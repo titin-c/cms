@@ -1,0 +1,170 @@
+/* fix (Andrea): desplegable compacto en vez de rejilla de tarjetas — cada
+   opción se lee con el nombre completo de la fuente, en su propia tipografía */
+.theme-font-select {
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--color-ink-100);
+  border-radius: var(--radius-md);
+  background: #FFFFFF;
+  cursor: pointer;
+  margin: 12px 0 20px;
+}
+.theme-font-select optgroup {
+  font-family: var(--font-ui);
+  font-style: normal;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+/* Vista previa de cada bloque tipográfico */
+.font-preview {
+  border: 1px dashed var(--color-ink-100);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.font-preview__heading { font-size: 28px; font-weight: 700; margin: 0; }
+.font-preview__body { font-size: 15px; line-height: 1.6; color: var(--color-ink-700); margin: 0; max-width: 480px; }
+.font-preview__button {
+  align-self: flex-start;
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  border: none;
+  background: var(--color-ink-900);
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: default;
+}
+.font-preview__menu { font-size: 13px; color: var(--color-ink-700); }
+
+/* Selectores de color */
+.color-picker-row { display: flex; align-items: center; gap: 10px; margin: 12px 0 14px; }
+.color-picker-row input[type="color"] {
+  width: 52px; height: 40px; border: 1px solid var(--color-ink-100); border-radius: var(--radius-md);
+  padding: 2px; cursor: pointer; background: none;
+}
+.color-hex-input { width: 120px !important; font-family: monospace !important; text-transform: uppercase; }
+
+.color-scale { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.contrast-indicator {
+  margin-top: 12px;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.contrast-indicator--good { background: #E8F5E9; color: #1B5E20; }
+.contrast-indicator--ok { background: #FFF8E1; color: #7A5C00; }
+.contrast-indicator--warn { background: #FFF3E0; color: #8A4B00; }
+.contrast-indicator--bad { background: #FDECEC; color: #7F0000; }
+
+/* fix (Andrea #10): ejemplo visual del separador */
+.separator-preview {
+  margin-top: 20px;
+  padding: 16px;
+  background: var(--color-surface-alt, #F5F5F5);
+  border-radius: var(--radius-md);
+}
+.separator-preview__content {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  color: var(--color-ink-500);
+  padding: 8px 0;
+}
+.separator-preview__line { height: 0; }
+
+/* fix (Andrea #11): panel flotante fijo — visible en pantalla sin importar
+   el scroll, para ver el efecto en vivo al tocar tipografías/colores */
+.admin-sticky-preview {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 300px;
+  max-height: 70vh;
+  overflow-y: auto;
+  z-index: 80;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.18);
+  border-radius: var(--radius-lg);
+}
+.theme-mockup__hover-hint {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  color: var(--color-ink-300);
+  margin: 10px 0 0;
+}
+@media (max-width: 900px) {
+  .admin-sticky-preview { position: static; width: 100%; box-shadow: none; margin-top: 20px; }
+}
+
+/* fix (Andrea #10): mini-ejemplo visual del grid, a escala */
+.grid-preview {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(var(--preview-columns, 4), 1fr);
+  gap: var(--preview-gap, 8px);
+}
+.grid-preview span {
+  aspect-ratio: 1;
+  background: var(--color-surface-alt, #E8E8E8);
+  border-radius: 2px;
+}
+.color-scale__swatch {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  font-family: var(--font-ui); font-size: 10px; color: var(--color-ink-500);
+}
+.color-scale__chip { width: 56px; height: 56px; border-radius: var(--radius-md); border: 1px solid var(--color-ink-100); }
+
+/* Vista previa combinada */
+.theme-mockup {
+  border: 1px solid var(--color-ink-100);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  background: #FFFFFF;
+}
+.theme-mockup__title { font-size: 24px; font-weight: 700; margin: 0 0 8px; }
+.theme-mockup__text { font-size: 14px; line-height: 1.6; margin: 0 0 16px; max-width: 480px; }
+.theme-mockup__row { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+.theme-mockup__btn { padding: 10px 20px; border-radius: 4px; border: none; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 150ms ease; }
+.theme-mockup__link { font-size: 14px; text-decoration: underline; }
+.theme-mockup__box { padding: 14px; border-radius: 4px; font-size: 13px; }
+
+.social-link-row {
+  display: grid;
+  grid-template-columns: 160px 1fr 32px;
+  gap: 8px;
+  margin-bottom: 8px;
+  align-items: center;
+}
+.social-link-row select, .social-link-row input { width: 100%; box-sizing: border-box; padding: 9px 10px; border: 1px solid var(--color-ink-100); border-radius: var(--radius-md); font-size: 14px; }
+.social-link-remove { background: none; border: none; font-size: 20px; color: var(--color-ink-500); cursor: pointer; width: 32px; height: 32px; }
+.social-link-remove:hover { color: var(--color-error, #7F0000); }
+
+/* fix (Andrea): pestañas de Ajustes */
+.admin-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--color-ink-100);
+  margin-bottom: 24px;
+}
+.admin-tab-btn {
+  background: none;
+  border: none;
+  padding: 10px 16px;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-ink-500);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.admin-tab-btn:hover { color: var(--color-ink-900); }
+.admin-tab-btn.is-active { color: var(--color-ink-900); border-bottom-color: var(--color-ink-900); }
+.admin-tab-panel { display: none; }
+.admin-tab-panel.is-active { display: block; }

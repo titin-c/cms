@@ -1,0 +1,182 @@
+/* Nav pública unificada — misma composición en todas las páginas */
+.site-nav {
+  position: relative;
+  z-index: var(--z-nav);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-4) var(--spacing-6);
+  font-family: var(--font-ui);
+}
+
+/* Sólida (categoría, sobre mí, legales) */
+.site-nav--solid {
+  background: var(--color-surface);
+  border-bottom: var(--separator-border, 1px solid var(--color-ink-100));
+  padding-bottom: var(--separator-gap, var(--spacing-4));
+  color: var(--color-ink-900);
+}
+
+/* Transparente sobre imagen oscura (home, proyecto) */
+.site-nav--on-hero {
+  color: #FFFFFF;
+}
+
+.site-nav__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+}
+
+.site-nav__link {
+  font-size: var(--font-size-sm);
+  text-decoration: none;
+  color: inherit;
+  transition: color 150ms ease;
+}
+.site-nav__link:hover { color: var(--color-accent, currentColor); }
+
+.site-nav__icon {
+  display: flex;
+  color: inherit;
+  transition: color 150ms ease;
+}
+.site-nav__icon:hover { color: var(--color-accent, currentColor); }
+
+.site-nav__lang {
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  color: inherit;
+  opacity: 0.85;
+  transition: color 150ms ease;
+}
+.site-nav__lang:hover { color: var(--color-accent, currentColor); opacity: 1; }
+.site-nav__lang .is-active { font-weight: var(--font-weight-bold); opacity: 1; }
+
+.site-nav__socials {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+}
+
+/* fix (Andrea): desplegable "Categorías" con submenú — hover en desktop, clic en móvil/teclado */
+.site-nav__dropdown { position: relative; }
+.site-nav__dropdown-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+.site-nav__dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  /* fix: sin margin-top — un hueco aquí queda FUERA de la caja de .site-nav__dropdown
+     (el menú está en position:absolute, no cuenta para el alto del contenedor), así
+     que al mover el ratón hacia abajo se salía del área de :hover y se cerraba solo */
+  padding-top: var(--spacing-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-ink-100);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  min-width: 200px;
+  padding-bottom: var(--spacing-2);
+  z-index: var(--z-nav);
+}
+.site-nav__dropdown-menu.is-open,
+.site-nav__dropdown:hover .site-nav__dropdown-menu { display: block; }
+.site-nav__dropdown-item {
+  display: block;
+  padding: var(--spacing-2) var(--spacing-4);
+  color: var(--color-ink-900);
+  text-decoration: none;
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+}
+.site-nav__dropdown-item:hover { background: var(--color-surface-alt); color: var(--color-accent, var(--color-ink-900)); }
+.site-nav__dropdown-item--all { font-weight: 600; border-bottom: 1px solid var(--color-ink-100); margin-bottom: var(--spacing-1); padding-bottom: var(--spacing-3); }
+
+@media (max-width: 768px) {
+  .site-nav__dropdown-menu {
+    position: static;
+    box-shadow: none;
+    border: none;
+    margin-top: var(--spacing-2);
+    padding-left: var(--spacing-4);
+    min-width: 0;
+  }
+}
+
+/* fix (Andrea): botón de menú móvil — oculto en desktop */
+.site-nav__toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 4px;
+  align-items: center;
+  justify-content: center;
+}
+
+/* fix (Andrea): marca en dos líneas — nombre + tagline, misma en todo el sitio */
+.site-nav__brand-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-decoration: none;
+  color: inherit;
+  line-height: 1.2;
+}
+.site-nav__brand-block-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 23px;
+}
+.site-nav__brand-block-tagline {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+@media (max-width: 768px) {
+  .site-nav__brand-block-name { font-size: 16px; }
+  .site-nav__brand-block-tagline { display: none; } /* en móvil, solo el nombre */
+
+  /* fix (Andrea): en móvil, las acciones del nav pasan a un panel desplegable
+     bajo la cabecera, abierto con el botón de hamburguesa — antes los enlaces
+     de "Sobre mí"/"Contacto" simplemente desaparecían y solo quedaban en el
+     footer, difícil de encontrar */
+  .site-nav__toggle { display: flex; }
+
+  .site-nav__actions {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-4);
+    padding: var(--spacing-5, 20px) var(--spacing-6);
+    background: var(--color-surface);
+    color: var(--color-ink-900);
+    border-bottom: 1px solid var(--color-ink-100);
+    box-shadow: var(--shadow-md);
+  }
+  .site-nav__actions.is-open { display: flex; }
+
+  .site-nav__socials { gap: var(--spacing-4); }
+}
+
+/* fix (Andrea): en la home, el nombre no se repite en el nav — ya está en el hero */
+.hero-mosaic .site-nav__brand-block { visibility: hidden; }

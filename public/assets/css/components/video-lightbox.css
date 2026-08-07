@@ -1,0 +1,119 @@
+/* Reset de apariencia de botón nativo cuando el item es un <button> (modo lightbox) */
+.video-grid__item {
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
+}
+
+.video-grid__thumb-wrap {
+  position: relative;
+  display: block;
+}
+/* fix (Andrea): miniaturas de vídeo en 16:9 (formato vídeo real), no 3:4 (formato foto) */
+.video-grid__thumb-wrap img {
+  aspect-ratio: 16 / 9;
+}
+
+.video-grid__play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 52px;
+  height: 52px;
+  border-radius: 9999px;
+  /* fix (Andrea): fijo, no depende del color de texto del tema — si el
+     principal es blanco, un círculo blanco + icono blanco se volvía invisible */
+  background: rgba(10, 10, 10, 0.75);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0; /* fix (Andrea): el icono de play solo aparece al hover/foco */
+  transition: opacity 150ms ease, transform 150ms ease, background 150ms ease;
+}
+.video-grid__item:hover .video-grid__play,
+.video-grid__item:focus-visible .video-grid__play {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1.08);
+  background: rgba(10, 10, 10, 0.9);
+}
+
+/* fix (Andrea): título propio del grid de vídeos, sin depender de category-page.css */
+.video-grid__item-title {
+  display: block;
+  margin-top: var(--spacing-2);
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  color: var(--color-ink-900);
+}
+.video-grid__item-title small { color: var(--color-ink-500); font-size: var(--font-size-xs); }
+
+/* fix (Andrea): grid de vídeos de la home — piezas más grandes que en /videos:
+   25% en desktop grande (4 por fila), 33% en tablet (3), 100% en móvil (1) */
+.home-video-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns, 4), 1fr);
+  gap: var(--grid-gap, var(--spacing-6));
+  padding: var(--spacing-12) var(--spacing-6);
+}
+@media (max-width: 1200px) {
+  .home-video-grid { grid-template-columns: repeat(max(2, calc(var(--grid-columns, 4) - 1)), 1fr); }
+}
+@media (max-width: 768px) {
+  .home-video-grid { grid-template-columns: 1fr; gap: var(--grid-gap, var(--spacing-6)); padding: var(--spacing-8) var(--spacing-4); }
+}
+
+/* Visor de vídeo — mismo lenguaje visual que el lightbox de imágenes */
+.video-lightbox[hidden] { display: none; }
+.video-lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 10, 10, 0.95);
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+.video-lightbox.is-open { opacity: 1; }
+
+.video-lightbox__frame-wrap {
+  width: min(1100px, 92vw);
+  aspect-ratio: 16 / 9;
+  transform: scale(0.96);
+  transition: transform 200ms ease;
+}
+.video-lightbox.is-open .video-lightbox__frame-wrap { transform: scale(1); }
+
+.video-lightbox__frame-wrap iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: var(--radius-md);
+}
+
+.video-lightbox__close {
+  position: absolute;
+  top: var(--spacing-4);
+  right: var(--spacing-6);
+  background: none;
+  border: none;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+}
+
+@media (max-width: 768px) {
+  .video-lightbox__frame-wrap { width: 94vw; }
+  .video-grid__play { width: 44px; height: 44px; }
+}

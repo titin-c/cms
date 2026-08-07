@@ -1,0 +1,83 @@
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--color-ink-900);
+  background: var(--color-surface);
+  line-height: var(--line-height-normal);
+}
+
+h1, h2, h3 { font-family: var(--font-display); font-weight: var(--font-weight-bold); line-height: var(--line-height-tight); margin: 0; }
+/* fix (design-system-agent): serif decorativa solo desde font-size-lg, nunca en textos pequeños */
+h1 { font-size: var(--font-size-2xl); }
+h2 { font-size: var(--font-size-xl); }
+
+a { color: inherit; }
+
+img { max-width: 100%; display: block; }
+
+button {
+  font-family: var(--font-ui);
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+/* Nunca :focus sin :focus-visible en elementos interactivos (react-patterns / component-library-base) */
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.empty-state {
+  text-align: center;
+  padding: var(--spacing-32) var(--spacing-6);
+  color: var(--color-ink-500);
+  font-family: var(--font-display);
+  font-size: var(--font-size-lg);
+}
+
+/* Breadcrumb — usado en proyecto.php y categoria.php */
+.breadcrumb {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  color: var(--color-ink-500);
+  margin-bottom: var(--spacing-6);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.breadcrumb a { color: var(--color-ink-500); text-decoration: none; }
+.breadcrumb a:hover { color: var(--color-ink-900); text-decoration: underline; }
+.breadcrumb [aria-current="page"] { color: var(--color-ink-900); font-weight: 500; }
+
+.field-error {
+  display: block;
+  color: var(--color-error);
+  font-size: var(--font-size-xs);
+  font-family: var(--font-ui);
+  margin-top: var(--spacing-1);
+}
+
+.save-status {
+  font-family: var(--font-ui);
+  font-size: var(--font-size-xs);
+  color: var(--color-ink-500);
+}
+.save-status[data-state="error"] { color: var(--color-error); }
+.save-status[data-state="success"] { color: var(--color-success); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

@@ -1,0 +1,148 @@
+.category-row {
+  padding: var(--spacing-8) var(--spacing-6);
+  padding-top: var(--separator-gap, var(--spacing-8));
+  border-top: var(--separator-border, 1px solid var(--color-ink-100));
+}
+
+/* fix (accessibility-agent, bloqueante): skip-link, visible solo al recibir foco */
+.category-row__skip {
+  position: absolute;
+  left: -9999px;
+  z-index: var(--z-toast);
+}
+.category-row__skip:focus {
+  left: var(--spacing-4);
+  top: var(--spacing-4);
+  background: var(--color-ink-900);
+  color: #FFFFFF;
+  padding: var(--spacing-2) var(--spacing-3);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-ui);
+  font-size: var(--font-size-sm);
+}
+
+.category-row__grid {
+  display: grid;
+  grid-template-columns: 1fr 240px;
+  gap: var(--spacing-6);
+  align-items: center;
+}
+
+/* fix (Andrea): la columna de texto ocupa al menos el 40% en pantallas grandes */
+@media (min-width: 1200px) {
+  .category-row__grid { grid-template-columns: 60% 40%; }
+}
+
+.category-row__gallery {
+  position: relative;
+  overflow: hidden;
+}
+
+.category-row__track {
+  display: flex;
+  gap: var(--spacing-2);
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  height: 320px; /* altura fija de referencia; el ancho se adapta según nº de proyectos */
+}
+.category-row__track::-webkit-scrollbar { display: none; }
+
+.category-row__item { flex: 0 0 auto; height: 100%; }
+.category-row__item img {
+  width: 200px;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+}
+
+/* fix (Andrea): título superpuesto a la imagen, visible solo al hover/focus */
+.category-row__item {
+  position: relative;
+  display: block;
+}
+.category-row__item-title {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: var(--spacing-6) var(--spacing-3) var(--spacing-3);
+  background: linear-gradient(to top, rgba(10,10,10,0.75), transparent);
+  color: #FFFFFF;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 180ms ease, transform 180ms ease;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+}
+.category-row__item:hover .category-row__item-title,
+.category-row__item:focus-visible .category-row__item-title {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* fix (Andrea): cuando caben todos los proyectos sin scroll, cada imagen ocupa
+   una fracción proporcional del ancho total (1 proyecto = 100%, 2 = 50%, etc.) */
+.category-row__gallery--fits .category-row__track { overflow-x: hidden; }
+.category-row__gallery--fits .category-row__item { flex: 1 1 0; min-width: 0; }
+.category-row__gallery--fits .category-row__item img { width: 100%; }
+
+/* fix (Andrea): flechas superpuestas, ocultas hasta hover/focus — maximiza área de galería */
+.category-row__arrow {
+  opacity: 0;
+  transition: opacity 120ms ease;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(10, 10, 10, 0.6);
+  color: #FFFFFF;
+  border: none;
+  border-radius: var(--radius-full);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+.category-row__arrow--prev { left: var(--spacing-2); }
+.category-row__arrow--next { right: var(--spacing-2); }
+
+/* fix (accessibility-agent): también visibles con :focus-within, no solo :hover */
+.category-row__gallery:hover .category-row__arrow,
+.category-row__gallery:focus-within .category-row__arrow {
+  opacity: 1;
+}
+
+.category-row__text h2 { margin-bottom: var(--spacing-2); }
+.category-row__text p {
+  font-size: var(--font-size-sm);
+  color: var(--color-ink-500);
+  line-height: var(--line-height-relaxed);
+  margin: 0;
+}
+.category-row__more {
+  display: inline-block;
+  margin-top: var(--spacing-3);
+  font-family: var(--font-ui);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-ink-900);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+}
+.category-row__more:hover { color: var(--color-accent, var(--color-ink-900)); text-decoration: underline; }
+
+.category-row__end-anchor { display: block; }
+
+@media (max-width: 768px) {
+  .category-row__grid { grid-template-columns: 1fr; }
+  .category-row__text { order: -1; margin-bottom: var(--spacing-4); }
+  /* fix (adenda home adaptativa): scroll táctil normal en móvil, sin JS de autoscroll ni ajuste dinámico */
+  .category-row__track { scroll-snap-type: x mandatory; height: 260px; }
+  .category-row__item { scroll-snap-align: start; }
+  .category-row__item img { width: 170px; }
+  .category-row__arrow { display: none; } /* el gesto de swipe reemplaza a las flechas en touch */
+  .category-row__gallery--fits .category-row__item { flex: 0 0 auto; } /* en móvil siempre scrollable, nunca ancho dinámico */
+  .category-row__gallery--fits .category-row__item img { width: 170px; }
+}

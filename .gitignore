@@ -1,0 +1,10 @@
+# Configuración generada por install.php — contiene credenciales, nunca a un repo
+src/lib/config.local.php
+
+# Imágenes subidas por los usuarios del panel
+public/uploads/*
+!public/uploads/.gitkeep
+
+# Sistema
+.DS_Store
+Thumbs.db

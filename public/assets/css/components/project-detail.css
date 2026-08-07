@@ -1,0 +1,170 @@
+/* Cabecera con imagen principal oscurecida, título+descripción a la derecha */
+.project-hero {
+  position: relative;
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+.project-hero__overlay {
+  position: absolute;
+  inset: 0;
+  /* fix (Lighthouse, contraste): overlay más oscuro en la zona del texto (derecha) */
+  background: linear-gradient(90deg, rgba(10,10,10,0.15) 0%, rgba(10,10,10,0.85) 65%);
+}
+
+.project-hero__content {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+  text-align: right;
+  color: #FFFFFF;
+  padding: var(--spacing-8) var(--spacing-8) var(--spacing-12);
+  max-width: 640px;
+  margin-left: auto;
+  /* fix (Lighthouse, contraste): sombra de texto como margen de seguridad
+     adicional, independiente del brillo puntual de la fotografía de fondo */
+  text-shadow: 0 1px 4px rgba(0,0,0,0.45);
+}
+
+.project-hero__content h1 {
+  font-size: clamp(28px, 4vw, var(--font-size-2xl));
+  margin: 0;
+}
+
+.project-hero__excerpt {
+  font-family: var(--font-body);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-relaxed);
+  color: rgba(255,255,255,0.88);
+  margin-top: var(--spacing-3);
+}
+
+/* Nav sobre la cabecera del proyecto: mismo tratamiento transparente que sobre el hero de la home */
+.site-nav--on-hero {
+  position: relative;
+  z-index: 2;
+  color: #FFFFFF;
+}
+
+/* Contenido del proyecto */
+.project-detail { max-width: 760px; margin: 0 auto; padding: var(--spacing-12) var(--spacing-6); }
+.project-detail__content {
+  font-family: var(--font-body);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-ink-900);
+}
+.project-detail__content p { margin: 0 0 var(--spacing-4); }
+.project-detail__content img { border-radius: var(--radius-sm); margin: var(--spacing-4) 0; }
+
+/* fix (Andrea): mosaico de miniaturas de la galería secundaria */
+.project-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--spacing-2);
+  margin: var(--spacing-8) 0;
+}
+.project-gallery-grid__item {
+  border: none;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+}
+.project-gallery-grid__item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 200ms ease;
+}
+.project-gallery-grid__item:hover img,
+.project-gallery-grid__item:focus-visible img {
+  transform: scale(1.05);
+}
+
+.project-detail__next {
+  display: block;
+  text-align: right;
+  font-family: var(--font-display);
+  font-size: var(--font-size-lg);
+  text-decoration: none;
+  color: var(--color-ink-900);
+  padding-top: var(--spacing-6);
+  border-top: 1px solid var(--color-ink-100);
+}
+
+/* fix (Andrea): visor de imagen sencillo, sin librerías externas */
+.lightbox[hidden] { display: none; }
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 10, 10, 0.95);
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+/* fix (Andrea): animación ligera — fade del fondo + zoom suave de la imagen */
+.lightbox.is-open { opacity: 1; }
+
+.lightbox__image {
+  max-width: 90vw;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+  transform: scale(0.96);
+  transition: transform 200ms ease;
+}
+.lightbox.is-open .lightbox__image { transform: scale(1); }
+.lightbox__close {
+  position: absolute;
+  top: var(--spacing-4);
+  right: var(--spacing-6);
+  background: none;
+  border: none;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+}
+.lightbox__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.1);
+  border: none;
+  color: #FFFFFF;
+  font-size: 36px;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.lightbox__nav--prev { left: var(--spacing-6); }
+.lightbox__nav--next { right: var(--spacing-6); }
+
+@media (max-width: 768px) {
+  .project-hero { min-height: 55vh; }
+  .project-hero__content { text-align: left; align-items: flex-start; margin-left: 0; padding: var(--spacing-6); }
+  .project-detail { padding: var(--spacing-8) var(--spacing-4); }
+  .lightbox__nav { width: 44px; height: 44px; font-size: 28px; }
+  .lightbox__nav--prev { left: var(--spacing-2); }
+  .lightbox__nav--next { right: var(--spacing-2); }
+}

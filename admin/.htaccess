@@ -1,0 +1,6 @@
+# Evita listado de directorios y expone solo lo necesario del panel admin.
+Options -Indexes
+<IfModule mod_headers.c>
+  Header set X-Frame-Options "DENY"
+  Header set X-Content-Type-Options "nosniff"
+</IfModule>

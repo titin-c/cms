@@ -1,0 +1,323 @@
+/* Panel de admin — usa los mismos tokens que la web pública, UI en sans-serif
+   para máxima legibilidad funcional (font-family definido en tokens.css como --font-ui) */
+
+body.admin-page, body.admin-auth-page {
+  margin: 0;
+  font-family: var(--font-ui, -apple-system, sans-serif);
+  color: var(--color-ink-900, #0A0A0A);
+  background: var(--color-surface-alt, #F5F5F5);
+  -webkit-font-smoothing: antialiased;
+}
+
+.admin-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-4, 16px) var(--spacing-6, 24px);
+  background: #FFFFFF;
+  border-bottom: 1px solid var(--color-ink-100, #E0E0E0);
+  box-shadow: var(--shadow-sm);
+}
+.admin-header__title { font-weight: 600; font-size: 15px; letter-spacing: -0.01em; }
+.admin-header__logout, .admin-header__back {
+  text-decoration: none;
+  color: var(--color-ink-500, #565656);
+  font-size: 13px;
+  font-weight: 500;
+  transition: color 120ms ease;
+}
+.admin-header__logout:hover, .admin-header__back:hover { color: var(--color-ink-900); }
+
+.admin-auth {
+  max-width: 380px;
+  margin: 15vh auto;
+  padding: var(--spacing-8, 32px) var(--spacing-8, 32px);
+  background: #FFFFFF;
+  border-radius: var(--radius-lg, 8px);
+  box-shadow: var(--shadow-md);
+}
+.admin-auth h1 { font-size: 19px; font-weight: 600; margin-bottom: var(--spacing-8, 32px); letter-spacing: -0.01em; }
+
+#login-form, #project-form, #category-form, #video-form, #page-form { display: flex; flex-direction: column; gap: var(--spacing-4, 16px); }
+
+/* fix (Andrea): jerarquía más cuidada entre label e input, en vez de "amontonado" */
+#login-form label, .admin-page main label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-ink-700, #2B2B2B);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.admin-page main input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="range"]),
+.admin-page main select,
+.admin-page main textarea,
+#login-form input {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--color-ink-900);
+  text-transform: none;
+  letter-spacing: normal;
+  padding: 11px 14px;
+  border: 1px solid var(--color-ink-100, #E0E0E0);
+  border-radius: var(--radius-md, 4px);
+  min-height: 44px;
+  background: #FFFFFF;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+.admin-page main input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="range"]):hover,
+.admin-page main select:hover,
+.admin-page main textarea:hover,
+#login-form input:hover {
+  border-color: var(--color-ink-300);
+}
+.admin-page main input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="range"]):focus,
+.admin-page main select:focus,
+.admin-page main textarea:focus,
+#login-form input:focus {
+  outline: none;
+  border-color: var(--color-ink-900);
+  box-shadow: 0 0 0 3px rgba(10,10,10,0.08);
+}
+
+.admin-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--radius-md, 4px);
+  padding: 11px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 44px;
+  transition: opacity 120ms ease, background 120ms ease;
+  letter-spacing: -0.005em;
+  /* fix: <button> trae relleno/tipografía nativos del navegador que se
+     sumaban a los de aquí — por eso "Nueva página" (un <button>) se veía
+     más grande que "Nueva categoría"/"Nuevo vídeo" (que son <a>) */
+  box-sizing: border-box;
+  font-family: inherit;
+  line-height: 1;
+  appearance: none;
+  -webkit-appearance: none;
+  text-decoration: none;
+}
+.admin-btn--primary { background: var(--color-ink-900, #0A0A0A); color: #FFFFFF; }
+.admin-btn--primary:hover { opacity: 0.85; }
+.admin-btn--secondary { background: #FFFFFF; border: 1px solid var(--color-ink-300, #9E9E9E); color: var(--color-ink-900); font-weight: 500; }
+.admin-btn--secondary:hover { border-color: var(--color-ink-900); }
+.admin-btn--link { background: none; color: var(--color-ink-500); text-decoration: underline; padding: 4px 0; min-height: auto; font-weight: 500; }
+.admin-btn--link:hover { color: var(--color-ink-900); }
+
+.admin-dashboard { padding: var(--spacing-8, 32px) var(--spacing-6, 24px); max-width: 1000px; margin: 0 auto; }
+.admin-dashboard__toolbar { display: flex; justify-content: space-between; margin-bottom: var(--spacing-6, 24px); gap: 12px; align-items: center; }
+#dashboard-search {
+  flex: 1; max-width: 320px; padding: 11px 14px; border-radius: var(--radius-md);
+  border: 1px solid var(--color-ink-100); min-height: 44px; font-size: 14px;
+}
+#dashboard-search:focus { outline: none; border-color: var(--color-ink-900); box-shadow: 0 0 0 3px rgba(10,10,10,0.08); }
+
+.admin-table { width: 100%; border-collapse: collapse; background: #FFFFFF; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); }
+.admin-table th {
+  text-align: left; padding: 12px 16px; font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.04em; color: var(--color-ink-500); border-bottom: 1px solid var(--color-ink-100); background: var(--color-surface-alt);
+}
+.admin-table td { text-align: left; padding: 14px 16px; border-bottom: 1px solid var(--color-ink-100); font-size: 14px; }
+.admin-table tr:last-child td { border-bottom: none; }
+.admin-table__loading { text-align: center; color: var(--color-ink-500); padding: 32px; }
+
+.admin-empty-state { text-align: center; padding: 20vh var(--spacing-6, 24px); }
+.admin-empty-state h1 { font-size: 24px; font-weight: 600; margin-bottom: 8px; letter-spacing: -0.01em; }
+.admin-empty-state p { color: var(--color-ink-500); margin-bottom: 24px; }
+
+.admin-form { max-width: 960px; margin: 0 auto; padding: var(--spacing-8, 32px) var(--spacing-6, 24px); }
+.admin-form__block { background: #FFFFFF; padding: var(--spacing-6, 24px); border-radius: var(--radius-lg, 8px); margin-bottom: var(--spacing-6, 24px); box-shadow: var(--shadow-sm); }
+.admin-form__block h2 { font-size: 15px; font-weight: 600; margin: 0 0 var(--spacing-4, 16px); letter-spacing: -0.005em; }
+.admin-form__block--optional { border: 1px dashed var(--color-ink-300); box-shadow: none; }
+.admin-form__optional { font-weight: 400; font-size: 11px; color: var(--color-ink-500); text-transform: none; letter-spacing: normal; }
+.admin-form__required { font-size: 10px; color: var(--color-error, #7F0000); text-transform: uppercase; font-weight: 700; letter-spacing: 0.04em; }
+.admin-form__hint { font-size: 12px; color: var(--color-ink-500); margin: 4px 0 8px; }
+.admin-form__checkbox { flex-direction: row !important; align-items: center; gap: 8px; font-weight: 500 !important; text-transform: none !important; font-size: 14px !important; letter-spacing: normal !important; }
+.admin-form__checkbox input[type="checkbox"], .admin-form__checkbox input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  accent-color: var(--color-ink-900);
+  cursor: pointer;
+}
+
+/* fix (Andrea): interruptor visual reutilizable — mostrar/ocultar título,
+   borrador/publicado, dónde aparece un elemento en la web, etc. */
+.admin-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-ink-900);
+  margin-bottom: 10px;
+}
+.admin-toggle:last-child { margin-bottom: 0; }
+.admin-toggle-row .admin-toggle { margin-bottom: 0; }
+.admin-toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+.admin-toggle__track {
+  width: 36px;
+  height: 20px;
+  border-radius: 9999px;
+  background: var(--color-ink-300);
+  position: relative;
+  flex-shrink: 0;
+  transition: background 150ms ease;
+}
+.admin-toggle__thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  transition: transform 150ms ease;
+}
+.admin-toggle input:checked ~ .admin-toggle__track { background: var(--color-ink-900); }
+.admin-toggle input:checked ~ .admin-toggle__track .admin-toggle__thumb { transform: translateX(16px); }
+.admin-toggle input:focus-visible ~ .admin-toggle__track { outline: 2px solid var(--color-ink-900); outline-offset: 2px; }
+.admin-toggle-row { display: flex; flex-wrap: wrap; gap: 20px; margin: 8px 0; }
+
+/* fix (Andrea): input + toggle en la misma línea (ej: título + "mostrar título") */
+.admin-form__inline-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.admin-form__inline-toggle-row input[type="text"] { flex: 1; }
+.admin-toggle--compact { margin-bottom: 0; flex-shrink: 0; white-space: nowrap; }
+.admin-toggle__compact-label { font-size: 12px; color: var(--color-ink-500); font-weight: 500; }
+
+/* fix (Andrea): tirador de arrastre para reordenar listados */
+.drag-handle {
+  cursor: grab;
+  color: var(--color-ink-300);
+  font-size: 18px;
+  user-select: none;
+  display: inline-block;
+  padding: 4px 8px;
+}
+.drag-handle:active { cursor: grabbing; }
+[data-id].is-dragging { opacity: 0.4; background: var(--color-surface-alt); }
+.admin-form__fieldset { border: 1px solid var(--color-ink-100); border-radius: var(--radius-md); padding: var(--spacing-3) var(--spacing-4); margin: var(--spacing-2) 0; }
+.admin-form__fieldset legend { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--color-ink-700); padding: 0 4px; }
+.admin-form__fieldset .admin-form__checkbox { margin-bottom: 6px; }
+
+/* fix (Andrea): campos ES/EN en dos columnas, en vez de mezclados en un único bloque vertical */
+.admin-form__bilingual {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-6);
+  margin-top: var(--spacing-2);
+}
+.admin-form__lang-col { display: flex; flex-direction: column; gap: var(--spacing-3); min-width: 0; }
+.admin-form__lang-badge {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-ink-500);
+  background: var(--color-surface-alt);
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+}
+@media (max-width: 900px) {
+  .admin-form__bilingual { grid-template-columns: 1fr; gap: var(--spacing-4); }
+}
+
+/* fix (Andrea): editor de texto enriquecido para las descripciones (Quill, tema Bubble) */
+.admin-richtext {
+  border: 1px solid var(--color-ink-100, #E0E0E0);
+  border-radius: var(--radius-md);
+  padding: 11px 14px;
+  min-height: 90px;
+  font-size: 15px;
+}
+.admin-richtext .ql-editor { padding: 0; min-height: 70px; }
+.admin-form__actions { display: flex; justify-content: flex-end; gap: 12px; position: sticky; bottom: 0; background: var(--color-surface-alt); padding: var(--spacing-4) 0; }
+
+/* ImageCropper (Cropper.js) */
+.image-cropper__stage { margin-top: 12px; }
+.image-cropper__canvas-wrap { max-height: 420px; overflow: hidden; background: var(--color-surface-alt, #F5F5F5); border-radius: var(--radius-md); }
+.image-cropper__source { display: block; max-width: 100%; }
+.image-cropper__controls { display: flex; align-items: center; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.image-cropper__zoom-btn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--color-ink-300); background: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.image-cropper__result { margin-top: 12px; }
+.image-cropper__preview { width: 100%; height: 240px; background-size: cover; background-position: center; border-radius: var(--radius-md); background-color: var(--color-ink-100); margin-bottom: 8px; }
+
+/* Quill bubble — ajuste tipográfico al font-ui del admin */
+.ql-editor { font-family: var(--font-ui); font-size: 15px; min-height: 160px; }
+
+/* Modal de gestión de categorías */
+.category-modal[hidden] { display: none; }
+.category-modal__overlay { position: fixed; inset: 0; background: rgba(10,10,10,.5); z-index: 200; }
+.category-modal__panel {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  background: #FFFFFF; border-radius: var(--radius-lg, 8px);
+  padding: var(--spacing-6, 24px); width: min(480px, 90vw); max-height: 85vh; overflow-y: auto;
+  z-index: 201;
+}
+.category-modal__panel--wide { width: min(880px, 92vw); }
+.category-modal__panel h2 { font-size: 16px; margin: 0 0 var(--spacing-4, 16px); }
+#category-form { display: flex; flex-direction: column; gap: var(--spacing-3, 12px); }
+
+/* fix (Andrea): el estado de guardado/error tenía que verse SIN tener que
+   volver arriba — ahora vive en la cabecera fija (sticky) y en error se
+   convierte en una etiqueta con fondo, no solo texto rojo fácil de ignorar */
+.save-status {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-ink-500);
+}
+.save-status[data-state="error"] {
+  color: #FFFFFF;
+  background: var(--color-error, #7F0000);
+  padding: 6px 12px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+}
+.save-status[data-state="success"] { color: var(--color-success); font-weight: 600; }
+
+/* fix (Andrea): el bloque con el campo obligatorio que falta se resalta y
+   recibe scroll automático — ya no hay que "adivinar" qué falta por rellenar */
+.admin-form__block--error {
+  border: 2px solid var(--color-error, #7F0000) !important;
+  animation: admin-block-flash 600ms ease 2;
+}
+@keyframes admin-block-flash {
+  0%, 100% { background: #FFFFFF; }
+  50% { background: #FDECEC; }
+}
+
+/* GalleryUploader */
+.gallery-uploader__list { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.gallery-item { display: flex; align-items: center; gap: 12px; padding: 8px; border: 1px solid var(--color-ink-100); border-radius: var(--radius-md); }
+.gallery-item img { width: 72px; height: 72px; object-fit: cover; border-radius: var(--radius-sm); flex-shrink: 0; }
+.gallery-item__fields { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.gallery-item__fields label { font-size: 11px; font-weight: 600; display: flex; flex-direction: column; gap: 2px; }
+.gallery-item__fields input { min-height: 36px; font-size: 13px; padding: 6px 8px; border: 1px solid var(--color-ink-300); border-radius: var(--radius-sm); }

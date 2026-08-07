@@ -1,0 +1,10 @@
+# Fuerza HTTPS (requisito de seguridad para el login del panel de admin)
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Si tu hosting no te permite configurar /public como raíz del dominio,
+# descomenta estas líneas para redirigir la raíz del dominio a /public:
+# RewriteCond %{REQUEST_URI} !^/public/
+# RewriteCond %{REQUEST_URI} !^/(admin|api)/
+# RewriteRule ^(.*)$ /public/$1 [L]

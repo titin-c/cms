@@ -1,0 +1,41 @@
+.site-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+  padding: var(--spacing-6);
+  padding-top: var(--separator-gap, var(--spacing-6));
+  border-top: var(--separator-border, 1px solid var(--color-ink-100));
+  font-family: var(--font-ui);
+}
+
+.site-footer__copy {
+  font-size: var(--font-size-xs);
+  color: var(--color-ink-500); /* fix (WAVE): #9E9E9E daba solo 2.85:1, muy por debajo de AAA; #565656 cumple 7.2:1 */
+}
+
+.site-footer__links {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+}
+.site-footer__links a {
+  font-size: var(--font-size-xs);
+  color: var(--color-ink-500);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+.site-footer__links a:hover { color: var(--color-accent, var(--color-ink-900)); }
+
+.language-badge {
+  display: inline-block;
+  font-family: var(--font-ui);
+  font-size: var(--font-size-xs);
+  color: var(--color-ink-500);
+  background: var(--color-surface-alt);
+  border-radius: var(--radius-full);
+  padding: var(--spacing-1) var(--spacing-3);
+  margin: var(--spacing-2) 0;
+}

@@ -1,0 +1,68 @@
+RewriteEngine On
+
+# fix (Lighthouse): caché de archivos estáticos — evita re-descargar CSS/JS/
+# imágenes en cada visita si no han cambiado (Ahorro estimado ~660 KiB)
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
+<IfModule mod_headers.c>
+  <FilesMatch "\.(css|js|webp|jpg|jpeg|png|woff2)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+</IfModule>
+
+# fix (Lighthouse): compresión — reduce el peso transferido de texto/CSS/JS
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/json image/svg+xml
+</IfModule>
+
+# fix (Lighthouse): cabeceras de seguridad básicas, sin coste de implementación
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+</IfModule>
+
+# fix (Andrea, SEO): segmentos de ruta y slugs traducidos al inglés, no solo
+# un prefijo /en/ — /project/oliva-beach en vez de /en/proyecto/oliva-playa.
+# Si un proyecto/categoría no tiene slug en inglés, nunca se genera un
+# enlace a estas rutas — el código cae directamente a la ruta en español
+# (ver src/lib/urls.php).
+
+# Sitemap dinámico
+RewriteRule ^sitemap\.xml$ sitemap.php [L]
+RewriteRule ^robots\.txt$ robots.php [L]
+
+# Home (la home no tiene "nombre" propio que traducir, mantiene el prefijo)
+RewriteRule ^en/?$ index.php?lang=en [L,QSA]
+
+# Proyecto
+RewriteRule ^project/([^/]+)/?$ proyecto.php?slug_en=$1&lang=en [L,QSA]
+RewriteRule ^proyecto/([^/]+)/?$ proyecto.php?slug=$1 [L,QSA]
+
+# Categoría
+RewriteRule ^category/([^/]+)/?$ categoria.php?slug_en=$1&lang=en [L,QSA]
+RewriteRule ^categoria/([^/]+)/?$ categoria.php?slug=$1 [L,QSA]
+
+# fix (Andrea): la ruta de /videos ahora es configurable (slug editable desde
+# /admin/videos.php) — se resuelve a través del mismo catch-all genérico de
+# abajo, delegado desde pagina.php según el slug configurado.
+
+# fix (Andrea): páginas fijas gestionables desde /admin/paginas.php (Sobre
+# mí, legales, y cualquier página nueva) — ruta plana genérica, siempre la
+# ÚLTIMA regla por ser la más permisiva. Las condiciones evitan que capture
+# archivos/carpetas reales (uploads, admin, api, robots.txt...).
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^en/([^/]+)/?$ pagina.php?slug=$1&lang=en [L,QSA]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^/]+)/?$ pagina.php?slug=$1 [L,QSA]

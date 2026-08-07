@@ -1,0 +1,42 @@
+/* fix (Andrea): módulo Simple — orden fijo título → imagen centrada →
+   descripción, todo apilado y centrado. Para quien no quiere ni categorías
+   ni vídeos en la home. */
+.home-simple {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--spacing-6);
+  padding: var(--spacing-12) var(--spacing-6);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.home-simple__title {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 42px);
+  margin: 0;
+  color: var(--color-ink-900);
+}
+
+.home-simple__image {
+  width: 100%;
+  max-width: 700px;
+  height: auto;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+}
+
+.home-simple__text {
+  font-family: var(--font-body);
+  font-size: var(--font-size-md);
+  line-height: 1.7;
+  color: var(--color-ink-700);
+  margin: 0;
+  max-width: 640px;
+  white-space: pre-line;
+}
+
+@media (max-width: 768px) {
+  .home-simple { padding: var(--spacing-8) var(--spacing-4); gap: var(--spacing-4); }
+}
