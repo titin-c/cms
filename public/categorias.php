@@ -10,6 +10,14 @@ $locale = $GLOBALS['__locale'];
 $pdo = getDb();
 $themeSettings = getSiteSettings($pdo);
 
+// fix (seo-agent [audit] 🔴): si el cliente desactivó Proyectos desde
+// Ajustes, esta página (hub de categorías) tampoco debe seguir indexable
+if (($themeSettings['module_projects_enabled'] ?? '1') !== '1') {
+    http_response_code(404);
+    include __DIR__ . '/404.php';
+    exit;
+}
+
 $localeCol = $locale === 'en' ? "COALESCE(title_en, title_es)" : "title_es";
 $homeDescCol = $locale === 'en' ? "COALESCE(home_description_en, description_en, home_description_es, description_es)" : "COALESCE(home_description_es, description_es)";
 $categories = $pdo->query("
@@ -37,10 +45,21 @@ $pageTitle = $pageMetaTitle ?: ($pageH1 ?: $defaultLabel);
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?= htmlspecialchars($pageTitle) ?> — <?= htmlspecialchars($themeSettings['site_name'] ?? 'Mi Sitio') ?></title>
-  <?php if ($pageMetaDescription): ?><meta name="description" content="<?= htmlspecialchars($pageMetaDescription) ?>"><?php endif; ?>
+  <meta name="description" content="<?= htmlspecialchars($pageMetaDescription ?: ($pageDescription ? strip_tags($pageDescription) : $pageTitle)) ?>">
   <link rel="canonical" href="<?= getSiteDomain($themeSettings) ?><?= $locale === 'en' ? $enUrl : $esUrl ?>">
   <link rel="alternate" hreflang="es" href="<?= getSiteDomain($themeSettings) ?><?= $esUrl ?>">
   <link rel="alternate" hreflang="en" href="<?= getSiteDomain($themeSettings) ?><?= $enUrl ?>">
+  <link rel="alternate" hreflang="x-default" href="<?= getSiteDomain($themeSettings) ?><?= $esUrl ?>">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "<?= addslashes($themeSettings['site_name'] ?? 'Mi Sitio') ?>", "item": "<?= getSiteDomain($themeSettings) ?><?= localeHomeUrl($locale) ?>" },
+      { "@type": "ListItem", "position": 2, "name": "<?= addslashes($pageTitle) ?>", "item": "<?= getSiteDomain($themeSettings) ?><?= $locale === 'en' ? $enUrl : $esUrl ?>" }
+    ]
+  }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="<?= htmlspecialchars(buildThemeFontsUrl($themeSettings)) ?>" rel="stylesheet">

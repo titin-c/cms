@@ -48,6 +48,17 @@ $enUrl = $page['slug_en'] ? '/en/' . rawurlencode($page['slug_en']) : null;
   <?php if ($enUrl): ?>
     <link rel="alternate" hreflang="en" href="<?= getSiteDomain($themeSettings) ?><?= $enUrl ?>">
   <?php endif; ?>
+  <link rel="alternate" hreflang="x-default" href="<?= getSiteDomain($themeSettings) ?><?= $esUrl ?>">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "<?= addslashes($themeSettings['site_name'] ?? 'Mi Sitio') ?>", "item": "<?= getSiteDomain($themeSettings) ?><?= localeHomeUrl($locale) ?>" },
+      { "@type": "ListItem", "position": 2, "name": "<?= addslashes($page['title']) ?>", "item": "<?= getSiteDomain($themeSettings) ?><?= ($locale === 'en' && $enUrl) ? $enUrl : $esUrl ?>" }
+    ]
+  }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="<?= htmlspecialchars(buildThemeFontsUrl($themeSettings)) ?>" rel="stylesheet">

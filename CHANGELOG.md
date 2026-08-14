@@ -3,7 +3,38 @@
 Este archivo deja constancia de qué incluye cada entrega, para poder comprobar
 de un vistazo si lo que hay subido en el repositorio remoto está actualizado.
 
-## 1.5.5 — actual
+## 1.6.0 — actual
+
+**Auditoría SEO completa (seo-agent, MODO audit):**
+
+- 🔴 `categorias.php` (hub) y `videos.php` no tenían *fallback* de meta
+  descripción — si no se rellenaba en Ajustes, la etiqueta desaparecía por
+  completo de la página. Corregido con la misma cadena de *fallback* que
+  usan home/proyecto/categoría.
+- 🔴 Ninguna página pública comprobaba si su módulo estaba activado desde
+  Ajustes — desactivar "Proyectos" o "Vídeos" solo ocultaba el menú del
+  admin, pero las páginas seguían 100% accesibles e indexables. Ahora
+  `proyecto.php`, `categoria.php`, `categorias.php` y `videos.php` dan 404
+  si su módulo está desactivado, y la home deja de mostrar esas secciones
+  también.
+- 🔴 `/videos` y `/categorias` (el hub) no estaban en el sitemap — páginas
+  reales, invisibles al rastreador. Añadidas, respetando también los
+  módulos activos.
+- 🟠 `hreflang x-default` ausente en `categorias.php`, `videos.php` y
+  `pagina.php` (sí estaba en home/proyecto/categoría) — añadido en las 3.
+- 🟠 Sin datos estructurados (`BreadcrumbList`) en esas mismas 3 páginas —
+  añadido, consistente con el resto del sitio.
+- 🟠 Sitemap sin extensión de imagen — añadida por proyecto (`<image:image>`
+  con la variante de mayor resolución), relevante para tráfico de Google
+  Images en un portfolio fotográfico.
+- Confirmado (no era un fallo): `robots.txt` ya existía como archivo
+  dinámico (`public/robots.php`); un único sitemap combinado con
+  alternativas de idioma incrustadas es el patrón correcto (no hacen falta
+  sitemaps separados por idioma); los campos `changefreq`/`priority` del
+  formato clásico de sitemap se omiten a propósito — Google los ignora por
+  completo desde hace años.
+
+## 1.5.5
 
 - Arreglado de raíz el aviso flotante que no aparecía en Ajustes:
   `ajustes.js` nunca importaba `save-status.js` y tocaba el texto de estado

@@ -11,6 +11,14 @@ $locale = $GLOBALS['__locale'];
 $pdo = getDb();
 $themeSettings = getSiteSettings($pdo);
 
+// fix (seo-agent [audit] 🔴): si el cliente desactivó Vídeos desde Ajustes,
+// esta página tampoco debe seguir accesible/indexable
+if (($themeSettings['module_videos_enabled'] ?? '1') !== '1') {
+    http_response_code(404);
+    include __DIR__ . '/404.php';
+    exit;
+}
+
 $videos = $pdo->query("SELECT * FROM videos WHERE status = 'published' ORDER BY sort_order ASC, id DESC")->fetchAll();
 
 $slugEs = $themeSettings['videos_slug_es'] ?: 'videos';
@@ -37,6 +45,17 @@ $pageTitle = $pageMetaTitle ?: ($pageH1 ?: ($locale === 'en' ? 'Videos' : 'Víde
   <link rel="canonical" href="<?= getSiteDomain($themeSettings) ?><?= $locale === 'en' ? $enUrl : $esUrl ?>">
   <link rel="alternate" hreflang="es" href="<?= getSiteDomain($themeSettings) ?><?= $esUrl ?>">
   <link rel="alternate" hreflang="en" href="<?= getSiteDomain($themeSettings) ?><?= $enUrl ?>">
+  <link rel="alternate" hreflang="x-default" href="<?= getSiteDomain($themeSettings) ?><?= $esUrl ?>">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "<?= addslashes($themeSettings['site_name'] ?? 'Mi Sitio') ?>", "item": "<?= getSiteDomain($themeSettings) ?><?= localeHomeUrl($locale) ?>" },
+      { "@type": "ListItem", "position": 2, "name": "<?= addslashes($pageTitle) ?>", "item": "<?= getSiteDomain($themeSettings) ?><?= $locale === 'en' ? $enUrl : $esUrl ?>" }
+    ]
+  }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="<?= htmlspecialchars(buildThemeFontsUrl($themeSettings)) ?>" rel="stylesheet">

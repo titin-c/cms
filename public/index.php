@@ -14,8 +14,8 @@ $themeSettings = getSiteSettings($pdo);
 // fix (Andrea, CMS multi-cliente): 3 módulos independientes y combinables —
 // cualquier combinación es válida, incluso ninguno (home solo con footer).
 $showHero = ($themeSettings['home_show_hero'] ?? '1') === '1';
-$showCategories = ($themeSettings['home_show_categories'] ?? '1') === '1';
-$showVideos = ($themeSettings['home_show_videos'] ?? '0') === '1';
+$showCategories = ($themeSettings['home_show_categories'] ?? '1') === '1' && ($themeSettings['module_projects_enabled'] ?? '1') === '1';
+$showVideos = ($themeSettings['home_show_videos'] ?? '0') === '1' && ($themeSettings['module_videos_enabled'] ?? '1') === '1';
 $showSimple = ($themeSettings['home_show_simple'] ?? '0') === '1';
 
 $categories = [];
