@@ -335,7 +335,7 @@ body.admin-page, body.admin-auth-page {
   border-radius: var(--radius-md);
   font-weight: 600;
 }
-.save-status[data-state="success"] { color: var(--color-success); font-weight: 600; }
+.save-status[data-state="saved"], .save-status[data-state="sent"] { color: var(--color-success); font-weight: 600; }
 
 /* fix (Andrea): el bloque con el campo obligatorio que falta se resalta y
    recibe scroll automático — ya no hay que "adivinar" qué falta por rellenar */

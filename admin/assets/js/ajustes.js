@@ -1,4 +1,5 @@
 import './components/image-cropper.js';
+import './components/save-status.js';
 import { linkToggleVisibility } from './components/toggle-visibility.js';
 
 /**
@@ -294,8 +295,7 @@ async function loadSettings() {
 }
 
 document.getElementById('save-settings-btn').addEventListener('click', async () => {
-  statusEl.textContent = 'Guardando...';
-  statusEl.dataset.state = 'saving';
+  window.setSaveStatus(statusEl, 'saving');
 
   try {
     const settingsRes = await fetch('/api/settings.php', {
@@ -344,11 +344,9 @@ document.getElementById('save-settings-btn').addEventListener('click', async () 
       body: JSON.stringify({ links: collectSocialLinks() }),
     });
     if (!settingsRes.ok || !socialRes.ok) throw new Error('save_failed');
-    statusEl.textContent = 'Guardado';
-    statusEl.dataset.state = 'success';
+    window.setSaveStatus(statusEl, 'saved', 'Ajustes guardados');
   } catch {
-    statusEl.textContent = 'No se pudo guardar.';
-    statusEl.dataset.state = 'error';
+    window.setSaveStatus(statusEl, 'error', 'No se pudo guardar.');
   }
 });
 

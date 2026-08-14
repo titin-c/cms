@@ -3,7 +3,18 @@
 Este archivo deja constancia de qué incluye cada entrega, para poder comprobar
 de un vistazo si lo que hay subido en el repositorio remoto está actualizado.
 
-## 1.5.4 — actual
+## 1.5.5 — actual
+
+- Arreglado de raíz el aviso flotante que no aparecía en Ajustes:
+  `ajustes.js` nunca importaba `save-status.js` y tocaba el texto de estado
+  a mano, saltándose por completo la función que lanza el aviso.
+- Arreglado además un bug relacionado que afectaba a **todos** los
+  formularios (proyecto, categoría, vídeo, página): el CSS esperaba
+  `data-state="success"` para poner el texto en verde, pero el JS real
+  siempre pusó `"saved"`/`"sent"` — así que ese texto nunca se coloreaba en
+  ningún formulario del panel.
+
+## 1.5.4
 
 - Vista previa combinada de Ajustes/Estilos: movida de abajo-derecha (se
   solapaba con el botón "Guardar ajustes") a arriba-derecha.
