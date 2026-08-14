@@ -3,7 +3,22 @@
 Este archivo deja constancia de qué incluye cada entrega, para poder comprobar
 de un vistazo si lo que hay subido en el repositorio remoto está actualizado.
 
-## 1.6.0 — actual
+## 1.6.1 — actual
+
+- 🔴 Arreglado el motivo real más probable de que el inglés no posicionara
+  bien: el sitemap generaba **una sola entrada `<url>`** por contenido (la
+  de español), con el inglés metido solo como anotación `alternate` dentro
+  de ella — la URL en inglés nunca aparecía como `<loc>` propio en ningún
+  sitio, así que Google tenía muchas menos papeletas de rastrearla e
+  indexarla de forma independiente. Ahora cada idioma disponible genera su
+  propia entrada `<url>` completa (patrón oficial de Google para sitios
+  multi-idioma), cada una apuntándose a sí misma y a las demás.
+- Confirmado (no era un fallo): a nivel de cada página individual, el
+  `hreflang` recíproco ya se generaba igual de bien visitando la versión en
+  español que la versión en inglés — el problema estaba únicamente en el
+  sitemap.
+
+## 1.6.0
 
 **Auditoría SEO completa (seo-agent, MODO audit):**
 

@@ -40,20 +40,33 @@ $categories = $projectsEnabled ? $pdo->query("
       )
 ")->fetchAll() : [];
 
-function urlEntry(string $loc, ?string $altLoc, string $lastmod = '', ?string $imageLoc = null): string {
-    $xml = "  <url>\n    <loc>{$loc}</loc>\n";
-    if ($altLoc) {
-        $xml .= "    <xhtml:link rel=\"alternate\" hreflang=\"es\" href=\"{$loc}\" />\n";
-        $xml .= "    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"{$altLoc}\" />\n";
-        $xml .= "    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"{$loc}\" />\n";
+/**
+ * fix (seo-agent [audit] 🔴): antes solo se generaba UNA entrada <url> (la
+ * de español) con el inglés metido como simple anotación "alternate" — eso
+ * significa que la URL en inglés nunca aparecía como <loc> propio en
+ * ningún sitio del sitemap, reduciendo sus opciones reales de indexarse.
+ * El formato correcto de Google exige una entrada <url> COMPLETA por cada
+ * idioma disponible, cada una apuntándose a sí misma y a las demás.
+ */
+function sitemapEntries(string $esLoc, ?string $enLoc, string $lastmod = '', ?string $imageLoc = null): string {
+    $alternates = "    <xhtml:link rel=\"alternate\" hreflang=\"es\" href=\"{$esLoc}\" />\n";
+    if ($enLoc) {
+        $alternates .= "    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"{$enLoc}\" />\n";
     }
-    if ($lastmod) {
-        $xml .= "    <lastmod>{$lastmod}</lastmod>\n";
+    $alternates .= "    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"{$esLoc}\" />\n";
+
+    $entry = function (string $loc) use ($alternates, $lastmod, $imageLoc) {
+        $xml = "  <url>\n    <loc>{$loc}</loc>\n{$alternates}";
+        if ($lastmod) { $xml .= "    <lastmod>{$lastmod}</lastmod>\n"; }
+        if ($imageLoc) { $xml .= "    <image:image>\n      <image:loc>{$imageLoc}</image:loc>\n    </image:image>\n"; }
+        $xml .= "  </url>\n";
+        return $xml;
+    };
+
+    $xml = $entry($esLoc);
+    if ($enLoc) {
+        $xml .= $entry($enLoc); // fix: ahora el inglés SÍ tiene su propia entrada <loc>
     }
-    if ($imageLoc) {
-        $xml .= "    <image:image>\n      <image:loc>{$imageLoc}</image:loc>\n    </image:image>\n";
-    }
-    $xml .= "  </url>\n";
     return $xml;
 }
 
@@ -61,23 +74,23 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
 ?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 <?php
-echo urlEntry("$base/", "$base/en/");
+echo sitemapEntries("$base/", "$base/en/");
 
 foreach ($contentPages as $page) {
     $enUrl = !empty($page['slug_en']) ? $base . '/en/' . rawurlencode($page['slug_en']) : null;
     $lastmod = date('Y-m-d', strtotime($page['updated_at']));
-    echo urlEntry($base . '/' . rawurlencode($page['slug']), $enUrl, $lastmod);
+    echo sitemapEntries($base . '/' . rawurlencode($page['slug']), $enUrl, $lastmod);
 }
 
 if ($projectsEnabled) {
     // fix (seo-agent [audit] 🔴): antes ausentes del sitemap
     $categoriesSlugEs = $themeSettings['categories_slug_es'] ?: 'categorias';
     $categoriesSlugEn = $themeSettings['categories_slug_en'] ?: 'categories';
-    echo urlEntry("$base/" . rawurlencode($categoriesSlugEs), "$base/en/" . rawurlencode($categoriesSlugEn));
+    echo sitemapEntries("$base/" . rawurlencode($categoriesSlugEs), "$base/en/" . rawurlencode($categoriesSlugEn));
 
     foreach ($categories as $cat) {
         $enUrl = !empty($cat['slug_en']) ? $base . '/category/' . rawurlencode($cat['slug_en']) : null;
-        echo urlEntry($base . '/categoria/' . rawurlencode($cat['slug']), $enUrl);
+        echo sitemapEntries($base . '/categoria/' . rawurlencode($cat['slug']), $enUrl);
     }
 
     foreach ($projects as $p) {
@@ -86,7 +99,7 @@ if ($projectsEnabled) {
         $lastmod = date('Y-m-d', strtotime($p['updated_at']));
         // fix (seo-agent [audit] 🟠): variante desktop = mayor resolución disponible, mejor para Google Images
         $imageLoc = $p['main_image'] ? $base . '/uploads/' . rawurlencode(variantFromThumbFilename($p['main_image'], 'desktop')) : null;
-        echo urlEntry($base . '/proyecto/' . rawurlencode($p['slug']), $enUrl, $lastmod, $imageLoc);
+        echo sitemapEntries($base . '/proyecto/' . rawurlencode($p['slug']), $enUrl, $lastmod, $imageLoc);
     }
 }
 
@@ -94,7 +107,7 @@ if ($videosEnabled) {
     // fix (seo-agent [audit] 🔴): antes ausente del sitemap
     $videosSlugEs = $themeSettings['videos_slug_es'] ?: 'videos';
     $videosSlugEn = $themeSettings['videos_slug_en'] ?: 'videos';
-    echo urlEntry("$base/" . rawurlencode($videosSlugEs), "$base/en/" . rawurlencode($videosSlugEn));
+    echo sitemapEntries("$base/" . rawurlencode($videosSlugEs), "$base/en/" . rawurlencode($videosSlugEn));
 }
 ?>
 </urlset>
