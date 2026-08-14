@@ -3,7 +3,17 @@
 Este archivo deja constancia de qué incluye cada entrega, para poder comprobar
 de un vistazo si lo que hay subido en el repositorio remoto está actualizado.
 
-## 1.5.2 — actual
+## 1.5.3 — actual
+
+- Arreglado de raíz el toggle apilado en columna: la regla genérica
+  `.admin-page main label` (pensada para "Título" + campo debajo) tenía más
+  especificidad CSS que `.admin-toggle`, así que ganaba ella y forzaba
+  columna en vez de fila — sin importar el orden en el archivo. Añadida una
+  regla `.admin-page main label.admin-toggle` que iguala y supera esa
+  especificidad, para que el interruptor quede siempre en fila (track a la
+  izquierda, texto a la derecha) de verdad.
+
+## 1.5.2
 
 - Arreglado: el `<input>` oculto del interruptor se posicionaba respecto al
   ancestro posicionado más cercano (a veces muy lejos) en vez de anclarse a

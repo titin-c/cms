@@ -177,6 +177,20 @@ body.admin-page, body.admin-auth-page {
      lejos de aquí — en vez de quedar anclado a su propio interruptor */
   position: relative;
 }
+/* fix (raíz del bug): ".admin-page main label" tiene más especificidad que
+   ".admin-toggle" (dos selectores de tipo "main"+"label" frente a una sola
+   clase), así que esa regla genérica ganaba y forzaba flex-direction:column
+   + mayúsculas + interletrado — aquí igualamos su especificidad exacta para
+   que la fila (track a la izquierda, texto a la derecha) se aplique de verdad */
+.admin-page main label.admin-toggle {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 500;
+  color: var(--color-ink-900);
+}
 .admin-toggle:last-child { margin-bottom: 0; }
 .admin-toggle-row .admin-toggle { margin-bottom: 0; }
 .admin-toggle input {
