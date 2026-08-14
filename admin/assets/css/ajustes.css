@@ -83,7 +83,7 @@
    el scroll, para ver el efecto en vivo al tocar tipografías/colores */
 .admin-sticky-preview {
   position: fixed;
-  bottom: 24px;
+  top: 88px; /* debajo de la cabecera fija del admin, no tapada por ella */
   right: 24px;
   width: 300px;
   max-height: 70vh;

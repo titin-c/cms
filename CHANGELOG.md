@@ -3,7 +3,16 @@
 Este archivo deja constancia de qué incluye cada entrega, para poder comprobar
 de un vistazo si lo que hay subido en el repositorio remoto está actualizado.
 
-## 1.5.3 — actual
+## 1.5.4 — actual
+
+- Vista previa combinada de Ajustes/Estilos: movida de abajo-derecha (se
+  solapaba con el botón "Guardar ajustes") a arriba-derecha.
+- Aviso flotante de guardado: además del texto discreto de siempre en la
+  cabecera, ahora aparece un aviso arriba a la derecha que se ve claramente
+  y desaparece solo a los pocos segundos — antes costaba notar que ya se
+  había guardado y se acababa pulsando el botón varias veces.
+
+## 1.5.3
 
 - Arreglado de raíz el toggle apilado en columna: la regla genérica
   `.admin-page main label` (pensada para "Título" + campo debajo) tenía más
