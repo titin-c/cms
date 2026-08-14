@@ -42,6 +42,7 @@ $enUrl = $page['slug_en'] ? '/en/' . rawurlencode($page['slug_en']) : null;
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?= htmlspecialchars($page['title']) ?> — <?= htmlspecialchars($themeSettings['site_name'] ?? 'Mi Sitio') ?></title>
+  <?php if ($page['noindex']): ?><meta name="robots" content="noindex, follow"><?php endif; ?>
   <meta name="description" content="<?= htmlspecialchars($page['meta_description'] ?: strip_tags($page['content'])) ?>">
   <link rel="canonical" href="<?= getSiteDomain($themeSettings) ?><?= $locale === 'en' && $enUrl ? $enUrl : $esUrl ?>">
   <link rel="alternate" hreflang="es" href="<?= getSiteDomain($themeSettings) ?><?= $esUrl ?>">

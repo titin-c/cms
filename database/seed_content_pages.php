@@ -33,6 +33,7 @@ $pages = [
         'show_in_header' => 0,
         'show_in_footer' => 1,
         'sort_order' => 2,
+        'noindex' => 1,
         'title_es' => 'Política de privacidad',
         'title_en' => 'Privacy Policy',
         'content_es' => '<p><strong>Responsable del tratamiento:</strong> [NOMBRE COMPLETO / RAZÓN SOCIAL], con NIF [NIF/NIE], domicilio en [DIRECCIÓN], correo de contacto [EMAIL].</p>
@@ -74,6 +75,7 @@ $pages = [
         'show_in_header' => 0,
         'show_in_footer' => 1,
         'sort_order' => 3,
+        'noindex' => 1,
         'title_es' => 'Política de cookies',
         'title_en' => 'Cookie Policy',
         'content_es' => '<p>Esta web, publicada por [NOMBRE COMPLETO / RAZÓN SOCIAL], actualmente <strong>no utiliza cookies no esenciales</strong> — no hay analítica, ni publicidad, ni rastreo de terceros.</p>
@@ -101,6 +103,7 @@ $pages = [
         'show_in_header' => 0,
         'show_in_footer' => 1,
         'sort_order' => 4,
+        'noindex' => 1,
         'title_es' => 'Aviso legal',
         'title_en' => 'Legal Notice',
         'content_es' => '<h2>Datos identificativos</h2>
@@ -143,8 +146,8 @@ $pages = [
 ];
 
 $stmt = $pdo->prepare("
-    INSERT INTO content_pages (slug, slug_en, show_in_header, show_in_footer, sort_order, title_es, title_en, content_es, content_en, meta_description_es, meta_description_en)
-    VALUES (:slug, :slug_en, :show_in_header, :show_in_footer, :sort_order, :title_es, :title_en, :content_es, :content_en, :meta_description_es, :meta_description_en)
+    INSERT INTO content_pages (slug, slug_en, show_in_header, show_in_footer, noindex, sort_order, title_es, title_en, content_es, content_en, meta_description_es, meta_description_en)
+    VALUES (:slug, :slug_en, :show_in_header, :show_in_footer, :noindex, :sort_order, :title_es, :title_en, :content_es, :content_en, :meta_description_es, :meta_description_en)
     ON DUPLICATE KEY UPDATE slug = slug
     -- fix: si la fila ya existe (por ejemplo ya la editaste desde el panel),
     -- este ON DUPLICATE KEY no la toca — solo evita el error de duplicado.
@@ -158,6 +161,7 @@ foreach ($pages as $key => $data) {
         'slug_en' => $data['slug_en'],
         'show_in_header' => $data['show_in_header'],
         'show_in_footer' => $data['show_in_footer'],
+        'noindex' => $data['noindex'] ?? 0,
         'sort_order' => $data['sort_order'],
         'title_es' => $data['title_es'],
         'title_en' => $data['title_en'],

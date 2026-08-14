@@ -96,6 +96,16 @@ if ($id) {
         <input type="number" id="page-order" name="sort_order" value="<?= htmlspecialchars($page['sort_order'] ?? 0) ?>">
       </section>
 
+      <section class="admin-form__block">
+        <h2>Buscadores</h2>
+        <label class="admin-toggle">
+          <input type="checkbox" id="page-noindex" <?= !empty($page['noindex']) ? 'checked' : '' ?>>
+          <span class="admin-toggle__track"><span class="admin-toggle__thumb"></span></span>
+          No mostrar esta página en Google
+        </label>
+        <p class="admin-toggle__desc">Recomendado para páginas legales (Privacidad, Cookies, Aviso legal) — no aportan valor de búsqueda. Para "Sobre mí" y páginas de contenido real, déjalo apagado.</p>
+      </section>
+
       <div class="admin-form__actions">
         <?php if ($page): ?>
           <button type="button" id="delete-page-btn" class="admin-btn admin-btn--link" style="color:#B71C1C;margin-right:auto;">Eliminar página</button>

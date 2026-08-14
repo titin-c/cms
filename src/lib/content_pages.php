@@ -37,6 +37,7 @@ function localizeContentPage(array $page, string $locale): array {
         'title' => ($locale === 'en' && $page['title_en']) ? $page['title_en'] : $page['title_es'],
         'content' => ($locale === 'en' && $page['content_en']) ? $page['content_en'] : $page['content_es'],
         'meta_description' => ($locale === 'en' && $page['meta_description_en']) ? $page['meta_description_en'] : $page['meta_description_es'],
+        'noindex' => !empty($page['noindex']),
     ];
 }
 

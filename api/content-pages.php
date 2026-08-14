@@ -44,6 +44,7 @@ switch ($method) {
             'meta_description_en' => $input['meta_description_en'] ?? null,
             'show_in_header' => !empty($input['show_in_header']) ? 1 : 0,
             'show_in_footer' => !empty($input['show_in_footer']) ? 1 : 0,
+            'noindex' => !empty($input['noindex']) ? 1 : 0,
             'sort_order' => $input['sort_order'] ?? 0,
         ];
 

@@ -25,7 +25,7 @@ $projects = $projectsEnabled ? $pdo->query("
     FROM projects WHERE status = 'published'
 ")->fetchAll() : [];
 
-$contentPages = $pdo->query("SELECT slug, slug_en, updated_at FROM content_pages")->fetchAll();
+$contentPages = $pdo->query("SELECT slug, slug_en, updated_at FROM content_pages WHERE noindex = 0")->fetchAll();
 
 $categories = $projectsEnabled ? $pdo->query("
     SELECT c.slug, c.slug_en

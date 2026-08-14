@@ -39,6 +39,7 @@ async function savePage() {
   data.id = pageId;
   data.show_in_header = document.getElementById('page-show-header').checked ? 1 : 0;
   data.show_in_footer = document.getElementById('page-show-footer').checked ? 1 : 0;
+  data.noindex = document.getElementById('page-noindex').checked ? 1 : 0;
 
   try {
     const res = await fetch('/api/content-pages.php', {

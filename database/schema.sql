@@ -150,6 +150,10 @@ CREATE TABLE content_pages (
   meta_description_en VARCHAR(300) NULL,
   show_in_header BOOLEAN NOT NULL DEFAULT 0,
   show_in_footer BOOLEAN NOT NULL DEFAULT 1,
+  -- fix (seo-agent [audit]): páginas legales (Privacidad/Cookies/Aviso legal)
+  -- no aportan valor de posicionamiento — noindex,follow es lo recomendado:
+  -- no compiten en el índice, pero sus enlaces internos se siguen rastreando
+  noindex BOOLEAN NOT NULL DEFAULT 0,
   sort_order INT NOT NULL DEFAULT 0,
   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;

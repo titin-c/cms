@@ -3,7 +3,21 @@
 Este archivo deja constancia de qué incluye cada entrega, para poder comprobar
 de un vistazo si lo que hay subido en el repositorio remoto está actualizado.
 
-## 1.6.1 — actual
+## 1.7.0 — actual
+
+**Control de indexación por página fija (seo-agent):**
+
+- Nuevo interruptor "No mostrar esta página en Google" en cada página fija
+  (`/admin/paginas.php` → editar → sección "Buscadores") — emite
+  `<meta name="robots" content="noindex, follow">` real.
+- Privacidad, Cookies y Aviso legal quedan marcadas `noindex` por defecto en
+  instalaciones nuevas (no aportan valor de posicionamiento — texto legal
+  genérico obligatorio, sin motivo para competir en el índice). "Sobre mí"
+  se mantiene indexable, al ser contenido real y único.
+- Las páginas `noindex` se excluyen del sitemap — pedirle a Google que
+  indexe algo marcado como "no indexar" es inconsistente.
+
+## 1.6.1
 
 - 🔴 Arreglado el motivo real más probable de que el inglés no posicionara
   bien: el sitemap generaba **una sola entrada `<url>`** por contenido (la
