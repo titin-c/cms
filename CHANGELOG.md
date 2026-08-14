@@ -3,7 +3,19 @@
 Este archivo deja constancia de qué incluye cada entrega, para poder comprobar
 de un vistazo si lo que hay subido en el repositorio remoto está actualizado.
 
-## 1.5.0 — actual
+## 1.5.1 — actual
+
+- Arreglado: el componente de interruptor (toggle) se estiraba a todo el
+  ancho de su contenedor por ser `display:flex` sin ancho definido, dando
+  sensación de quedar descolocado/centrado según el bloque donde estuviera.
+  Ahora se ajusta al contenido (`width: fit-content`) y queda pegado a la
+  izquierda en cualquier contexto.
+- Etiquetas de los interruptores acortadas en toda la interfaz — el texto
+  largo que antes iba entre paréntesis dentro del propio toggle ahora vive
+  en una línea de apoyo más pequeña debajo (mismo patrón que ya usábamos
+  para los `admin-form__hint`).
+
+## 1.5.0
 
 - Módulo "Páginas" añadido a los módulos activables/desactivables de Ajustes.
 - Formulario de categoría: toggle "mostrar título" junto al propio título

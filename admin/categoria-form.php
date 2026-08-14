@@ -104,7 +104,7 @@ if ($id) {
         <label class="admin-toggle">
           <input type="checkbox" id="cat-show-home-2" <?= ($category === null || !empty($category['show_in_home'])) ? 'checked' : '' ?>>
           <span class="admin-toggle__track"><span class="admin-toggle__thumb"></span></span>
-          Mostrar esta categoría como fila en la home
+          Mostrar en la home
         </label>
 
         <div id="cat-home-row-fields" style="margin-top:16px;">

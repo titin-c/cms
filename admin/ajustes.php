@@ -95,8 +95,9 @@ foreach ($curatedFonts as $f) { $groups[$f['category']][] = $f['name']; }
         <label class="admin-toggle" style="margin-top:12px;">
           <input type="checkbox" id="show-language-menu" checked>
           <span class="admin-toggle__track"><span class="admin-toggle__thumb"></span></span>
-          Mostrar el selector de idioma ES/EN en la web
+          Selector de idioma ES/EN
         </label>
+        <p class="admin-toggle__desc">Se muestra en la web.</p>
 
         <label for="site-domain" style="margin-top:12px;">Dominio del sitio — opcional</label>
         <input type="text" id="site-domain" placeholder="https://midominio.com">
@@ -281,23 +282,31 @@ foreach ($curatedFonts as $f) { $groups[$f['category']][] = $f['name']; }
         <label class="admin-toggle">
           <input type="checkbox" id="home-show-hero">
           <span class="admin-toggle__track"><span class="admin-toggle__thumb"></span></span>
-          Hero (mosaico grande con el nombre del sitio)
+          Hero
         </label>
+        <p class="admin-toggle__desc">Mosaico grande con el nombre del sitio.</p>
+
         <label class="admin-toggle">
           <input type="checkbox" id="home-show-categories">
           <span class="admin-toggle__track"><span class="admin-toggle__thumb"></span></span>
-          Categorías de proyectos (filas con scroll horizontal)
+          Categorías
         </label>
+        <p class="admin-toggle__desc">Filas de proyectos con scroll horizontal.</p>
+
         <label class="admin-toggle">
           <input type="checkbox" id="home-show-videos">
           <span class="admin-toggle__track"><span class="admin-toggle__thumb"></span></span>
-          Todos los vídeos publicados (rejilla)
+          Vídeos
         </label>
+        <p class="admin-toggle__desc">Rejilla con todos los vídeos publicados.</p>
+
         <label class="admin-toggle">
           <input type="checkbox" id="home-show-simple">
           <span class="admin-toggle__track"><span class="admin-toggle__thumb"></span></span>
-          Simple (imagen destacada + título + texto)
+          Simple
         </label>
+        <p class="admin-toggle__desc">Imagen destacada + título + texto.</p>
+
         <p class="admin-form__hint">Si desactivas el Hero, la home usa la misma cabecera sólida que el resto de páginas.</p>
       </section>
 

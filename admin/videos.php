@@ -53,12 +53,12 @@ requireAuth();
       <label class="admin-toggle">
         <input type="checkbox" id="videos-show-header">
         <span class="admin-toggle__track"><span class="admin-toggle__thumb"></span></span>
-        Mostrar "Vídeos" en el menú de cabecera
+        Menú de cabecera
       </label>
       <label class="admin-toggle">
         <input type="checkbox" id="videos-show-footer">
         <span class="admin-toggle__track"><span class="admin-toggle__thumb"></span></span>
-        Mostrar "Vídeos" en el footer
+        Footer
       </label>
 
       <div class="admin-form__bilingual" style="margin-top:12px;">

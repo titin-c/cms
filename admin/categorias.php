@@ -50,12 +50,14 @@ requireAuth();
       <label class="admin-toggle">
         <input type="checkbox" id="categories-show-header">
         <span class="admin-toggle__track"><span class="admin-toggle__thumb"></span></span>
-        Mostrar "Categorías" en el menú de cabecera (con submenú desplegable de cada una)
+        Menú de cabecera
       </label>
+      <p class="admin-toggle__desc">Aparece como "Categorías", con un submenú desplegable de cada una.</p>
+
       <label class="admin-toggle">
         <input type="checkbox" id="categories-show-footer">
         <span class="admin-toggle__track"><span class="admin-toggle__thumb"></span></span>
-        Mostrar en el footer
+        Footer
       </label>
 
       <div class="admin-form__bilingual" style="margin-top:12px;">
