@@ -3,7 +3,15 @@
 Este archivo deja constancia de qué incluye cada entrega, para poder comprobar
 de un vistazo si lo que hay subido en el repositorio remoto está actualizado.
 
-## 1.5.1 — actual
+## 1.5.2 — actual
+
+- Arreglado: el `<input>` oculto del interruptor se posicionaba respecto al
+  ancestro posicionado más cercano (a veces muy lejos) en vez de anclarse a
+  su propio interruptor — por eso podía aparecer solapado con el track en
+  vez de quedar invisible en su sitio. Añadido `position: relative` al
+  contenedor + coordenadas exactas del input.
+
+## 1.5.1
 
 - Arreglado: el componente de interruptor (toggle) se estiraba a todo el
   ancho de su contenedor por ser `display:flex` sin ancho definido, dando

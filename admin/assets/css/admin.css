@@ -172,11 +172,17 @@ body.admin-page, body.admin-auth-page {
   line-height: 1.35;
   color: var(--color-ink-900);
   margin-bottom: 10px;
+  /* fix: sin esto, el input oculto de abajo (position:absolute) se
+     posicionaba respecto al ancestro posicionado más cercano — a veces muy
+     lejos de aquí — en vez de quedar anclado a su propio interruptor */
+  position: relative;
 }
 .admin-toggle:last-child { margin-bottom: 0; }
 .admin-toggle-row .admin-toggle { margin-bottom: 0; }
 .admin-toggle input {
   position: absolute;
+  top: 0;
+  left: 0;
   opacity: 0;
   width: 1px;
   height: 1px;
