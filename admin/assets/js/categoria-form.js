@@ -1,6 +1,9 @@
 import './components/save-status.js';
 import { linkToggleVisibility } from './components/toggle-visibility.js';
 import { parseApiJson, saveErrorMessage } from './components/session-check.js';
+import { startSessionKeepalive } from './components/session-keepalive.js';
+
+startSessionKeepalive();
 
 const form = document.getElementById('category-form');
 const main = document.querySelector('.admin-form');

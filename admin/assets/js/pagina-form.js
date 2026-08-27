@@ -1,5 +1,8 @@
 import './components/save-status.js';
 import { parseApiJson, saveErrorMessage } from './components/session-check.js';
+import { startSessionKeepalive } from './components/session-keepalive.js';
+
+startSessionKeepalive();
 
 const form = document.getElementById('page-form');
 const main = document.querySelector('.admin-form');

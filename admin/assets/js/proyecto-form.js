@@ -8,6 +8,9 @@ import './components/text-excerpt-picker.js';
 import './components/save-status.js';
 import './components/gallery-uploader.js';
 import { parseApiJson, saveErrorMessage } from './components/session-check.js';
+import { startSessionKeepalive } from './components/session-keepalive.js';
+
+startSessionKeepalive();
 
 const form = document.getElementById('project-form');
 const main = document.querySelector('.admin-form');

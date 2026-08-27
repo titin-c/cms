@@ -1,6 +1,9 @@
 import './components/image-cropper.js';
 import './components/save-status.js';
 import { parseApiJson, saveErrorMessage } from './components/session-check.js';
+import { startSessionKeepalive } from './components/session-keepalive.js';
+
+startSessionKeepalive();
 
 const form = document.getElementById('video-form');
 const main = document.querySelector('.admin-form');

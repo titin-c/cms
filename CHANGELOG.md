@@ -3,7 +3,19 @@
 Este archivo deja constancia de qué incluye cada entrega, para poder comprobar
 de un vistazo si lo que hay subido en el repositorio remoto está actualizado.
 
-## 1.10.2 — actual
+## 1.10.3 — actual
+
+- 🔴 Arreglada la causa real del "Tu sesión ha caducado" al guardar páginas
+  largas (como "Sobre mí"): por defecto, PHP da de baja la sesión del
+  servidor a los 24 minutos de inactividad — de sobra si solo cambias un
+  interruptor, pero se queda corto si llevas un rato largo redactando texto.
+  Ahora la sesión del panel dura 4 horas, y mientras tienes abierta una
+  pantalla de edición (páginas, categorías, proyectos, vídeos) se manda un
+  aviso silencioso de vez en cuando para mantenerla viva de verdad — no solo
+  para que salga un mensaje más claro si caduca, sino para que no llegue a
+  caducar en el uso normal.
+
+## 1.10.2
 
 - 🔴 Arreglado: la opción "Categorías" del menú de cabecera (la que abre un
   desplegable con las categorías) no tenía el mismo tamaño de letra que el

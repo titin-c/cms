@@ -11,6 +11,13 @@ const LOCKOUT_MINUTES = 15;
 
 function startSecureSession(): void {
     if (session_status() === PHP_SESSION_NONE) {
+        // fix (Andrea): redactar una página larga (p.ej. "Sobre mí") en el editor
+        // de texto puede llevar más de los 24 minutos que PHP deja por defecto
+        // (session.gc_maxlifetime = 1440) antes de poder borrar la sesión en el
+        // servidor — al guardar, parecía "Error de conexión" cuando en realidad
+        // la sesión ya había caducado de fondo. Se alarga a 4 horas.
+        $sessionLifetime = 60 * 60 * 4;
+        ini_set('session.gc_maxlifetime', (string) $sessionLifetime);
         session_set_cookie_params([
             'lifetime' => 0,
             'path' => '/',
