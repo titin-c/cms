@@ -1,7 +1,6 @@
 import './components/save-status.js';
-
-import './components/save-status.js';
 import { linkToggleVisibility } from './components/toggle-visibility.js';
+import { parseApiJson, saveErrorMessage } from './components/session-check.js';
 
 const form = document.getElementById('category-form');
 const main = document.querySelector('.admin-form');
@@ -49,7 +48,7 @@ async function saveCategory(status) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     });
-    const result = await res.json();
+    const result = await parseApiJson(res);
     if (!res.ok) {
       window.setSaveStatus(statusEl, 'error', result.message || 'No se pudo guardar.');
       return;
@@ -58,8 +57,8 @@ async function saveCategory(status) {
     main.dataset.categoryId = categoryId;
     window.setSaveStatus(statusEl, status === 'draft' ? 'saved' : 'sent');
     // fix: ya no redirige sola tras guardar — antes te dejaba a mitad de edición
-  } catch {
-    window.setSaveStatus(statusEl, 'error', 'Error de conexión.');
+  } catch (err) {
+    window.setSaveStatus(statusEl, 'error', saveErrorMessage(err));
   }
 }
 

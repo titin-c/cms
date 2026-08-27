@@ -105,6 +105,11 @@
   background: none;
   border: none;
   font: inherit;
+  /* fix (Andrea): "font: inherit" hereda de .site-nav (sin tamaño propio, cae
+     al body) en vez de igualar al resto de enlaces del menú — se sobreescribe
+     tamaño y grosor explícitamente para que "Categorías" combine con los demás */
+  font-size: var(--type-header-menu-size, var(--font-size-sm));
+  font-weight: var(--type-header-menu-weight, var(--font-weight-regular));
   color: inherit;
   cursor: pointer;
   padding: 0;

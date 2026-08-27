@@ -1,4 +1,5 @@
 import './components/save-status.js';
+import { parseApiJson, saveErrorMessage } from './components/session-check.js';
 
 const form = document.getElementById('page-form');
 const main = document.querySelector('.admin-form');
@@ -47,7 +48,7 @@ async function savePage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     });
-    const result = await res.json();
+    const result = await parseApiJson(res);
     if (!res.ok) {
       window.setSaveStatus(statusEl, 'error', result.message || 'No se pudo guardar.');
       return;
@@ -56,8 +57,8 @@ async function savePage() {
     main.dataset.pageId = pageId;
     window.setSaveStatus(statusEl, 'sent');
     // fix: ya no redirige sola tras guardar — antes te dejaba a mitad de edición
-  } catch {
-    window.setSaveStatus(statusEl, 'error', 'Error de conexión.');
+  } catch (err) {
+    window.setSaveStatus(statusEl, 'error', saveErrorMessage(err));
   }
 }
 

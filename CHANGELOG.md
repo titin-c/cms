@@ -3,7 +3,24 @@
 Este archivo deja constancia de qué incluye cada entrega, para poder comprobar
 de un vistazo si lo que hay subido en el repositorio remoto está actualizado.
 
-## 1.10.1 — actual
+## 1.10.2 — actual
+
+- 🔴 Arreglado: la opción "Categorías" del menú de cabecera (la que abre un
+  desplegable con las categorías) no tenía el mismo tamaño de letra que el
+  resto de opciones del menú — usaba el tamaño del cuerpo de la página en
+  vez del ajustado en Tipografía → "Cabecera — menú". Ahora coincide.
+- 🔴 Arreglado: al guardar cualquier formulario del panel (páginas, categorías,
+  proyectos, vídeos, ajustes) con la sesión ya caducada, salía un
+  desconcertante "Error de conexión." que hacía pensar que algo había fallado
+  al guardar. Ahora se detecta ese caso concreto y avisa de lo que ha pasado
+  de verdad, con la forma correcta de recuperarlo sin perder lo escrito:
+  iniciar sesión de nuevo en otra pestaña y volver a pulsar "Guardar" en la
+  pestaña original (recargarla sí perdería los cambios, al traer de vuelta la
+  última versión guardada). En Ajustes además había un caso peor: con la
+  sesión caducada podía llegar a decir "Ajustes guardados" sin haberse
+  guardado nada; también queda arreglado.
+
+## 1.10.1
 
 - 🔴 Arreglado: en los controles de tipografía nuevos, el desplegable de
   grosor "empujaba" su propio ancho por la opción más larga (Extra-negrita)

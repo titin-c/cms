@@ -1,5 +1,6 @@
 import './components/image-cropper.js';
 import './components/save-status.js';
+import { parseApiJson, saveErrorMessage } from './components/session-check.js';
 
 const form = document.getElementById('video-form');
 const main = document.querySelector('.admin-form');
@@ -43,7 +44,7 @@ async function saveVideo(status) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(serializeForm(status)),
     });
-    const data = await res.json();
+    const data = await parseApiJson(res);
     if (!res.ok) {
       window.setSaveStatus(statusEl, 'error', data.message || 'No se pudo guardar.');
       if (data.field) highlightMissingField(data.field);
@@ -52,8 +53,8 @@ async function saveVideo(status) {
     videoId = data.id;
     window.setSaveStatus(statusEl, status === 'draft' ? 'saved' : 'sent');
     // fix: ya no redirige sola tras publicar — antes te dejaba a mitad de edición
-  } catch {
-    window.setSaveStatus(statusEl, 'error', 'Error de conexión.');
+  } catch (err) {
+    window.setSaveStatus(statusEl, 'error', saveErrorMessage(err));
   }
 }
 

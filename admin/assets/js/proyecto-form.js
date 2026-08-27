@@ -7,6 +7,7 @@ import './components/image-cropper.js';
 import './components/text-excerpt-picker.js';
 import './components/save-status.js';
 import './components/gallery-uploader.js';
+import { parseApiJson, saveErrorMessage } from './components/session-check.js';
 
 const form = document.getElementById('project-form');
 const main = document.querySelector('.admin-form');
@@ -59,7 +60,7 @@ async function saveProject(status) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(serializeForm(status)),
     });
-    const data = await res.json();
+    const data = await parseApiJson(res);
     if (!res.ok) {
       window.setSaveStatus(statusEl, 'error', data.message || 'No se pudo guardar.');
       if (data.field) highlightMissingField(data.field); // fix: scroll + resaltado del campo exacto que falta
@@ -69,8 +70,8 @@ async function saveProject(status) {
     window.renderGalleryUploader(projectId); // fix: habilita la subida de galería en cuanto el proyecto ya existe
     window.setSaveStatus(statusEl, status === 'draft' ? 'saved' : 'sent');
     // fix: ya no redirige sola tras publicar — antes te dejaba a mitad de edición
-  } catch {
-    window.setSaveStatus(statusEl, 'error', 'Error de conexión.');
+  } catch (err) {
+    window.setSaveStatus(statusEl, 'error', saveErrorMessage(err));
   }
 }
 

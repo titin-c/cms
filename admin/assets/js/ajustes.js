@@ -2,6 +2,7 @@ import './components/image-cropper.js';
 import './components/save-status.js';
 import { linkToggleVisibility } from './components/toggle-visibility.js';
 import { initFontDropdown } from './components/font-dropdown.js';
+import { assertSessionAlive, saveErrorMessage } from './components/session-check.js';
 
 /**
  * Derivación de tonos claros/oscuros a partir de un color base — mismo
@@ -502,10 +503,12 @@ document.getElementById('save-settings-btn').addEventListener('click', async () 
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ links: collectSocialLinks() }),
     });
+    assertSessionAlive(settingsRes);
+    assertSessionAlive(socialRes);
     if (!settingsRes.ok || !socialRes.ok) throw new Error('save_failed');
     window.setSaveStatus(statusEl, 'saved', 'Ajustes guardados');
-  } catch {
-    window.setSaveStatus(statusEl, 'error', 'No se pudo guardar.');
+  } catch (err) {
+    window.setSaveStatus(statusEl, 'error', saveErrorMessage(err));
   }
 });
 
