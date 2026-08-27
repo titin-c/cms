@@ -3,7 +3,19 @@
 Este archivo deja constancia de qué incluye cada entrega, para poder comprobar
 de un vistazo si lo que hay subido en el repositorio remoto está actualizado.
 
-## 1.9.2 — actual
+## 1.9.3 — actual
+
+- 🔴 Arreglo de fondo (no solo un parche puntual) del aviso "Contenido muy
+  pronto.": en vez de mirar si algún módulo está *activado*, ahora se
+  comprueba si de verdad se ha *mostrado* algo. Antes de este cambio
+  también salía de más con el Hero solo (sin ningún otro módulo) — el
+  mismo motivo que el arreglo de la 1.9.2 con el Mosaico de proyectos, pero
+  sin cubrir el caso del Hero. De paso, se ha revisado y comprobado
+  sistemáticamente las 64 combinaciones posibles de los 5 módulos de la
+  home (incluyendo Simple activado pero sin título/texto/imagen rellenos,
+  que se quedaba sin avisar de nada).
+
+## 1.9.2
 
 - 🔴 Arreglado: si el Mosaico de proyectos era el único módulo activo de la
   home, se pintaba bien como cabecera a pantalla completa pero debajo

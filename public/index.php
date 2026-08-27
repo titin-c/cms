@@ -244,6 +244,22 @@ if (!$homeMetaDescription) {
     $mainRenderedKeys = $navOverlayModule
         ? array_values(array_diff($enabledModulesOrder, [$navOverlayModule]))
         : $enabledModulesOrder;
+
+    // fix (Andrea, revisado a fondo tras dos avisos "Contenido muy pronto"
+    // sobrantes — con Mosaico solo y con Hero solo): el aviso de "no hay
+    // nada que enseñar" no puede mirar solo si algún módulo está
+    // *activado*, tiene que mirar si algo se ha *mostrado* de verdad.
+    // - Si el Hero o el Mosaico de proyectos son la cabecera (fuera de
+    //   <main>), ya se ha mostrado algo — cuentan siempre.
+    // - Categorías, Vídeos y el propio Mosaico (cuando no son la cabecera)
+    //   siempre pintan algo dentro de <main>, aunque sea su propio aviso de
+    //   "todavía no hay nada aquí" — también cuentan siempre.
+    // - Simple es el único que puede quedar completamente en blanco (si no
+    //   se ha rellenado ni título, ni texto, ni imagen) — solo cuenta si de
+    //   verdad tiene algo que mostrar.
+    // - El Hero dentro de <main> (reordenado, ya no es el primero) siempre
+    //   pinta su fondo + nombre del sitio — cuenta siempre.
+    $anyContentShown = ($navOverlayModule !== null);
   ?>
 
   <?php if ($navOverlayModule === 'hero'): ?>
@@ -273,10 +289,10 @@ if (!$homeMetaDescription) {
   <main id="main-content">
     <?php foreach ($mainRenderedKeys as $moduleKey): ?>
 
-      <?php if ($moduleKey === 'hero'): ?>
+      <?php if ($moduleKey === 'hero'): $anyContentShown = true; ?>
         <?php $heroEmbedsNav = false; include __DIR__ . '/../src/templates/hero-mosaic.php'; ?>
 
-      <?php elseif ($moduleKey === 'categories'): ?>
+      <?php elseif ($moduleKey === 'categories'): $anyContentShown = true; ?>
         <?php if (empty($categories)): ?>
           <p class="empty-state"><?= $locale === 'en' ? 'New projects coming soon.' : 'Nuevos proyectos muy pronto.' ?></p>
         <?php else: ?>
@@ -285,7 +301,7 @@ if (!$homeMetaDescription) {
           <?php endforeach; ?>
         <?php endif; ?>
 
-      <?php elseif ($moduleKey === 'videos'): ?>
+      <?php elseif ($moduleKey === 'videos'): $anyContentShown = true; ?>
         <?php if (empty($videos)): ?>
           <p class="empty-state"><?= $locale === 'en' ? 'No videos published yet.' : 'Todavía no hay vídeos publicados.' ?></p>
         <?php else: ?>
@@ -342,6 +358,7 @@ if (!$homeMetaDescription) {
         }
 
         if ($simpleTitle || $simpleDesc || $simpleImage):
+          $anyContentShown = true;
       ?>
         <section class="home-simple">
           <?php if ($simpleTitle): $tag = $showHero ? 'h2' : 'h1'; ?><<?= $tag ?> class="home-simple__title"><?= htmlspecialchars($simpleTitle) ?></<?= $tag ?>><?php endif; ?>
@@ -356,7 +373,7 @@ if (!$homeMetaDescription) {
         </section>
       <?php endif; ?>
 
-      <?php elseif ($moduleKey === 'projects_mosaic'): ?>
+      <?php elseif ($moduleKey === 'projects_mosaic'): $anyContentShown = true; ?>
         <?php if (empty($projectsMosaicItems)): ?>
           <p class="empty-state"><?= $locale === 'en' ? 'New projects coming soon.' : 'Nuevos proyectos muy pronto.' ?></p>
         <?php else: ?>
@@ -366,14 +383,7 @@ if (!$homeMetaDescription) {
 
     <?php endforeach; ?>
 
-    <?php
-      // fix (Andrea): este aviso es solo para "de verdad no hay nada que
-      // enseñar". El Hero es puramente decorativo y no cuenta (igual que
-      // antes), pero el Mosaico de proyectos SÍ es contenido real — si es el
-      // único módulo activo, ya se ha pintado arriba como cabecera especial
-      // (fuera de <main>), así que no hay que repetir el aviso aquí debajo.
-    ?>
-    <?php if (empty($mainRenderedKeys) && $navOverlayModule !== 'projects_mosaic'): ?>
+    <?php if (!$anyContentShown): ?>
       <p class="empty-state" style="padding-top:var(--spacing-24);"><?= $locale === 'en' ? 'Content coming soon.' : 'Contenido muy pronto.' ?></p>
     <?php endif; ?>
   </main>
