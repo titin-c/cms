@@ -366,7 +366,14 @@ if (!$homeMetaDescription) {
 
     <?php endforeach; ?>
 
-    <?php if (empty($mainRenderedKeys)): ?>
+    <?php
+      // fix (Andrea): este aviso es solo para "de verdad no hay nada que
+      // enseñar". El Hero es puramente decorativo y no cuenta (igual que
+      // antes), pero el Mosaico de proyectos SÍ es contenido real — si es el
+      // único módulo activo, ya se ha pintado arriba como cabecera especial
+      // (fuera de <main>), así que no hay que repetir el aviso aquí debajo.
+    ?>
+    <?php if (empty($mainRenderedKeys) && $navOverlayModule !== 'projects_mosaic'): ?>
       <p class="empty-state" style="padding-top:var(--spacing-24);"><?= $locale === 'en' ? 'Content coming soon.' : 'Contenido muy pronto.' ?></p>
     <?php endif; ?>
   </main>

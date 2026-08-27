@@ -3,7 +3,16 @@
 Este archivo deja constancia de qué incluye cada entrega, para poder comprobar
 de un vistazo si lo que hay subido en el repositorio remoto está actualizado.
 
-## 1.9.1 — actual
+## 1.9.2 — actual
+
+- 🔴 Arreglado: si el Mosaico de proyectos era el único módulo activo de la
+  home, se pintaba bien como cabecera a pantalla completa pero debajo
+  seguía saliendo el aviso "Contenido muy pronto." — la comprobación de
+  "no hay ningún módulo con contenido" no distinguía entre el Hero
+  (decorativo, no cuenta) y el Mosaico de proyectos (contenido real, si es
+  el único activo ya se ha mostrado arriba).
+
+## 1.9.1
 
 - 🔴 Arreglado: en el Hero modo "sin fondo" con un color de fondo claro, la
   cabecera seguía forzando texto blanco (heredado del tratamiento sobre
