@@ -13,10 +13,14 @@ require_once __DIR__ . '/../lib/social_icons.php';
  *   el Hero de siempre no lo necesita, ya que se posiciona a sí mismo).
  * - $langSwitchUrl (string|null, opcional): URL de la versión alternativa de
  *   idioma de ESTA página. Si es null, no se muestra el toggle.
+ * - $navSticky (bool, opcional): true = cabecera sólida que se queda fija
+ *   arriba al hacer scroll (usado en el Hero modo "sin fondo": la cabecera
+ *   sale debajo del Hero en vez de superpuesta, y se pega arriba al bajar).
  * - $themeSettings (array): ya cargado por el caller antes de incluir esto.
  */
 $navOnHero = $navOnHero ?? false;
 $navOverlayStandalone = $navOverlayStandalone ?? false;
+$navSticky = $navSticky ?? false;
 $locale = $GLOBALS['__locale'] ?? 'es';
 $themeSettings = $themeSettings ?? (isset($pdo) && $pdo instanceof PDO ? getSiteSettings($pdo) : []);
 
@@ -28,7 +32,7 @@ $siteSubtitle = $locale === 'en'
     ? ($themeSettings['site_subtitle_en'] ?? $themeSettings['site_subtitle_es'] ?? '')
     : ($themeSettings['site_subtitle_es'] ?? '');
 ?>
-<header class="site-nav <?= $navOnHero ? 'site-nav--on-hero' : 'site-nav--solid' ?><?= $navOverlayStandalone ? ' site-nav--overlay-standalone' : '' ?>">
+<header class="site-nav <?= $navOnHero ? 'site-nav--on-hero' : 'site-nav--solid' ?><?= $navOverlayStandalone ? ' site-nav--overlay-standalone' : '' ?><?= $navSticky ? ' site-nav--sticky' : '' ?>">
   <a href="<?= localeHomeUrl($locale) ?>" class="site-nav__brand-block">
     <span class="site-nav__brand-block-name"><?= htmlspecialchars($siteName) ?></span>
     <span class="site-nav__brand-block-tagline"><?= htmlspecialchars($siteSubtitle) ?></span>

@@ -1,6 +1,7 @@
 import './components/image-cropper.js';
 import './components/save-status.js';
 import { linkToggleVisibility } from './components/toggle-visibility.js';
+import { initFontDropdown } from './components/font-dropdown.js';
 
 /**
  * Derivación de tonos claros/oscuros a partir de un color base — mismo
@@ -172,6 +173,8 @@ colorSecondaryHex.addEventListener('change', () => {
 // --- Selección de tipografía ---
 const fontSelectContent = document.getElementById('font-select-content');
 const fontSelectUi = document.getElementById('font-select-ui');
+initFontDropdown('font-select-content');
+initFontDropdown('font-select-ui');
 
 fontSelectContent.addEventListener('change', (e) => {
   const font = e.target.value;

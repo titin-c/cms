@@ -48,6 +48,15 @@
   padding-bottom: var(--spacing-4);
 }
 
+/* fix (Andrea): Hero modo "sin fondo" — la cabecera sale sólida justo debajo
+   del Hero (no superpuesta) y se queda fija arriba al hacer scroll. Selector
+   compuesto (.site-nav.site-nav--sticky) para ganar por especificidad a
+   .site-nav { position: relative } sin importar el orden de las reglas. */
+.site-nav.site-nav--sticky {
+  position: sticky;
+  top: 0;
+}
+
 .site-nav__actions {
   display: flex;
   align-items: center;

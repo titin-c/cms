@@ -3,7 +3,20 @@
 Este archivo deja constancia de qué incluye cada entrega, para poder comprobar
 de un vistazo si lo que hay subido en el repositorio remoto está actualizado.
 
-## 1.9.3 — actual
+## 1.9.4 — actual
+
+- Ajustes → selector de tipografías: ahora es un menú desplegable propio con
+  cada fuente mostrada en un tamaño grande, para poder apreciar bien las
+  diferencias entre tipografías parecidas (el `<select>` nativo las mostraba
+  todas al mismo tamaño pequeño). Funciona igual que antes por dentro (mismo
+  campo, mismo guardado, misma vista previa en vivo).
+- Hero modo "sin fondo": la cabecera ya no se superpone al Hero (no hay foto
+  detrás que oscurecer) — ahora sale sólida justo debajo, y se queda fija
+  arriba de la pantalla al hacer scroll. Este cambio es exclusivo de este
+  modo; en "mosaico" y "foto al azar" la cabecera se sigue superponiendo
+  como siempre.
+
+## 1.9.3
 
 - 🔴 Arreglo de fondo (no solo un parche puntual) del aviso "Contenido muy
   pronto.": en vez de mirar si algún módulo está *activado*, ahora se

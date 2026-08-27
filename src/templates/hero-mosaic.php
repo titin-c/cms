@@ -17,9 +17,14 @@
  * propia cabecera transparente superpuesta como siempre; si se ha
  * reordenado y ya no es el primero, el caller ya habrá pintado la cabecera
  * sólida antes de llegar aquí, así que el Hero no la repite.
+ * fix (Andrea): en el modo "sin fondo" (solo en este modo, a petición
+ * suya), la cabecera no se superpone al Hero — no hay foto que oscurecer
+ * detrás, así que en vez de flotar transparente por encima, sale justo
+ * debajo, sólida, y se queda fija arriba (sticky) al hacer scroll.
  */
 $heroBackgroundMode = $heroBackgroundMode ?? 'mosaic';
 $heroEmbedsNav = $heroEmbedsNav ?? true;
+$heroNavBelowSticky = $heroEmbedsNav && $heroBackgroundMode === 'none';
 $minTiles = 30; // con piezas de tamaño variable hacen falta más "unidades" para llenar el grid 10x6 sin huecos
 $mosaicImages = $mosaicImages ?? []; // defensivo: nunca null, aunque no haya proyectos destacados aún
 $imageCount = count($mosaicImages);
@@ -49,7 +54,7 @@ $heroPhoto = $heroPhoto ?? null;
   <?php endif; ?>
   <?php // modo 'none': sin imagen ni overlay, solo el color de fondo del propio .hero-mosaic--none ?>
 
-  <?php if ($heroEmbedsNav):
+  <?php if ($heroEmbedsNav && !$heroNavBelowSticky):
     $navOnHero = true;
     $langSwitchUrl = localeHomeUrl($locale === 'es' ? 'en' : 'es');
     include __DIR__ . '/nav.php';
@@ -66,3 +71,14 @@ $heroPhoto = $heroPhoto ?? null;
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
   </a>
 </section>
+
+<?php if ($heroNavBelowSticky):
+  // fix (Andrea): modo "sin fondo" — la cabecera no flota sobre el Hero
+  // (no hay foto que oscurecer), sale sólida justo debajo y se fija arriba
+  // al hacer scroll.
+  $navOnHero = false;
+  $navOverlayStandalone = false;
+  $navSticky = true;
+  $langSwitchUrl = localeHomeUrl($locale === 'es' ? 'en' : 'es');
+  include __DIR__ . '/nav.php';
+endif; ?>
