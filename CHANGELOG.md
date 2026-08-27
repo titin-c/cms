@@ -3,7 +3,15 @@
 Este archivo deja constancia de qué incluye cada entrega, para poder comprobar
 de un vistazo si lo que hay subido en el repositorio remoto está actualizado.
 
-## 1.10.0 — actual
+## 1.10.1 — actual
+
+- 🔴 Arreglado: en los controles de tipografía nuevos, el desplegable de
+  grosor "empujaba" su propio ancho por la opción más larga (Extra-negrita)
+  y dejaba el deslizador de tamaño reducido a un punto apenas visible. Ahora
+  la fila usa una rejilla con anchos fijos para el valor y el desplegable,
+  así el deslizador siempre se queda con el espacio que sobra.
+
+## 1.10.0
 
 - Ajustes → Estilos → nueva sección "Tipografía — tamaños y grosores": un
   control de tamaño (deslizador, en píxeles) y grosor de letra (de Fina a
