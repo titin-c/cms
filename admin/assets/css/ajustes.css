@@ -168,3 +168,36 @@
 .admin-tab-btn.is-active { color: var(--color-ink-900); border-bottom-color: var(--color-ink-900); }
 .admin-tab-panel { display: none; }
 .admin-tab-panel.is-active { display: block; }
+
+/* fix (Andrea): lista de módulos de la home reordenable por drag & drop —
+   nativo (HTML5 Drag and Drop API), sin dependencias externas. */
+.admin-drag-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.admin-drag-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--color-ink-100);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-alt, #FAFAFA);
+  cursor: grab;
+}
+.admin-drag-item:active { cursor: grabbing; }
+.admin-drag-item.is-dragging { opacity: 0.4; }
+.admin-drag-item.is-drag-over { border-color: var(--color-ink-900); border-style: dashed; }
+.admin-drag-handle {
+  flex-shrink: 0;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--color-ink-500);
+  padding-top: 2px;
+  user-select: none;
+}
+.admin-drag-item__content { flex: 1; min-width: 0; }

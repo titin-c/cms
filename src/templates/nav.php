@@ -7,11 +7,16 @@ require_once __DIR__ . '/../lib/social_icons.php';
  *
  * Variables esperadas del caller:
  * - $navOnHero (bool, opcional): true = transparente sobre imagen oscura.
+ * - $navOverlayStandalone (bool, opcional): true = el propio nav.php se
+ *   posiciona flotando sobre lo primero que venga después (usado cuando el
+ *   módulo Mosaico de proyectos es el primero de la home y hace de "hero" —
+ *   el Hero de siempre no lo necesita, ya que se posiciona a sí mismo).
  * - $langSwitchUrl (string|null, opcional): URL de la versión alternativa de
  *   idioma de ESTA página. Si es null, no se muestra el toggle.
  * - $themeSettings (array): ya cargado por el caller antes de incluir esto.
  */
 $navOnHero = $navOnHero ?? false;
+$navOverlayStandalone = $navOverlayStandalone ?? false;
 $locale = $GLOBALS['__locale'] ?? 'es';
 $themeSettings = $themeSettings ?? (isset($pdo) && $pdo instanceof PDO ? getSiteSettings($pdo) : []);
 
@@ -23,7 +28,7 @@ $siteSubtitle = $locale === 'en'
     ? ($themeSettings['site_subtitle_en'] ?? $themeSettings['site_subtitle_es'] ?? '')
     : ($themeSettings['site_subtitle_es'] ?? '');
 ?>
-<header class="site-nav <?= $navOnHero ? 'site-nav--on-hero' : 'site-nav--solid' ?>">
+<header class="site-nav <?= $navOnHero ? 'site-nav--on-hero' : 'site-nav--solid' ?><?= $navOverlayStandalone ? ' site-nav--overlay-standalone' : '' ?>">
   <a href="<?= localeHomeUrl($locale) ?>" class="site-nav__brand-block">
     <span class="site-nav__brand-block-name"><?= htmlspecialchars($siteName) ?></span>
     <span class="site-nav__brand-block-tagline"><?= htmlspecialchars($siteSubtitle) ?></span>
@@ -86,13 +91,15 @@ $siteSubtitle = $locale === 'en'
     <?php endif; ?>
     <a href="#contact-drawer" class="site-nav__link" data-open-contact><?= t('nav.contact') ?></a>
 
-    <div class="site-nav__socials">
-      <?php foreach ($socialLinksNav as $social): ?>
-        <a href="<?= htmlspecialchars($social['url']) ?>" class="site-nav__icon" aria-label="<?= htmlspecialchars(SOCIAL_PLATFORMS[$social['platform']] ?? $social['platform']) ?>" target="_blank" rel="noopener">
-          <?= socialIconSvg($social['platform']) ?>
-        </a>
-      <?php endforeach; ?>
-    </div>
+    <?php if (($themeSettings['header_show_social'] ?? '1') === '1'): ?>
+      <div class="site-nav__socials">
+        <?php foreach ($socialLinksNav as $social): ?>
+          <a href="<?= htmlspecialchars($social['url']) ?>" class="site-nav__icon" aria-label="<?= htmlspecialchars(SOCIAL_PLATFORMS[$social['platform']] ?? $social['platform']) ?>" target="_blank" rel="noopener">
+            <?= socialIconSvg($social['platform']) ?>
+          </a>
+        <?php endforeach; ?>
+      </div>
+    <?php endif; ?>
 
     <?php if ($showLangMenu && !empty($langSwitchUrl)): ?>
       <a href="<?= htmlspecialchars($langSwitchUrl) ?>" class="site-nav__lang">

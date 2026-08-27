@@ -38,6 +38,8 @@ function getSiteSettings(PDO $pdo): array {
         'contact_email' => '',
         'contact_phone' => '',
         'show_language_menu' => '1',
+        'header_show_social' => '1',
+        'footer_show_social' => '1',
 
         // fix (Andrea, CMS multi-cliente): la home se compone de 3 módulos
         // independientes y combinables — hero, categorías de proyectos, y
@@ -83,6 +85,12 @@ function getSiteSettings(PDO $pdo): array {
         // publicados con efecto parallax al hacer scroll.
         'home_show_projects_mosaic' => '0',
         'projects_mosaic_columns' => '3', // '1' | '2' | '3'
+
+        // fix (Andrea): orden en que aparecen los módulos de la home,
+        // reordenable por drag & drop desde Ajustes → Home. Los módulos
+        // apagados simplemente se saltan; si faltara alguno en la lista
+        // guardada (ajuste nuevo, sitio ya existente) se añade al final.
+        'home_modules_order' => 'hero,categories,videos,simple,projects_mosaic',
 
         'videos_show_in_header' => '0',
         'videos_show_in_footer' => '0',

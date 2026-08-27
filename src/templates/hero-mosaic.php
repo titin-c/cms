@@ -12,8 +12,14 @@
  * llenar el grid — el placeholder gris solo se usa si no hay NINGUNA imagen
  * destacada todavía (estado vacío real).
  * fix (Andrea): altura 100vh en desktop.
+ * fix (Andrea, orden de módulos): $heroEmbedsNav (bool, opcional, true por
+ * defecto) — si el Hero es el primer módulo activo de la home, incluye su
+ * propia cabecera transparente superpuesta como siempre; si se ha
+ * reordenado y ya no es el primero, el caller ya habrá pintado la cabecera
+ * sólida antes de llegar aquí, así que el Hero no la repite.
  */
 $heroBackgroundMode = $heroBackgroundMode ?? 'mosaic';
+$heroEmbedsNav = $heroEmbedsNav ?? true;
 $minTiles = 30; // con piezas de tamaño variable hacen falta más "unidades" para llenar el grid 10x6 sin huecos
 $mosaicImages = $mosaicImages ?? []; // defensivo: nunca null, aunque no haya proyectos destacados aún
 $imageCount = count($mosaicImages);
@@ -43,11 +49,11 @@ $heroPhoto = $heroPhoto ?? null;
   <?php endif; ?>
   <?php // modo 'none': sin imagen ni overlay, solo el color de fondo del propio .hero-mosaic--none ?>
 
-  <?php
+  <?php if ($heroEmbedsNav):
     $navOnHero = true;
     $langSwitchUrl = localeHomeUrl($locale === 'es' ? 'en' : 'es');
     include __DIR__ . '/nav.php';
-  ?>
+  endif; ?>
 
   <div class="hero-mosaic__content">
     <h1 class="hero-mosaic__title"><?= htmlspecialchars($themeSettings['site_name'] ?? 'Mi Sitio') ?></h1>

@@ -35,11 +35,13 @@ $__socialLinksFooter = (isset($pdo) && $pdo instanceof PDO) ? getSocialLinks($pd
       <a href="<?= $__locale === 'en' ? '/en/' . rawurlencode($__themeSettings['videos_slug_en'] ?? 'videos') : '/' . rawurlencode($__themeSettings['videos_slug_es'] ?? 'videos') ?>"><?= $__locale === 'en' ? 'Videos' : 'Vídeos' ?></a>
     <?php endif; ?>
     <a href="#" data-open-cookie-settings><?= t('footer.cookie_prefs') ?></a>
-    <?php foreach ($__socialLinksFooter as $social): ?>
-      <a href="<?= htmlspecialchars($social['url']) ?>" aria-label="<?= htmlspecialchars(SOCIAL_PLATFORMS[$social['platform']] ?? $social['platform']) ?>" target="_blank" rel="noopener">
-        <?= socialIconSvg($social['platform'], 14) ?>
-      </a>
-    <?php endforeach; ?>
+    <?php if (($__themeSettings['footer_show_social'] ?? '1') === '1'): ?>
+      <?php foreach ($__socialLinksFooter as $social): ?>
+        <a href="<?= htmlspecialchars($social['url']) ?>" aria-label="<?= htmlspecialchars(SOCIAL_PLATFORMS[$social['platform']] ?? $social['platform']) ?>" target="_blank" rel="noopener">
+          <?= socialIconSvg($social['platform'], 14) ?>
+        </a>
+      <?php endforeach; ?>
+    <?php endif; ?>
   </nav>
 </footer>
 

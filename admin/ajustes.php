@@ -113,9 +113,24 @@ foreach ($curatedFonts as $f) { $groups[$f['category']][] = $f['name']; }
 
       <section class="admin-form__block">
         <h2>Redes sociales</h2>
-        <p class="admin-form__hint">Aparecen en la cabecera y en el footer, en este orden.</p>
+        <p class="admin-form__hint">En este orden, donde estén activadas.</p>
         <div id="social-links-list"></div>
         <button type="button" id="add-social-btn" class="admin-btn admin-btn--secondary" style="margin-top:8px;">+ Añadir red social</button>
+
+        <!-- fix (Andrea): antes salían siempre en cabecera y pie — ahora cada
+             sitio elige dónde mostrarlas, por separado. -->
+        <div style="margin-top:16px; display:flex; gap:24px; flex-wrap:wrap;">
+          <label class="admin-toggle admin-toggle--compact">
+            <input type="checkbox" id="header-show-social" checked>
+            <span class="admin-toggle__track"><span class="admin-toggle__thumb"></span></span>
+            Mostrar en la cabecera
+          </label>
+          <label class="admin-toggle admin-toggle--compact">
+            <input type="checkbox" id="footer-show-social" checked>
+            <span class="admin-toggle__track"><span class="admin-toggle__thumb"></span></span>
+            Mostrar en el pie de página
+          </label>
+        </div>
       </section>
 
       <section class="admin-form__block">
@@ -313,64 +328,93 @@ foreach ($curatedFonts as $f) { $groups[$f['category']][] = $f['name']; }
 
       <section class="admin-form__block">
         <h2>Módulos de la home</h2>
-        <p class="admin-form__hint">Cada uno se puede activar o desactivar de forma independiente — combínalos como quieras.</p>
-        <label class="admin-toggle">
-          <input type="checkbox" id="home-show-hero">
-          <span class="admin-toggle__track"><span class="admin-toggle__thumb"></span></span>
-          Hero
-        </label>
-        <p class="admin-toggle__desc">Sección grande a pantalla completa con el nombre del sitio.</p>
+        <p class="admin-form__hint">Actívalos o desactívalos como quieras, y arrastra <span aria-hidden="true">⠿</span> para cambiar el orden en que aparecen en la página.</p>
+        <p class="admin-form__hint">El primero que quede activo usa la cabecera transparente superpuesta (como ahora el Hero) si es el Hero o el Mosaico de proyectos; cualquier otro caso usa la cabecera sólida normal.</p>
 
-        <!-- fix (Andrea): fondo del Hero configurable — mosaico (de siempre),
-             foto destacada al azar, o sin fondo (color liso). -->
-        <div id="hero-background-fields" style="margin:8px 0 16px 0;">
-          <label for="hero-background-mode">Fondo del Hero</label>
-          <select id="hero-background-mode">
-            <option value="mosaic">Mosaico de fotos (como siempre)</option>
-            <option value="random_photo">Foto destacada al azar</option>
-            <option value="none">Sin fondo (color liso)</option>
-          </select>
-          <p class="admin-form__hint" id="hero-background-none-hint" hidden>El texto se adapta automáticamente para verse bien tanto si el color de fondo es claro como oscuro.</p>
-        </div>
+        <ul class="admin-drag-list" id="home-modules-list">
+          <li class="admin-drag-item" draggable="true" data-module="hero">
+            <span class="admin-drag-handle" aria-hidden="true" title="Arrastrar para reordenar">⠿</span>
+            <div class="admin-drag-item__content">
+              <label class="admin-toggle">
+                <input type="checkbox" id="home-show-hero">
+                <span class="admin-toggle__track"><span class="admin-toggle__thumb"></span></span>
+                Hero
+              </label>
+              <p class="admin-toggle__desc">Sección grande a pantalla completa con el nombre del sitio.</p>
 
-        <label class="admin-toggle">
-          <input type="checkbox" id="home-show-categories">
-          <span class="admin-toggle__track"><span class="admin-toggle__thumb"></span></span>
-          Categorías
-        </label>
-        <p class="admin-toggle__desc">Filas de proyectos con scroll horizontal.</p>
+              <!-- fix (Andrea): fondo del Hero configurable — mosaico (de siempre),
+                   foto destacada al azar, o sin fondo (color liso). -->
+              <div id="hero-background-fields" style="margin:8px 0 0 0;">
+                <label for="hero-background-mode">Fondo del Hero</label>
+                <select id="hero-background-mode">
+                  <option value="mosaic">Mosaico de fotos (como siempre)</option>
+                  <option value="random_photo">Foto destacada al azar</option>
+                  <option value="none">Sin fondo (color liso)</option>
+                </select>
+                <p class="admin-form__hint" id="hero-background-none-hint" hidden>El texto se adapta automáticamente para verse bien tanto si el color de fondo es claro como oscuro.</p>
+              </div>
+            </div>
+          </li>
 
-        <label class="admin-toggle">
-          <input type="checkbox" id="home-show-videos">
-          <span class="admin-toggle__track"><span class="admin-toggle__thumb"></span></span>
-          Vídeos
-        </label>
-        <p class="admin-toggle__desc">Rejilla con todos los vídeos publicados.</p>
+          <li class="admin-drag-item" draggable="true" data-module="categories">
+            <span class="admin-drag-handle" aria-hidden="true" title="Arrastrar para reordenar">⠿</span>
+            <div class="admin-drag-item__content">
+              <label class="admin-toggle">
+                <input type="checkbox" id="home-show-categories">
+                <span class="admin-toggle__track"><span class="admin-toggle__thumb"></span></span>
+                Categorías
+              </label>
+              <p class="admin-toggle__desc">Filas de proyectos con scroll horizontal.</p>
+            </div>
+          </li>
 
-        <label class="admin-toggle">
-          <input type="checkbox" id="home-show-simple">
-          <span class="admin-toggle__track"><span class="admin-toggle__thumb"></span></span>
-          Simple
-        </label>
-        <p class="admin-toggle__desc">Imagen destacada + título + texto.</p>
+          <li class="admin-drag-item" draggable="true" data-module="videos">
+            <span class="admin-drag-handle" aria-hidden="true" title="Arrastrar para reordenar">⠿</span>
+            <div class="admin-drag-item__content">
+              <label class="admin-toggle">
+                <input type="checkbox" id="home-show-videos">
+                <span class="admin-toggle__track"><span class="admin-toggle__thumb"></span></span>
+                Vídeos
+              </label>
+              <p class="admin-toggle__desc">Rejilla con todos los vídeos publicados.</p>
+            </div>
+          </li>
 
-        <label class="admin-toggle">
-          <input type="checkbox" id="home-show-projects-mosaic">
-          <span class="admin-toggle__track"><span class="admin-toggle__thumb"></span></span>
-          Mosaico de proyectos
-        </label>
-        <p class="admin-toggle__desc">Todos los proyectos publicados a pantalla completa, con efecto parallax al hacer scroll.</p>
+          <li class="admin-drag-item" draggable="true" data-module="simple">
+            <span class="admin-drag-handle" aria-hidden="true" title="Arrastrar para reordenar">⠿</span>
+            <div class="admin-drag-item__content">
+              <label class="admin-toggle">
+                <input type="checkbox" id="home-show-simple">
+                <span class="admin-toggle__track"><span class="admin-toggle__thumb"></span></span>
+                Simple
+              </label>
+              <p class="admin-toggle__desc">Imagen destacada + título + texto.</p>
+            </div>
+          </li>
 
-        <div id="projects-mosaic-fields" style="margin:8px 0 0 0;" hidden>
-          <label for="projects-mosaic-columns">Miniaturas por fila</label>
-          <select id="projects-mosaic-columns">
-            <option value="1">1 por fila</option>
-            <option value="2">2 por fila</option>
-            <option value="3">3 por fila</option>
-          </select>
-        </div>
+          <li class="admin-drag-item" draggable="true" data-module="projects_mosaic">
+            <span class="admin-drag-handle" aria-hidden="true" title="Arrastrar para reordenar">⠿</span>
+            <div class="admin-drag-item__content">
+              <label class="admin-toggle">
+                <input type="checkbox" id="home-show-projects-mosaic">
+                <span class="admin-toggle__track"><span class="admin-toggle__thumb"></span></span>
+                Mosaico de proyectos
+              </label>
+              <p class="admin-toggle__desc">Todos los proyectos publicados a pantalla completa, con efecto parallax al hacer scroll.</p>
 
-        <p class="admin-form__hint">Si desactivas el Hero, la home usa la misma cabecera sólida que el resto de páginas.</p>
+              <div id="projects-mosaic-fields" style="margin:8px 0 0 0;" hidden>
+                <label for="projects-mosaic-columns">Miniaturas por fila</label>
+                <select id="projects-mosaic-columns">
+                  <option value="1">1 por fila</option>
+                  <option value="2">2 por fila</option>
+                  <option value="3">3 por fila</option>
+                </select>
+              </div>
+            </div>
+          </li>
+        </ul>
+
+        <p class="admin-form__hint">Si ningún módulo con cabecera transparente queda el primero, la home usa la misma cabecera sólida que el resto de páginas.</p>
       </section>
 
       <!-- fix (Andrea): módulo Simple — para quien no quiere ni categorías ni

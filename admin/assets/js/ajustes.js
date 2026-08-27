@@ -226,6 +226,43 @@ async function loadSocialLinks() {
   }
 }
 
+// --- Módulos de la home: reordenar por drag & drop (HTML5 nativo, sin dependencias) ---
+const homeModulesList = document.getElementById('home-modules-list');
+let draggedModuleItem = null;
+
+homeModulesList.querySelectorAll('.admin-drag-item').forEach((item) => {
+  item.addEventListener('dragstart', () => {
+    draggedModuleItem = item;
+    requestAnimationFrame(() => item.classList.add('is-dragging'));
+  });
+  item.addEventListener('dragend', () => {
+    item.classList.remove('is-dragging');
+    draggedModuleItem = null;
+  });
+  item.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    if (!draggedModuleItem || draggedModuleItem === item) return;
+    const rect = item.getBoundingClientRect();
+    const insertBeforeThis = (e.clientY - rect.top) < rect.height / 2;
+    homeModulesList.insertBefore(draggedModuleItem, insertBeforeThis ? item : item.nextSibling);
+  });
+});
+
+// fix (Andrea): un módulo que no aparezca en el orden guardado (ajuste nuevo,
+// todavía sin guardar) se queda donde ya estaba en el HTML — nunca desaparece
+function applyHomeModulesOrder(orderStr) {
+  const order = (orderStr || '').split(',').map((s) => s.trim()).filter(Boolean);
+  const items = Array.from(homeModulesList.children);
+  order.forEach((key) => {
+    const el = items.find((i) => i.dataset.module === key);
+    if (el) homeModulesList.appendChild(el);
+  });
+}
+
+function collectHomeModulesOrder() {
+  return Array.from(homeModulesList.children).map((li) => li.dataset.module).join(',');
+}
+
 // --- Carga y guardado ---
 const statusEl = document.getElementById('save-status');
 
@@ -261,6 +298,9 @@ async function loadSettings() {
     document.getElementById('coming-soon-message-es').value = settings.coming_soon_message_es || '';
     document.getElementById('coming-soon-message-en').value = settings.coming_soon_message_en || '';
     linkToggleVisibility('#site-coming-soon', ['#coming-soon-fields']);
+    document.getElementById('header-show-social').checked = (settings.header_show_social ?? '1') === '1';
+    document.getElementById('footer-show-social').checked = (settings.footer_show_social ?? '1') === '1';
+    applyHomeModulesOrder(settings.home_modules_order);
     document.getElementById('home-simple-title-es').value = settings.home_simple_title_es || '';
     document.getElementById('home-simple-title-en').value = settings.home_simple_title_en || '';
     document.getElementById('home-simple-desc-es').value = settings.home_simple_description_es || '';
@@ -335,6 +375,9 @@ document.getElementById('save-settings-btn').addEventListener('click', async () 
         site_coming_soon: document.getElementById('site-coming-soon').checked ? '1' : '0',
         coming_soon_message_es: document.getElementById('coming-soon-message-es').value,
         coming_soon_message_en: document.getElementById('coming-soon-message-en').value,
+        header_show_social: document.getElementById('header-show-social').checked ? '1' : '0',
+        footer_show_social: document.getElementById('footer-show-social').checked ? '1' : '0',
+        home_modules_order: collectHomeModulesOrder(),
         home_meta_description_es: document.getElementById('home-meta-es').value,
         home_meta_description_en: document.getElementById('home-meta-en').value,
         module_projects_enabled: document.getElementById('module-projects-enabled').checked ? '1' : '0',

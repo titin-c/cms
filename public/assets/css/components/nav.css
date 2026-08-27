@@ -22,6 +22,20 @@
   color: #FFFFFF;
 }
 
+/* fix (Andrea): cuando el Mosaico de proyectos es el primer módulo de la
+   home, la cabecera flota sobre su primera fila (igual que sobre el Hero),
+   en vez de ocupar su propia franja y empujar el mosaico hacia abajo. */
+.site-nav--overlay-standalone {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-nav);
+  background: linear-gradient(to bottom, rgba(10, 10, 10, 0.55) 0%, transparent 100%);
+  border-bottom: none;
+  padding-bottom: var(--spacing-4);
+}
+
 .site-nav__actions {
   display: flex;
   align-items: center;

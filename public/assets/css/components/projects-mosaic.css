@@ -11,6 +11,25 @@
 .projects-mosaic--cols-2 { --projects-mosaic-columns: 2; }
 .projects-mosaic--cols-3 { --projects-mosaic-columns: 3; }
 
+/* fix (Andrea): cuando este módulo es el primero de la home, la cabecera
+   (site-nav--overlay-standalone) flota encima de su primera fila — este
+   degradado extra asegura que el texto de la cabecera se lea bien encima
+   de cualquier foto, clara u oscura. */
+.projects-mosaic--as-hero {
+  position: relative;
+}
+.projects-mosaic--as-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 140px;
+  background: linear-gradient(to bottom, rgba(10, 10, 10, 0.55) 0%, transparent 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
 .projects-mosaic__wrap {
   overflow: hidden; /* recorta el desbordamiento del parallax interno */
   opacity: 0;

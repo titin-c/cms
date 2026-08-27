@@ -3,7 +3,44 @@
 Este archivo deja constancia de qué incluye cada entrega, para poder comprobar
 de un vistazo si lo que hay subido en el repositorio remoto está actualizado.
 
-## 1.7.0 — actual
+## 1.9.0 — actual
+
+- Redes sociales: ahora se pueden mostrar u ocultar por separado en la
+  cabecera y en el pie de página (Ajustes → Sitio → Redes sociales).
+- 🔴 Arreglado: el Hero en modo "mosaico" o "foto al azar" podía quedarse
+  sin imágenes si el módulo Categorías estaba apagado en la home (por
+  ejemplo, al usar en su lugar el nuevo Mosaico de proyectos) — el Hero
+  ahora busca sus fotos de forma independiente de qué otros módulos estén
+  visibles, y si todavía no hay ningún proyecto marcado como "Destacado",
+  usa cualquier proyecto publicado como alternativa en vez de quedarse vacío.
+- Cabecera transparente superpuesta también sobre el Mosaico de proyectos
+  cuando es el primer módulo de la home (antes ese tratamiento era exclusivo
+  del Hero).
+- Arreglada la pixelación de las miniaturas del Mosaico de proyectos al
+  mostrarse grandes (1 o 2 columnas): la imagen de reserva usa ya la
+  variante de mayor resolución disponible.
+- Módulos de la home reordenables por drag & drop desde Ajustes → Home
+  (Hero, Categorías, Vídeos, Simple, Mosaico de proyectos) — el que quede
+  primero decide si la cabecera es transparente (Hero o Mosaico de
+  proyectos) o sólida (cualquier otro caso).
+
+## 1.8.0
+
+**Tres funcionalidades nuevas para clientes con la web ya publicada (Andrea):**
+
+- Modo "en construcción": dos interruptores independientes en Ajustes →
+  Sitio — "No indexar en buscadores" (noindex/nofollow) y página
+  "Próximamente" (con mensaje ES/EN configurable), combinables entre sí;
+  `/admin` sigue accesible siempre.
+- Hero con fondo configurable en Ajustes → Home: mosaico de fotos (de
+  siempre), foto destacada al azar, o sin fondo (color liso, con el texto
+  adaptado automáticamente a claro/oscuro).
+- Nuevo módulo de home "Mosaico de proyectos": todos los proyectos
+  publicados a pantalla completa, en 1/2/3 columnas configurables, con
+  revelado lateral + efecto parallax al hacer scroll, overlay oscuro/claro
+  según el tema del sitio al pasar el ratón, y resumen con elipsis CSS.
+
+## 1.7.0
 
 **Control de indexación por página fija (seo-agent):**
 
