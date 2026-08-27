@@ -3,7 +3,26 @@
 Este archivo deja constancia de qué incluye cada entrega, para poder comprobar
 de un vistazo si lo que hay subido en el repositorio remoto está actualizado.
 
-## 1.10.4 — actual
+## 1.10.5 — actual
+
+- 🔴 Encontrada la causa real (y definitiva) del error al guardar páginas:
+  no era la longitud de ningún campo (eso era un problema real pero distinto,
+  arreglado en la 1.10.4) — era que a la base de datos le faltaba la columna
+  `noindex` de la tabla de páginas. Esa columna la añade una migración SQL
+  que hay que ejecutar una sola vez a mano sobre la base de datos, y que
+  nunca llegó a ejecutarse. Por eso fallaba siempre, solo en páginas, pasara
+  lo que pasara con la sesión o con la longitud de los textos.
+- 🔧 Nueva herramienta de diagnóstico: **/admin/db-check.php**. Comprueba que
+  la base de datos tiene todas las tablas y columnas que el panel necesita, y
+  las añade automáticamente con un botón si falta algo — sin tener que
+  ejecutar SQL a mano nunca más. Es segura de visitar y repetir cuando
+  quieras: si no falta nada, no toca nada. Recomendado visitarla después de
+  cada actualización del CMS, y siempre que algo dé un error raro al guardar.
+  Se ha usado ya para confirmar y arreglar el problema de esta versión, tanto
+  en local como se recomienda hacer también en producción tras subir este
+  parche.
+
+## 1.10.4
 
 - 🔴 Encontrada y arreglada la causa real de "error de conexión" al guardar
   "Sobre mí" (y, en general, cualquier página, categoría, proyecto o vídeo):
