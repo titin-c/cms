@@ -3,7 +3,15 @@
 Este archivo deja constancia de qué incluye cada entrega, para poder comprobar
 de un vistazo si lo que hay subido en el repositorio remoto está actualizado.
 
-## 1.9.0 — actual
+## 1.9.1 — actual
+
+- 🔴 Arreglado: en el Hero modo "sin fondo" con un color de fondo claro, la
+  cabecera seguía forzando texto blanco (heredado del tratamiento sobre
+  foto oscura) y se perdía contra el fondo claro. Ahora se adapta igual que
+  el resto del contenido del Hero en ese modo — texto oscuro sobre fondo
+  claro, blanco sobre fondo oscuro.
+
+## 1.9.0
 
 - Redes sociales: ahora se pueden mostrar u ocultar por separado en la
   cabecera y en el pie de página (Ajustes → Sitio → Redes sociales).

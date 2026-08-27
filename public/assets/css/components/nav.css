@@ -22,6 +22,18 @@
   color: #FFFFFF;
 }
 
+/* fix (Andrea): en el Hero modo "sin fondo", no hay foto detrás — el fondo
+   es lisamente el color de fondo del sitio (claro u oscuro), así que la
+   cabecera ya no puede ser blanca fija (se perdía sobre un fondo claro).
+   Se adapta igual que el resto del contenido del Hero en este modo
+   (mismo criterio que .hero-mosaic--none .hero-mosaic__content). */
+[data-theme-tone="light"] .hero-mosaic--none .site-nav--on-hero {
+  color: var(--color-ink-900);
+}
+[data-theme-tone="dark"] .hero-mosaic--none .site-nav--on-hero {
+  color: #FFFFFF;
+}
+
 /* fix (Andrea): cuando el Mosaico de proyectos es el primer módulo de la
    home, la cabecera flota sobre su primera fila (igual que sobre el Hero),
    en vez de ocupar su propia franja y empujar el mosaico hacia abajo. */
