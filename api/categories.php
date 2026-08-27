@@ -7,6 +7,7 @@
 header('Content-Type: application/json');
 require_once __DIR__ . '/../src/lib/auth.php';
 require_once __DIR__ . '/../src/lib/db.php';
+require_once __DIR__ . '/../src/lib/validation.php';
 
 requireAuth();
 $pdo = getDb();
@@ -39,12 +40,34 @@ switch ($method) {
         foreach ($fieldNames as $f) {
             $values[$f] = trim((string) ($input[$f] ?? '')) !== '' ? trim($input[$f]) : null;
         }
-        $values['sort_order'] = $input['sort_order'] ?? 0;
-        $values['header_placement'] = in_array($input['header_placement'] ?? '', ['none', 'direct', 'submenu']) ? $input['header_placement'] : 'submenu';
-        $values['show_in_footer'] = !empty($input['show_in_footer']) ? 1 : 0;
-        $values['show_in_home'] = !empty($input['show_in_home']) ? 1 : 0;
-        $values['show_title'] = !empty($input['show_title']) ? 1 : 0;
-        $values['status'] = ($input['status'] ?? 'published') === 'draft' ? 'draft' : 'published';
+        $values['slug'] = $slug;
+        $values['slug_en'] = $slugEn;
+
+        // fix (Andrea): acorta lo que sobre en vez de dejar que MySQL rechace
+        // el guardado entero — ver comentario en src/lib/validation.php.
+        [$values, $truncatedFields] = truncateFieldsToLimits($values, [
+            'slug' => 120, 'slug_en' => 120,
+            'title_es' => 160, 'title_en' => 160,
+            'home_title_es' => 120, 'home_title_en' => 120,
+            'meta_description_es' => 300, 'meta_description_en' => 300,
+            'button_label_es' => 60, 'button_label_en' => 60,
+            'seo_keywords_es' => 300, 'seo_keywords_en' => 300,
+        ], [
+            'slug' => 'URL slug (ES)', 'slug_en' => 'URL slug (EN)',
+            'title_es' => 'Título (ES)', 'title_en' => 'Título (EN)',
+            'home_title_es' => 'Título en la home (ES)', 'home_title_en' => 'Título en la home (EN)',
+            'meta_description_es' => 'Meta descripción (ES)', 'meta_description_en' => 'Meta descripción (EN)',
+            'button_label_es' => 'Texto del botón (ES)', 'button_label_en' => 'Texto del botón (EN)',
+            'seo_keywords_es' => 'Palabras clave (ES)', 'seo_keywords_en' => 'Palabras clave (EN)',
+        ]);
+        $slug = $values['slug'];
+        $slugEn = $values['slug_en'];
+        unset($values['slug'], $values['slug_en']); // se añaden aparte según sea alta o edición, como antes
+
+        $response = ['ok' => true];
+        if ($warning = truncationWarningMessage($truncatedFields)) {
+            $response['warning'] = $warning;
+        }
 
         try {
             if (!empty($input['id'])) {
@@ -52,7 +75,7 @@ switch ($method) {
                 $set = implode(', ', array_map(fn($k) => "$k = :$k", array_keys($values)));
                 $stmt = $pdo->prepare("UPDATE categories SET $set, slug_en = :slug_en WHERE id = :id");
                 $stmt->execute($values + ['slug_en' => $slugEn, 'id' => $input['id']]);
-                echo json_encode(['ok' => true, 'id' => $input['id']]);
+                echo json_encode($response + ['id' => $input['id']]);
                 break;
             }
 
@@ -62,14 +85,14 @@ switch ($method) {
             $placeholders = implode(', ', array_map(fn($k) => ":$k", array_keys($values)));
             $stmt = $pdo->prepare("INSERT INTO categories ($cols) VALUES ($placeholders)");
             $stmt->execute($values);
-            echo json_encode(['ok' => true, 'id' => $pdo->lastInsertId()]);
+            echo json_encode($response + ['id' => $pdo->lastInsertId()]);
         } catch (PDOException $e) {
             if ($e->getCode() === '23000') {
                 http_response_code(409);
                 echo json_encode(['error' => 'duplicate_slug', 'message' => 'Ya existe una categoría con esa URL (slug ES o EN). Ajusta el título.']);
                 exit;
             }
-            throw $e;
+            respondUnexpectedDbError($e, 'categories.php save error');
         }
         break;
 

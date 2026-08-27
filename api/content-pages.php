@@ -2,6 +2,7 @@
 header('Content-Type: application/json');
 require_once __DIR__ . '/../src/lib/auth.php';
 require_once __DIR__ . '/../src/lib/db.php';
+require_once __DIR__ . '/../src/lib/validation.php';
 
 requireAuth();
 $pdo = getDb();
@@ -33,27 +34,46 @@ switch ($method) {
         $slugEn = trim((string) ($input['slug_en'] ?? ''));
         if ($slugEn === '' && !empty($input['title_en'])) { $slugEn = slugifyPhp($input['title_en']); }
 
-        $fields = [
+        $raw = [
             'slug' => $slug,
             'slug_en' => $slugEn !== '' ? $slugEn : null,
             'title_es' => $input['title_es'],
             'title_en' => $input['title_en'] ?? null,
-            'content_es' => $input['content_es'] ?? '',
-            'content_en' => $input['content_en'] ?? null,
             'meta_description_es' => $input['meta_description_es'] ?? null,
             'meta_description_en' => $input['meta_description_en'] ?? null,
+        ];
+        // fix (Andrea): acorta lo que sobre en vez de dejar que MySQL rechace
+        // el guardado entero — ver comentario en src/lib/validation.php.
+        [$raw, $truncatedFields] = truncateFieldsToLimits($raw, [
+            'slug' => 160, 'slug_en' => 160,
+            'title_es' => 200, 'title_en' => 200,
+            'meta_description_es' => 300, 'meta_description_en' => 300,
+        ], [
+            'slug' => 'URL slug (ES)', 'slug_en' => 'URL slug (EN)',
+            'title_es' => 'Título (ES)', 'title_en' => 'Título (EN)',
+            'meta_description_es' => 'Meta descripción (ES)', 'meta_description_en' => 'Meta descripción (EN)',
+        ]);
+
+        $fields = $raw + [
+            'content_es' => $input['content_es'] ?? '',
+            'content_en' => $input['content_en'] ?? null,
             'show_in_header' => !empty($input['show_in_header']) ? 1 : 0,
             'show_in_footer' => !empty($input['show_in_footer']) ? 1 : 0,
             'noindex' => !empty($input['noindex']) ? 1 : 0,
             'sort_order' => $input['sort_order'] ?? 0,
         ];
 
+        $response = ['ok' => true];
+        if ($warning = truncationWarningMessage($truncatedFields)) {
+            $response['warning'] = $warning;
+        }
+
         try {
             if (!empty($input['id'])) {
                 $set = implode(', ', array_map(fn($k) => "$k = :$k", array_keys($fields)));
                 $stmt = $pdo->prepare("UPDATE content_pages SET $set WHERE id = :id");
                 $stmt->execute($fields + ['id' => $input['id']]);
-                echo json_encode(['ok' => true, 'id' => $input['id']]);
+                echo json_encode($response + ['id' => $input['id']]);
                 break;
             }
 
@@ -61,14 +81,14 @@ switch ($method) {
             $placeholders = implode(', ', array_map(fn($k) => ":$k", array_keys($fields)));
             $stmt = $pdo->prepare("INSERT INTO content_pages ($cols) VALUES ($placeholders)");
             $stmt->execute($fields);
-            echo json_encode(['ok' => true, 'id' => $pdo->lastInsertId()]);
+            echo json_encode($response + ['id' => $pdo->lastInsertId()]);
         } catch (PDOException $e) {
             if ($e->getCode() === '23000') {
                 http_response_code(409);
                 echo json_encode(['error' => 'duplicate_slug', 'message' => 'Ya existe una página con esa URL (slug ES o EN). Cambia el título o el slug.']);
                 exit;
             }
-            throw $e;
+            respondUnexpectedDbError($e, 'content-pages.php save error');
         }
         break;
 

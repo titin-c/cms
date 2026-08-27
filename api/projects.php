@@ -6,6 +6,7 @@
 header('Content-Type: application/json');
 require_once __DIR__ . '/../src/lib/auth.php';
 require_once __DIR__ . '/../src/lib/db.php';
+require_once __DIR__ . '/../src/lib/validation.php';
 
 requireAuth();
 $pdo = getDb();
@@ -91,6 +92,24 @@ switch ($method) {
             'seo_description_en' => $input['seo_description_en'] ?? null,
         ];
 
+        // fix (Andrea): acorta lo que sobre en vez de dejar que MySQL rechace
+        // el guardado entero — ver comentario en src/lib/validation.php.
+        [$fields, $truncatedFields] = truncateFieldsToLimits($fields, [
+            'slug' => 160, 'slug_en' => 160,
+            'main_image' => 255, 'main_image_alt' => 255,
+            'title_es' => 200, 'title_en' => 200,
+            'seo_keywords' => 255, 'seo_keywords_en' => 255,
+            'seo_description_es' => 300, 'seo_description_en' => 300,
+        ], [
+            'slug' => 'URL slug (ES)', 'slug_en' => 'URL slug (EN)',
+            'main_image' => 'Imagen principal', 'main_image_alt' => 'Alt de la imagen principal',
+            'title_es' => 'Título (ES)', 'title_en' => 'Título (EN)',
+            'seo_keywords' => 'Palabras clave (ES)', 'seo_keywords_en' => 'Palabras clave (EN)',
+            'seo_description_es' => 'Meta descripción (ES)', 'seo_description_en' => 'Meta descripción (EN)',
+        ]);
+        $warning = truncationWarningMessage($truncatedFields);
+        $slug = $fields['slug']; // por si se ha acortado arriba
+
         try {
             if ($id) {
                 $set = implode(', ', array_map(fn($k) => "$k = :$k", array_keys($fields)));
@@ -117,7 +136,7 @@ switch ($method) {
                 ]);
                 exit;
             }
-            throw $e;
+            respondUnexpectedDbError($e, 'projects.php save error');
         }
 
         // fix (Andrea): sincroniza categorías adicionales (many-to-many) —
@@ -135,7 +154,9 @@ switch ($method) {
             }
         }
 
-        echo json_encode(['ok' => true, 'id' => $id, 'slug' => $slug, 'status' => $status]);
+        $response = ['ok' => true, 'id' => $id, 'slug' => $slug, 'status' => $status];
+        if ($warning) $response['warning'] = $warning;
+        echo json_encode($response);
         break;
 
     case 'DELETE':

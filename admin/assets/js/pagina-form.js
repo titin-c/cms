@@ -59,6 +59,10 @@ async function savePage() {
     pageId = result.id;
     main.dataset.pageId = pageId;
     window.setSaveStatus(statusEl, 'sent');
+    // fix (Andrea): si el servidor ha tenido que acortar algún campo (título,
+    // slug o meta descripción) por superar el máximo permitido, se avisa
+    // aparte — el guardado en sí ha ido bien, pero conviene revisar el texto
+    if (result.warning) window.showWarningToast(result.warning);
     // fix: ya no redirige sola tras guardar — antes te dejaba a mitad de edición
   } catch (err) {
     window.setSaveStatus(statusEl, 'error', saveErrorMessage(err));

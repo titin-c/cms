@@ -3,7 +3,31 @@
 Este archivo deja constancia de qué incluye cada entrega, para poder comprobar
 de un vistazo si lo que hay subido en el repositorio remoto está actualizado.
 
-## 1.10.3 — actual
+## 1.10.4 — actual
+
+- 🔴 Encontrada y arreglada la causa real de "error de conexión" al guardar
+  "Sobre mí" (y, en general, cualquier página, categoría, proyecto o vídeo):
+  no era la sesión caducada. El verdadero problema era que algunos campos de
+  texto (título, slug o meta descripción/subtítulo) tienen un límite de
+  caracteres en la base de datos, y si un valor ya guardado lo superaba —por
+  ejemplo, de antes de que el formulario limitara cuánto se podía escribir—
+  el guardado se rompía siempre, en cualquier intento, aunque solo cambiaras
+  una casilla que no tiene nada que ver (como la de "mostrar en el footer"):
+  el formulario reenvía todos los campos de la página en cada guardado, no
+  solo el que has tocado, así que ese valor de sobra volvía a fallar cada
+  vez. Ahora, si esto ocurre, el campo se acorta automáticamente al máximo
+  permitido y se avisa con claridad de qué se ha acortado, en vez de perder
+  el guardado entero. Se ha revisado y aplicado el mismo arreglo en las
+  cuatro secciones que pueden verse afectadas (páginas, categorías,
+  proyectos y vídeos), además de una red de seguridad general para que
+  ningún otro error de base de datos imprevisto vuelva a romper la respuesta
+  del servidor de esta forma.
+  - El diagnóstico de la versión 1.10.2/1.10.3 (sesión caducada) era
+    razonable dado lo que se veía en pantalla, y las mejoras de esa versión
+    (sesión más larga, aviso de mantenimiento de sesión) siguen siendo
+    útiles por sí mismas, pero no eran la causa de este fallo concreto.
+
+## 1.10.3
 
 - 🔴 Arreglada la causa real del "Tu sesión ha caducado" al guardar páginas
   largas (como "Sobre mí"): por defecto, PHP da de baja la sesión del

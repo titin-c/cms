@@ -59,6 +59,9 @@ async function saveCategory(status) {
     categoryId = result.id;
     main.dataset.categoryId = categoryId;
     window.setSaveStatus(statusEl, status === 'draft' ? 'saved' : 'sent');
+    // fix (Andrea): si el servidor ha tenido que acortar algún campo por
+    // superar el máximo permitido, se avisa aparte — el guardado ha ido bien
+    if (result.warning) window.showWarningToast(result.warning);
     // fix: ya no redirige sola tras guardar — antes te dejaba a mitad de edición
   } catch (err) {
     window.setSaveStatus(statusEl, 'error', saveErrorMessage(err));

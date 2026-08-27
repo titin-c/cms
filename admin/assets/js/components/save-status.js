@@ -31,6 +31,14 @@ window.setSaveStatus = function setSaveStatus(el, state, customMessage) {
   }
 };
 
+// fix (Andrea): aviso aparte para "se ha guardado, pero se ha acortado un
+// campo por superar el máximo permitido" — no es un error (sí se ha
+// guardado) pero tampoco un éxito silencioso, así que se muestra como un
+// segundo aviso junto al de "Guardado"/"Publicado".
+window.showWarningToast = function showWarningToast(message) {
+  showToast(message, 'warning');
+};
+
 function showToast(message, type) {
   let container = document.getElementById('toast-container');
   if (!container) {

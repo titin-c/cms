@@ -385,6 +385,7 @@ body.admin-page, body.admin-auth-page {
 .toast.is-visible { opacity: 1; transform: translateX(0); }
 .toast--success { background: #1B5E20; }
 .toast--error { background: #7F0000; }
+.toast--warning { background: #8A5A00; } /* fix (Andrea): aviso de "se ha acortado un campo" — ni error ni éxito puro */
 @media (max-width: 600px) {
   #toast-container { top: auto; bottom: 20px; right: 16px; left: 16px; align-items: stretch; }
   .toast { max-width: none; }

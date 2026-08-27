@@ -2,6 +2,7 @@
 header('Content-Type: application/json');
 require_once __DIR__ . '/../src/lib/auth.php';
 require_once __DIR__ . '/../src/lib/db.php';
+require_once __DIR__ . '/../src/lib/validation.php';
 
 requireAuth();
 $pdo = getDb();
@@ -57,26 +58,46 @@ switch ($method) {
             'status' => $status,
         ];
 
+        // fix (Andrea): acorta lo que sobre en vez de dejar que MySQL rechace
+        // el guardado entero — ver comentario en src/lib/validation.php.
+        [$fields, $truncatedFields] = truncateFieldsToLimits($fields, [
+            'slug' => 160, 'slug_en' => 160,
+            'title_es' => 200, 'title_en' => 200,
+            'subtitle_es' => 300, 'subtitle_en' => 300,
+            'thumbnail' => 255, 'thumbnail_alt' => 255,
+            'video_url' => 500,
+        ], [
+            'slug' => 'URL slug (ES)', 'slug_en' => 'URL slug (EN)',
+            'title_es' => 'Título (ES)', 'title_en' => 'Título (EN)',
+            'subtitle_es' => 'Subtítulo (ES)', 'subtitle_en' => 'Subtítulo (EN)',
+            'thumbnail' => 'Miniatura', 'thumbnail_alt' => 'Alt de la miniatura',
+            'video_url' => 'URL del vídeo',
+        ]);
+        $response = ['ok' => true, 'status' => $status];
+        if ($warning = truncationWarningMessage($truncatedFields)) {
+            $response['warning'] = $warning;
+        }
+
         try {
             if (!empty($input['id'])) {
                 $set = implode(', ', array_map(fn($k) => "$k = :$k", array_keys($fields)));
                 $stmt = $pdo->prepare("UPDATE videos SET $set WHERE id = :id");
                 $stmt->execute($fields + ['id' => $input['id']]);
-                echo json_encode(['ok' => true, 'id' => $input['id'], 'status' => $status]);
+                echo json_encode($response + ['id' => $input['id']]);
                 break;
             }
             $cols = implode(', ', array_keys($fields));
             $placeholders = implode(', ', array_map(fn($k) => ":$k", array_keys($fields)));
             $stmt = $pdo->prepare("INSERT INTO videos ($cols) VALUES ($placeholders)");
             $stmt->execute($fields);
-            echo json_encode(['ok' => true, 'id' => $pdo->lastInsertId(), 'status' => $status]);
+            echo json_encode($response + ['id' => $pdo->lastInsertId()]);
         } catch (PDOException $e) {
             if ($e->getCode() === '23000') {
                 http_response_code(409);
                 echo json_encode(['error' => 'duplicate_slug', 'message' => 'Ya existe un vídeo con esa URL (slug). Cambia el título o el slug.']);
                 exit;
             }
-            throw $e;
+            respondUnexpectedDbError($e, 'videos.php save error');
         }
         break;
 
