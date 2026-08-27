@@ -191,6 +191,99 @@ fontSelectUi.addEventListener('change', (e) => {
   document.getElementById('mockup-link').style.fontFamily = `'${font}', sans-serif`;
 });
 
+// --- Tipografía: tamaños y grosores, con visor en tiempo real ---
+// fix (Andrea): un control de tamaño (slider, px) + grosor (desplegable) por
+// cada tipo de texto del sitio, más los 4 niveles de encabezado (proporcional
+// a partir de H1, o cada uno a mano). El visor de abajo usa las mismas
+// unidades exactas que verá la web pública.
+const TYPE_SIMPLE_KEYS = ['hero_title', 'hero_subtitle', 'header_title', 'header_menu', 'body', 'footer_legal', 'footer_menu', 'breadcrumb', 'grid_title', 'grid_summary'];
+const TYPE_HEADING_KEYS = ['h1', 'h2', 'h3', 'h4'];
+const TYPE_ALL_KEYS = [...TYPE_SIMPLE_KEYS, ...TYPE_HEADING_KEYS];
+const TYPE_DEFAULTS = {
+  hero_title: [34, 700], hero_subtitle: [14, 400], header_title: [23, 700], header_menu: [14, 400],
+  body: [16, 400], footer_legal: [12, 400], footer_menu: [12, 400], breadcrumb: [12, 400],
+  grid_title: [14, 600], grid_summary: [14, 400],
+  h1: [40, 700], h2: [28, 700], h3: [22, 700], h4: [18, 700],
+};
+const HEADING_RATIOS = { h2: 0.7, h3: 0.55, h4: 0.45 }; // misma proporción que computeHeadingSizes() en PHP
+
+function typeDomId(key) { return key.replace(/_/g, '-'); }
+
+function updateTypePreview(key) {
+  const dom = typeDomId(key);
+  const sizeEl = document.getElementById(`type-${dom}-size`);
+  const weightEl = document.getElementById(`type-${dom}-weight`);
+  if (!sizeEl || !weightEl) return;
+  const valueEl = document.getElementById(`type-${dom}-size-value`);
+  if (valueEl) valueEl.textContent = `${sizeEl.value}px`;
+  const previewEl = document.getElementById(`type-preview-${key}`);
+  if (previewEl) {
+    previewEl.style.fontSize = `${sizeEl.value}px`;
+    previewEl.style.fontWeight = weightEl.value;
+  }
+}
+
+// fix (Andrea): "proporcional" — solo se edita H1, el resto se recalcula con
+// la misma proporción de fábrica (28/40, 22/40, 18/40) cada vez que cambia.
+function recomputeProportionalHeadings() {
+  if (document.getElementById('type-headings-mode').value !== 'proportional') return;
+  const h1Size = Number(document.getElementById('type-h1-size').value);
+  const h1Weight = document.getElementById('type-h1-weight').value;
+  Object.entries(HEADING_RATIOS).forEach(([level, ratio]) => {
+    document.getElementById(`type-${level}-size`).value = Math.round(h1Size * ratio);
+    document.getElementById(`type-${level}-weight`).value = h1Weight;
+    updateTypePreview(level);
+  });
+}
+
+function updateHeadingsModeUI() {
+  const isCustom = document.getElementById('type-headings-mode').value === 'custom';
+  document.getElementById('headings-custom-fields').hidden = !isCustom;
+  document.getElementById('headings-proportional-hint').hidden = isCustom;
+  if (!isCustom) recomputeProportionalHeadings();
+}
+
+TYPE_ALL_KEYS.forEach((key) => {
+  const dom = typeDomId(key);
+  const sizeEl = document.getElementById(`type-${dom}-size`);
+  const weightEl = document.getElementById(`type-${dom}-weight`);
+  if (!sizeEl || !weightEl) return;
+  sizeEl.addEventListener('input', () => {
+    updateTypePreview(key);
+    if (key === 'h1') recomputeProportionalHeadings();
+  });
+  weightEl.addEventListener('change', () => {
+    updateTypePreview(key);
+    if (key === 'h1') recomputeProportionalHeadings();
+  });
+});
+document.getElementById('type-headings-mode').addEventListener('change', updateHeadingsModeUI);
+
+function loadTypeSettings(settings) {
+  TYPE_ALL_KEYS.forEach((key) => {
+    const dom = typeDomId(key);
+    const [defSize, defWeight] = TYPE_DEFAULTS[key];
+    const sizeEl = document.getElementById(`type-${dom}-size`);
+    const weightEl = document.getElementById(`type-${dom}-weight`);
+    if (!sizeEl || !weightEl) return;
+    sizeEl.value = settings[`type_${key}_size`] || defSize;
+    weightEl.value = settings[`type_${key}_weight`] || defWeight;
+    updateTypePreview(key);
+  });
+  document.getElementById('type-headings-mode').value = settings.type_headings_mode || 'proportional';
+  updateHeadingsModeUI();
+}
+
+function collectTypeSettings() {
+  const out = { type_headings_mode: document.getElementById('type-headings-mode').value };
+  TYPE_ALL_KEYS.forEach((key) => {
+    const dom = typeDomId(key);
+    out[`type_${key}_size`] = document.getElementById(`type-${dom}-size`).value;
+    out[`type_${key}_weight`] = document.getElementById(`type-${dom}-weight`).value;
+  });
+  return out;
+}
+
 // --- Redes sociales (lista dinámica: añadir/quitar) ---
 const socialList = document.getElementById('social-links-list');
 
@@ -304,6 +397,7 @@ async function loadSettings() {
     document.getElementById('header-show-social').checked = (settings.header_show_social ?? '1') === '1';
     document.getElementById('footer-show-social').checked = (settings.footer_show_social ?? '1') === '1';
     applyHomeModulesOrder(settings.home_modules_order);
+    loadTypeSettings(settings);
     document.getElementById('home-simple-title-es').value = settings.home_simple_title_es || '';
     document.getElementById('home-simple-title-en').value = settings.home_simple_title_en || '';
     document.getElementById('home-simple-desc-es').value = settings.home_simple_description_es || '';
@@ -400,6 +494,7 @@ document.getElementById('save-settings-btn').addEventListener('click', async () 
         separator_size: document.getElementById('separator-size').value,
         grid_columns: document.getElementById('grid-columns').value,
         grid_gap: document.getElementById('grid-gap').value,
+        ...collectTypeSettings(),
       }),
     });
     const socialRes = await fetch('/api/social-links.php', {

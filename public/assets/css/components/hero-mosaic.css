@@ -84,13 +84,17 @@
 }
 
 .hero-mosaic__title {
-  font-size: 34px;
+  /* fix (Andrea): tamaño/grosor propios, independientes del ajuste de H1
+     (aunque semánticamente sea un <h1>, aquí es decorativo) */
+  font-size: var(--type-hero-title-size, 34px);
+  font-weight: var(--type-hero-title-weight, var(--font-weight-bold));
   margin: 0;
 }
 
 .hero-mosaic__subtitle {
   font-family: var(--font-ui);
-  font-size: var(--font-size-sm);
+  font-size: var(--type-hero-subtitle-size, var(--font-size-sm));
+  font-weight: var(--type-hero-subtitle-weight, var(--font-weight-regular));
   letter-spacing: 0.15em;
   text-transform: uppercase;
   margin-top: var(--spacing-2);

@@ -3,7 +3,32 @@
 Este archivo deja constancia de qué incluye cada entrega, para poder comprobar
 de un vistazo si lo que hay subido en el repositorio remoto está actualizado.
 
-## 1.9.4 — actual
+## 1.10.0 — actual
+
+- Ajustes → Estilos → nueva sección "Tipografía — tamaños y grosores": un
+  control de tamaño (deslizador, en píxeles) y grosor de letra (de Fina a
+  Extra-negrita, 6 opciones) para cada tipo de texto del sitio: título y
+  subtítulo del Hero, título y menú de la cabecera, encabezados H1-H4,
+  textos/párrafos, legal y menú del pie de página, miga de pan, y título y
+  resumen de los grids (home, categorías y proyectos). Incluye un visor con
+  todos los elementos a la vez, a tamaño real, que se actualiza al momento.
+  Los encabezados H1-H4 van en modo "proporcional" por defecto (ajustas solo
+  el H1 y los demás se escalan automáticamente con la misma proporción de
+  siempre) o "personalizado" (cada nivel con su propio tamaño y grosor).
+  🔴 Nota: los tamaños de fábrica reproducen el aspecto actual del sitio en
+  casi todos los casos; la única excepción es el título de cada categoría en
+  el listado de /categorias, que antes se veía más grande (28px) y ahora
+  usa el mismo tamaño que el resto de títulos de grid (14px) — se puede
+  volver a subir desde el nuevo control si se prefería más grande.
+- Ajustes → selectores de tipografía: lista de fuentes revisada — se quitan
+  varias sans-serif geométricas que se veían casi idénticas entre sí (DM
+  Sans, Sora, Outfit, Plus Jakarta Sans, IBM Plex Sans, Public Sans) y se
+  añaden tipografías populares que faltaban (Montserrat, Poppins, Raleway,
+  Nunito), además de Merriweather entre las serif. Si el sitio ya tenía
+  guardada una tipografía que ya no está en la lista curada, se sigue
+  mostrando (en un grupo "Actual") para no perder la selección real.
+
+## 1.9.4
 
 - Ajustes → selector de tipografías: ahora es un menú desplegable propio con
   cada fuente mostrada en un tamaño grande, para poder apreciar bien las

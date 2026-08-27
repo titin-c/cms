@@ -3,7 +3,7 @@
   margin: 0 auto;
   padding: var(--spacing-12) var(--spacing-6);
 }
-.content-page h1 { font-size: var(--font-size-2xl); margin-bottom: var(--spacing-4); }
+.content-page h1 { font-size: var(--type-h1-size, var(--font-size-2xl)); margin-bottom: var(--spacing-4); }
 
 .content-page__placeholder-notice {
   font-family: var(--font-ui);
@@ -17,7 +17,8 @@
 
 .content-page__body {
   font-family: var(--font-body);
-  font-size: var(--font-size-md);
+  font-size: var(--type-body-size, var(--font-size-md));
+  font-weight: var(--type-body-weight, var(--font-weight-regular));
   line-height: var(--line-height-relaxed);
   color: var(--color-ink-700);
 }

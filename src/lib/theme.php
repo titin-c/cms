@@ -102,6 +102,27 @@ function getSiteSettings(PDO $pdo): array {
         'videos_description_en' => '',
         'videos_meta_description_es' => '',
         'videos_meta_description_en' => '',
+
+        // fix (Andrea): tamaño y grosor de letra configurables por tipo de
+        // texto, con vista previa en vivo en Ajustes → Estilos. Los
+        // encabezados (H1-H4) van en modo "proporcional" por defecto (solo
+        // se ajusta el H1 y los demás se escalan a partir de él) o en modo
+        // "personalizado" (cada nivel con su propio tamaño/grosor).
+        'type_hero_title_size' => '34', 'type_hero_title_weight' => '700',
+        'type_hero_subtitle_size' => '14', 'type_hero_subtitle_weight' => '400',
+        'type_header_title_size' => '23', 'type_header_title_weight' => '700',
+        'type_header_menu_size' => '14', 'type_header_menu_weight' => '400',
+        'type_headings_mode' => 'proportional', // 'proportional' | 'custom'
+        'type_h1_size' => '40', 'type_h1_weight' => '700',
+        'type_h2_size' => '28', 'type_h2_weight' => '700',
+        'type_h3_size' => '22', 'type_h3_weight' => '700',
+        'type_h4_size' => '18', 'type_h4_weight' => '700',
+        'type_body_size' => '16', 'type_body_weight' => '400',
+        'type_footer_legal_size' => '12', 'type_footer_legal_weight' => '400',
+        'type_footer_menu_size' => '12', 'type_footer_menu_weight' => '400',
+        'type_breadcrumb_size' => '12', 'type_breadcrumb_weight' => '400',
+        'type_grid_title_size' => '14', 'type_grid_title_weight' => '600',
+        'type_grid_summary_size' => '14', 'type_grid_summary_weight' => '400',
     ];
 
     $rows = $pdo->query("SELECT setting_key, setting_value FROM site_settings")->fetchAll();
@@ -199,13 +220,46 @@ function maybeRenderComingSoon(array $settings, string $locale): void {
 }
 
 /**
- * URL de Google Fonts para las dos tipografías elegidas, cargando los pesos
- * necesarios: 400/500/700 para la de UI, 400/700 para la de títulos/texto.
+ * URL de Google Fonts para las dos tipografías elegidas.
+ * fix (Andrea): con los controles de grosor por tipo de texto (Fina a
+ * Extra-negrita), cualquiera de las dos tipografías puede usarse con
+ * cualquiera de los 6 grosores — se cargan todos para las dos familias.
  */
 function buildThemeFontsUrl(array $settings): string {
     $content = str_replace(' ', '+', $settings['font_content']);
     $ui = str_replace(' ', '+', $settings['font_ui']);
-    return "https://fonts.googleapis.com/css2?family={$content}:wght@400;700&family={$ui}:wght@400;500;700&display=swap";
+    $weights = '300;400;500;600;700;800';
+    return "https://fonts.googleapis.com/css2?family={$content}:wght@{$weights}&family={$ui}:wght@{$weights}&display=swap";
+}
+
+/**
+ * fix (Andrea): tamaños/grosores de encabezados H1-H4 — en modo
+ * "proportional" solo se guarda el H1 y los demás se derivan con una escala
+ * fija (misma proporción que los valores de fábrica: 28/40, 22/40, 18/40);
+ * en modo "custom" se usa el valor guardado de cada nivel tal cual.
+ * Se calcula en PHP (no en CSS) para que el mismo número exacto se pueda
+ * replicar en la vista previa en vivo del admin con JS.
+ */
+function computeHeadingSizes(array $settings): array {
+    $h1Size = (int) ($settings['type_h1_size'] ?? 40);
+    $h1Weight = (int) ($settings['type_h1_weight'] ?? 700);
+
+    if (($settings['type_headings_mode'] ?? 'proportional') === 'custom') {
+        return [
+            'h1' => ['size' => $h1Size, 'weight' => $h1Weight],
+            'h2' => ['size' => (int) ($settings['type_h2_size'] ?? 28), 'weight' => (int) ($settings['type_h2_weight'] ?? 700)],
+            'h3' => ['size' => (int) ($settings['type_h3_size'] ?? 22), 'weight' => (int) ($settings['type_h3_weight'] ?? 700)],
+            'h4' => ['size' => (int) ($settings['type_h4_size'] ?? 18), 'weight' => (int) ($settings['type_h4_weight'] ?? 700)],
+        ];
+    }
+
+    $ratios = ['h2' => 0.7, 'h3' => 0.55, 'h4' => 0.45];
+    return [
+        'h1' => ['size' => $h1Size, 'weight' => $h1Weight],
+        'h2' => ['size' => (int) round($h1Size * $ratios['h2']), 'weight' => $h1Weight],
+        'h3' => ['size' => (int) round($h1Size * $ratios['h3']), 'weight' => $h1Weight],
+        'h4' => ['size' => (int) round($h1Size * $ratios['h4']), 'weight' => $h1Weight],
+    ];
 }
 
 /** Bloque <style> con las variables CSS de tokens.css sobreescritas según los ajustes elegidos. */
@@ -231,6 +285,30 @@ function renderThemeOverridesStyleTag(array $settings): string {
     $gridGap = (int) ($settings['grid_gap'] ?? 24) . 'px';
     $gridColumns = max(1, (int) ($settings['grid_columns'] ?? 4));
 
+    // fix (Andrea): tamaño/grosor por tipo de texto — ver computeHeadingSizes()
+    // para la lógica de encabezados proporcional/personalizada.
+    $headings = computeHeadingSizes($settings);
+    $heroTitleSize = (int) ($settings['type_hero_title_size'] ?? 34) . 'px';
+    $heroTitleWeight = (int) ($settings['type_hero_title_weight'] ?? 700);
+    $heroSubtitleSize = (int) ($settings['type_hero_subtitle_size'] ?? 14) . 'px';
+    $heroSubtitleWeight = (int) ($settings['type_hero_subtitle_weight'] ?? 400);
+    $headerTitleSize = (int) ($settings['type_header_title_size'] ?? 23) . 'px';
+    $headerTitleWeight = (int) ($settings['type_header_title_weight'] ?? 700);
+    $headerMenuSize = (int) ($settings['type_header_menu_size'] ?? 14) . 'px';
+    $headerMenuWeight = (int) ($settings['type_header_menu_weight'] ?? 400);
+    $bodySize = (int) ($settings['type_body_size'] ?? 16) . 'px';
+    $bodyWeight = (int) ($settings['type_body_weight'] ?? 400);
+    $footerLegalSize = (int) ($settings['type_footer_legal_size'] ?? 12) . 'px';
+    $footerLegalWeight = (int) ($settings['type_footer_legal_weight'] ?? 400);
+    $footerMenuSize = (int) ($settings['type_footer_menu_size'] ?? 12) . 'px';
+    $footerMenuWeight = (int) ($settings['type_footer_menu_weight'] ?? 400);
+    $breadcrumbSize = (int) ($settings['type_breadcrumb_size'] ?? 12) . 'px';
+    $breadcrumbWeight = (int) ($settings['type_breadcrumb_weight'] ?? 400);
+    $gridTitleSize = (int) ($settings['type_grid_title_size'] ?? 14) . 'px';
+    $gridTitleWeight = (int) ($settings['type_grid_title_weight'] ?? 600);
+    $gridSummarySize = (int) ($settings['type_grid_summary_size'] ?? 14) . 'px';
+    $gridSummaryWeight = (int) ($settings['type_grid_summary_weight'] ?? 400);
+
     return <<<CSS
     <style>
       :root {
@@ -253,6 +331,35 @@ function renderThemeOverridesStyleTag(array $settings): string {
 
         --separator-border: {$separatorBorder};
         --separator-gap: {$separatorGap};
+
+        --type-hero-title-size: {$heroTitleSize};
+        --type-hero-title-weight: {$heroTitleWeight};
+        --type-hero-subtitle-size: {$heroSubtitleSize};
+        --type-hero-subtitle-weight: {$heroSubtitleWeight};
+        --type-header-title-size: {$headerTitleSize};
+        --type-header-title-weight: {$headerTitleWeight};
+        --type-header-menu-size: {$headerMenuSize};
+        --type-header-menu-weight: {$headerMenuWeight};
+        --type-h1-size: {$headings['h1']['size']}px;
+        --type-h1-weight: {$headings['h1']['weight']};
+        --type-h2-size: {$headings['h2']['size']}px;
+        --type-h2-weight: {$headings['h2']['weight']};
+        --type-h3-size: {$headings['h3']['size']}px;
+        --type-h3-weight: {$headings['h3']['weight']};
+        --type-h4-size: {$headings['h4']['size']}px;
+        --type-h4-weight: {$headings['h4']['weight']};
+        --type-body-size: {$bodySize};
+        --type-body-weight: {$bodyWeight};
+        --type-footer-legal-size: {$footerLegalSize};
+        --type-footer-legal-weight: {$footerLegalWeight};
+        --type-footer-menu-size: {$footerMenuSize};
+        --type-footer-menu-weight: {$footerMenuWeight};
+        --type-breadcrumb-size: {$breadcrumbSize};
+        --type-breadcrumb-weight: {$breadcrumbWeight};
+        --type-grid-title-size: {$gridTitleSize};
+        --type-grid-title-weight: {$gridTitleWeight};
+        --type-grid-summary-size: {$gridSummarySize};
+        --type-grid-summary-weight: {$gridSummaryWeight};
 
         --grid-gap: {$gridGap};
         --grid-columns: {$gridColumns};

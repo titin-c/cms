@@ -64,7 +64,8 @@
 }
 
 .site-nav__link {
-  font-size: var(--font-size-sm);
+  font-size: var(--type-header-menu-size, var(--font-size-sm));
+  font-weight: var(--type-header-menu-weight, var(--font-weight-regular));
   text-decoration: none;
   color: inherit;
   transition: color 150ms ease;
@@ -172,8 +173,8 @@
 }
 .site-nav__brand-block-name {
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 23px;
+  font-weight: var(--type-header-title-weight, 700);
+  font-size: var(--type-header-title-size, 23px);
 }
 .site-nav__brand-block-tagline {
   font-family: var(--font-ui);

@@ -3,15 +3,21 @@ html { scroll-behavior: smooth; }
 body {
   margin: 0;
   font-family: var(--font-body);
+  font-size: var(--type-body-size, var(--font-size-md));
+  font-weight: var(--type-body-weight, var(--font-weight-regular));
   color: var(--color-ink-900);
   background: var(--color-surface);
   line-height: var(--line-height-normal);
 }
 
-h1, h2, h3 { font-family: var(--font-display); font-weight: var(--font-weight-bold); line-height: var(--line-height-tight); margin: 0; }
+/* fix (Andrea): tamaño y grosor de H1-H4 configurables desde Ajustes →
+   Estilos → Tipografía (proporcional a partir de H1, o cada nivel a mano) */
+h1, h2, h3, h4 { font-family: var(--font-display); line-height: var(--line-height-tight); margin: 0; }
 /* fix (design-system-agent): serif decorativa solo desde font-size-lg, nunca en textos pequeños */
-h1 { font-size: var(--font-size-2xl); }
-h2 { font-size: var(--font-size-xl); }
+h1 { font-size: var(--type-h1-size, var(--font-size-2xl)); font-weight: var(--type-h1-weight, var(--font-weight-bold)); }
+h2 { font-size: var(--type-h2-size, var(--font-size-xl)); font-weight: var(--type-h2-weight, var(--font-weight-bold)); }
+h3 { font-size: var(--type-h3-size, var(--font-size-lg)); font-weight: var(--type-h3-weight, var(--font-weight-bold)); }
+h4 { font-size: var(--type-h4-size, var(--font-size-md)); font-weight: var(--type-h4-weight, var(--font-weight-bold)); }
 
 a { color: inherit; }
 
@@ -49,7 +55,8 @@ button {
 /* Breadcrumb — usado en proyecto.php y categoria.php */
 .breadcrumb {
   font-family: var(--font-ui);
-  font-size: 12px;
+  font-size: var(--type-breadcrumb-size, 12px);
+  font-weight: var(--type-breadcrumb-weight, var(--font-weight-regular));
   color: var(--color-ink-500);
   margin-bottom: var(--spacing-6);
   display: flex;

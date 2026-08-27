@@ -48,6 +48,22 @@ switch ($method) {
             'categories_description_es', 'categories_description_en',
             'categories_meta_title_es', 'categories_meta_title_en',
             'categories_meta_description_es', 'categories_meta_description_en',
+            // fix (Andrea): tamaño/grosor por tipo de texto
+            'type_hero_title_size', 'type_hero_title_weight',
+            'type_hero_subtitle_size', 'type_hero_subtitle_weight',
+            'type_header_title_size', 'type_header_title_weight',
+            'type_header_menu_size', 'type_header_menu_weight',
+            'type_headings_mode',
+            'type_h1_size', 'type_h1_weight',
+            'type_h2_size', 'type_h2_weight',
+            'type_h3_size', 'type_h3_weight',
+            'type_h4_size', 'type_h4_weight',
+            'type_body_size', 'type_body_weight',
+            'type_footer_legal_size', 'type_footer_legal_weight',
+            'type_footer_menu_size', 'type_footer_menu_weight',
+            'type_breadcrumb_size', 'type_breadcrumb_weight',
+            'type_grid_title_size', 'type_grid_title_weight',
+            'type_grid_summary_size', 'type_grid_summary_weight',
         ];
         $input = json_decode(file_get_contents('php://input'), true) ?? [];
 

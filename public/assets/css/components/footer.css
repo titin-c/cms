@@ -11,7 +11,8 @@
 }
 
 .site-footer__copy {
-  font-size: var(--font-size-xs);
+  font-size: var(--type-footer-legal-size, var(--font-size-xs));
+  font-weight: var(--type-footer-legal-weight, var(--font-weight-regular));
   color: var(--color-ink-500); /* fix (WAVE): #9E9E9E daba solo 2.85:1, muy por debajo de AAA; #565656 cumple 7.2:1 */
 }
 
@@ -21,7 +22,8 @@
   gap: var(--spacing-4);
 }
 .site-footer__links a {
-  font-size: var(--font-size-xs);
+  font-size: var(--type-footer-menu-size, var(--font-size-xs));
+  font-weight: var(--type-footer-menu-weight, var(--font-weight-regular));
   color: var(--color-ink-500);
   text-decoration: none;
   display: flex;

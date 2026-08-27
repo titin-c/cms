@@ -8,38 +8,55 @@ requireAuth();
 $pdo = getDb();
 $currentSettings = getSiteSettings($pdo);
 
-// fix (Andrea): antes cada selector solo ofrecía serif o sans por separado —
-// ahora ambos ofrecen la lista completa (agrupada por categoría), para poder
-// elegir cualquier combinación libremente.
+// fix (Andrea): la lista anterior tenía demasiadas sans-serif geométricas
+// casi idénticas entre sí (DM Sans/Sora/Outfit/Plus Jakarta Sans/IBM Plex
+// Sans/Public Sans) y le faltaban tipografías populares y muy reconocibles
+// (Montserrat, Poppins...). Nueva selección: menos fuentes pero cada una
+// visualmente distinta de las demás — mezcla de serifs desde muy dramáticas
+// (Bodoni Moda) a suaves y legibles (Merriweather), y sans-serifs desde
+// geométricas conocidas (Montserrat, Poppins) a redondeadas (Nunito) o con
+// más personalidad (Space Grotesk).
 $curatedFonts = [
     ['name' => 'Playfair Display', 'category' => 'Serif'],
-    ['name' => 'Lora', 'category' => 'Serif'],
-    ['name' => 'Cormorant Garamond', 'category' => 'Serif'],
-    ['name' => 'EB Garamond', 'category' => 'Serif'],
-    ['name' => 'Libre Baskerville', 'category' => 'Serif'],
-    ['name' => 'Fraunces', 'category' => 'Serif'],
-    ['name' => 'DM Serif Display', 'category' => 'Serif'],
-    ['name' => 'Newsreader', 'category' => 'Serif'],
-    ['name' => 'Spectral', 'category' => 'Serif'],
     ['name' => 'Bodoni Moda', 'category' => 'Serif'],
-    ['name' => 'Prata', 'category' => 'Serif'],
+    ['name' => 'DM Serif Display', 'category' => 'Serif'],
+    ['name' => 'Cormorant Garamond', 'category' => 'Serif'],
+    ['name' => 'Lora', 'category' => 'Serif'],
+    ['name' => 'Merriweather', 'category' => 'Serif'],
+    ['name' => 'Libre Baskerville', 'category' => 'Serif'],
+    ['name' => 'EB Garamond', 'category' => 'Serif'],
+    ['name' => 'Fraunces', 'category' => 'Serif'],
     ['name' => 'Crimson Pro', 'category' => 'Serif'],
+    ['name' => 'Montserrat', 'category' => 'Sans-serif'],
+    ['name' => 'Poppins', 'category' => 'Sans-serif'],
     ['name' => 'Inter', 'category' => 'Sans-serif'],
-    ['name' => 'Work Sans', 'category' => 'Sans-serif'],
-    ['name' => 'Manrope', 'category' => 'Sans-serif'],
+    ['name' => 'Raleway', 'category' => 'Sans-serif'],
+    ['name' => 'Nunito', 'category' => 'Sans-serif'],
     ['name' => 'Space Grotesk', 'category' => 'Sans-serif'],
-    ['name' => 'DM Sans', 'category' => 'Sans-serif'],
-    ['name' => 'Sora', 'category' => 'Sans-serif'],
-    ['name' => 'Outfit', 'category' => 'Sans-serif'],
-    ['name' => 'Plus Jakarta Sans', 'category' => 'Sans-serif'],
-    ['name' => 'Karla', 'category' => 'Sans-serif'],
-    ['name' => 'IBM Plex Sans', 'category' => 'Sans-serif'],
+    ['name' => 'Work Sans', 'category' => 'Sans-serif'],
     ['name' => 'Archivo', 'category' => 'Sans-serif'],
-    ['name' => 'Public Sans', 'category' => 'Sans-serif'],
+    ['name' => 'Manrope', 'category' => 'Sans-serif'],
+    ['name' => 'Karla', 'category' => 'Sans-serif'],
 ];
-$familyParams = array_map(fn($f) => 'family=' . str_replace(' ', '+', $f['name']) . ':wght@400;700', $curatedFonts);
+
+// fix (Andrea): si el sitio ya tenía guardada una tipografía que no está en
+// la lista curada (por ejemplo, una de las quitadas en esta revisión), no
+// desaparece silenciosamente del desplegable — se añade en su propio grupo
+// para no perder la selección real al guardar.
+$curatedNames = array_column($curatedFonts, 'name');
+$keptFonts = [];
+foreach (['font_content', 'font_ui'] as $fontField) {
+    $current = trim($currentSettings[$fontField] ?? '');
+    if ($current && !in_array($current, $curatedNames, true) && !in_array($current, $keptFonts, true)) {
+        $curatedFonts[] = ['name' => $current, 'category' => 'Actual'];
+        $keptFonts[] = $current;
+    }
+}
+
+$familyParams = array_map(fn($f) => 'family=' . str_replace(' ', '+', $f['name']) . ':wght@300;400;500;600;700;800', $curatedFonts);
 $fontsUrl = 'https://fonts.googleapis.com/css2?' . implode('&', $familyParams) . '&display=swap';
 $groups = ['Serif' => [], 'Sans-serif' => []];
+if ($keptFonts) { $groups['Actual'] = []; }
 foreach ($curatedFonts as $f) { $groups[$f['category']][] = $f['name']; }
 ?>
 <!DOCTYPE html>
@@ -229,6 +246,132 @@ foreach ($curatedFonts as $f) { $groups[$f['category']][] = $f['name']; }
         <div class="font-preview" id="preview-ui">
           <button type="button" class="font-preview__button" id="preview-ui-button">Contacto</button>
           <span class="font-preview__menu" id="preview-ui-menu">Sobre mí &nbsp;·&nbsp; Contacto &nbsp;·&nbsp; ES / EN</span>
+        </div>
+      </section>
+
+      <!-- fix (Andrea): tamaño y grosor de letra por tipo de texto, con vista
+           previa en vivo de todos los sitios donde aparece cada uno. -->
+      <section class="admin-form__block">
+        <h2>Tipografía — tamaños y grosores</h2>
+        <p class="admin-form__hint">Tamaño (en píxeles) y grosor de letra de cada tipo de texto del sitio. La vista previa de abajo se actualiza al momento.</p>
+
+        <?php
+        $simpleTypeControls = [
+            'hero_title' => ['Hero — título', 20, 100],
+            'hero_subtitle' => ['Hero — subtítulo', 10, 24],
+            'header_title' => ['Cabecera — título', 14, 40],
+            'header_menu' => ['Cabecera — menú', 10, 20],
+            'body' => ['Textos (párrafos y descripciones)', 12, 22],
+            'footer_legal' => ['Pie de página — legal', 10, 18],
+            'footer_menu' => ['Pie de página — menú', 10, 18],
+            'breadcrumb' => ['Miga de pan', 10, 16],
+            'grid_title' => ['Grids (home, categorías, proyectos) — título', 10, 24],
+            'grid_summary' => ['Grids (home, categorías, proyectos) — resumen', 10, 20],
+        ];
+        $weightOptions = [
+            '300' => 'Fina', '400' => 'Normal', '500' => 'Medio',
+            '600' => 'Semi-negrita', '700' => 'Negrita', '800' => 'Extra-negrita',
+        ];
+        $renderWeightOptions = function () use ($weightOptions) {
+            foreach ($weightOptions as $val => $wlabel) {
+                echo '<option value="' . $val . '">' . $wlabel . '</option>';
+            }
+        };
+        ?>
+
+        <?php foreach ($simpleTypeControls as $key => [$label, $min, $max]): $dash = str_replace('_', '-', $key); ?>
+          <div class="type-control">
+            <label for="type-<?= $dash ?>-size"><?= htmlspecialchars($label) ?></label>
+            <div class="type-control__row">
+              <input type="range" id="type-<?= $dash ?>-size" min="<?= $min ?>" max="<?= $max ?>" step="1">
+              <span id="type-<?= $dash ?>-size-value" class="type-control__value"></span>
+              <select id="type-<?= $dash ?>-weight" class="type-control__weight">
+                <?php $renderWeightOptions(); ?>
+              </select>
+            </div>
+          </div>
+        <?php endforeach; ?>
+
+        <div class="type-control type-control--headings">
+          <label for="type-headings-mode">Encabezados (H1, H2, H3, H4)</label>
+          <select id="type-headings-mode">
+            <option value="proportional">Proporcional a partir de H1 (recomendado)</option>
+            <option value="custom">Personalizar cada nivel por separado</option>
+          </select>
+          <p class="admin-form__hint" id="headings-proportional-hint">H2, H3 y H4 se escalan automáticamente a partir del tamaño y grosor de H1.</p>
+
+          <div class="type-control" style="margin-top:12px;">
+            <label for="type-h1-size">H1</label>
+            <div class="type-control__row">
+              <input type="range" id="type-h1-size" min="24" max="72" step="1">
+              <span id="type-h1-size-value" class="type-control__value"></span>
+              <select id="type-h1-weight" class="type-control__weight">
+                <?php $renderWeightOptions(); ?>
+              </select>
+            </div>
+          </div>
+
+          <div id="headings-custom-fields" hidden>
+            <?php foreach (['h2' => [18, 56], 'h3' => [16, 40], 'h4' => [14, 32]] as $level => [$min, $max]): ?>
+              <div class="type-control" style="margin-top:12px;">
+                <label for="type-<?= $level ?>-size"><?= strtoupper($level) ?></label>
+                <div class="type-control__row">
+                  <input type="range" id="type-<?= $level ?>-size" min="<?= $min ?>" max="<?= $max ?>" step="1">
+                  <span id="type-<?= $level ?>-size-value" class="type-control__value"></span>
+                  <select id="type-<?= $level ?>-weight" class="type-control__weight">
+                    <?php $renderWeightOptions(); ?>
+                  </select>
+                </div>
+              </div>
+            <?php endforeach; ?>
+          </div>
+        </div>
+
+        <!-- fix (Andrea): visor con todos los elementos a la vez, a tamaño real -->
+        <div class="type-preview-panel" id="type-preview-panel">
+          <p class="type-preview-panel__label">Vista previa</p>
+
+          <span class="type-preview-item__label">Hero — título</span>
+          <p class="type-preview-item" id="type-preview-hero_title" style="font-family:var(--font-display);">Nombre del sitio</p>
+
+          <span class="type-preview-item__label">Hero — subtítulo</span>
+          <p class="type-preview-item" id="type-preview-hero_subtitle" style="font-family:var(--font-ui); letter-spacing:0.15em; text-transform:uppercase;">Fotografía y visual</p>
+
+          <span class="type-preview-item__label">Cabecera — título</span>
+          <p class="type-preview-item" id="type-preview-header_title" style="font-family:var(--font-display);">Nombre del sitio</p>
+
+          <span class="type-preview-item__label">Cabecera — menú</span>
+          <p class="type-preview-item" id="type-preview-header_menu" style="font-family:var(--font-ui);">Sobre mí &nbsp;·&nbsp; Categorías &nbsp;·&nbsp; Contacto</p>
+
+          <span class="type-preview-item__label">H1</span>
+          <p class="type-preview-item" id="type-preview-h1" style="font-family:var(--font-display);">Título de página</p>
+
+          <span class="type-preview-item__label">H2</span>
+          <p class="type-preview-item" id="type-preview-h2" style="font-family:var(--font-display);">Subtítulo de sección</p>
+
+          <span class="type-preview-item__label">H3</span>
+          <p class="type-preview-item" id="type-preview-h3" style="font-family:var(--font-display);">Encabezado de apartado</p>
+
+          <span class="type-preview-item__label">H4</span>
+          <p class="type-preview-item" id="type-preview-h4" style="font-family:var(--font-display);">Encabezado menor</p>
+
+          <span class="type-preview-item__label">Textos</span>
+          <p class="type-preview-item" id="type-preview-body" style="font-family:var(--font-body);">Este es un párrafo de ejemplo, como los que aparecen en la descripción de un proyecto o en una página de contenido.</p>
+
+          <span class="type-preview-item__label">Pie de página — legal</span>
+          <p class="type-preview-item" id="type-preview-footer_legal" style="font-family:var(--font-ui);">© 2026 Nombre del sitio</p>
+
+          <span class="type-preview-item__label">Pie de página — menú</span>
+          <p class="type-preview-item" id="type-preview-footer_menu" style="font-family:var(--font-ui);">Aviso legal &nbsp;·&nbsp; Privacidad</p>
+
+          <span class="type-preview-item__label">Miga de pan</span>
+          <p class="type-preview-item" id="type-preview-breadcrumb" style="font-family:var(--font-ui);">Inicio / Categoría / Proyecto</p>
+
+          <span class="type-preview-item__label">Grids (título)</span>
+          <p class="type-preview-item" id="type-preview-grid_title" style="font-family:var(--font-ui); color:var(--color-ink-900);">Nombre del proyecto</p>
+
+          <span class="type-preview-item__label">Grids (resumen)</span>
+          <p class="type-preview-item" id="type-preview-grid_summary" style="font-family:var(--font-body);">Breve descripción de este proyecto o categoría, tal como aparece bajo cada miniatura.</p>
         </div>
       </section>
 

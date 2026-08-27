@@ -68,8 +68,8 @@
   background: linear-gradient(to top, rgba(10,10,10,0.75), transparent);
   color: #FFFFFF;
   font-family: var(--font-ui);
-  font-size: 13px;
-  font-weight: 500;
+  font-size: var(--type-grid-title-size, 13px);
+  font-weight: var(--type-grid-title-weight, 500);
   opacity: 0;
   transform: translateY(4px);
   transition: opacity 180ms ease, transform 180ms ease;
@@ -116,7 +116,8 @@
 
 .category-row__text h2 { margin-bottom: var(--spacing-2); }
 .category-row__text p {
-  font-size: var(--font-size-sm);
+  font-size: var(--type-body-size, var(--font-size-sm));
+  font-weight: var(--type-body-weight, var(--font-weight-regular));
   color: var(--color-ink-500);
   line-height: var(--line-height-relaxed);
   margin: 0;

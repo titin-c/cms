@@ -79,14 +79,15 @@
 }
 
 .projects-mosaic__title {
-  font-size: var(--font-size-md, 16px);
-  font-weight: 600;
+  font-size: var(--type-grid-title-size, var(--font-size-md, 16px));
+  font-weight: var(--type-grid-title-weight, 600);
 }
 
 /* fix: resumen recortado con elipsis a partir de 3 líneas, sin importar lo largo que sea */
 .projects-mosaic__excerpt {
   font-family: var(--font-ui);
-  font-size: var(--font-size-sm);
+  font-size: var(--type-grid-summary-size, var(--font-size-sm));
+  font-weight: var(--type-grid-summary-weight, var(--font-weight-regular));
   line-height: var(--line-height-normal);
   display: -webkit-box;
   -webkit-line-clamp: 3;
