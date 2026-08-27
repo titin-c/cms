@@ -10,6 +10,7 @@ $GLOBALS['__locale'] = resolveLocale();
 $locale = $GLOBALS['__locale'];
 $pdo = getDb();
 $themeSettings = getSiteSettings($pdo);
+maybeRenderComingSoon($themeSettings, $locale); // fix (Andrea, web en construcción)
 
 // fix (Andrea, CMS multi-cliente): 3 módulos independientes y combinables —
 // cualquier combinación es válida, incluso ninguno (home solo con footer).
@@ -17,10 +18,13 @@ $showHero = ($themeSettings['home_show_hero'] ?? '1') === '1';
 $showCategories = ($themeSettings['home_show_categories'] ?? '1') === '1' && ($themeSettings['module_projects_enabled'] ?? '1') === '1';
 $showVideos = ($themeSettings['home_show_videos'] ?? '0') === '1' && ($themeSettings['module_videos_enabled'] ?? '1') === '1';
 $showSimple = ($themeSettings['home_show_simple'] ?? '0') === '1';
+$showProjectsMosaic = ($themeSettings['home_show_projects_mosaic'] ?? '0') === '1' && ($themeSettings['module_projects_enabled'] ?? '1') === '1';
 
 $categories = [];
 $videos = [];
 $mosaicImages = [];
+$projectsMosaicItems = [];
+$projectsMosaicColumns = (int) ($themeSettings['projects_mosaic_columns'] ?? 3);
 
 if ($showCategories) {
     // Categorías CON al menos un proyecto publicado (regla: vacías nunca se renderizan)
@@ -73,7 +77,27 @@ if ($showVideos) {
     $videos = $pdo->query("SELECT * FROM videos WHERE status = 'published' ORDER BY sort_order ASC, id DESC")->fetchAll();
 }
 
-if ($showHero) {
+if ($showProjectsMosaic) {
+    // fix (Andrea): mosaico de TODOS los proyectos publicados, de cualquier
+    // categoría — a diferencia del módulo Categorías, aquí no importa
+    // show_in_home ni la categoría, solo que el proyecto esté publicado.
+    $projectsMosaicItems = $pdo->query("
+        SELECT slug, slug_en, title_es, title_en, excerpt_es, excerpt_en, main_image, main_image_alt
+        FROM projects
+        WHERE status = 'published'
+        ORDER BY sort_order ASC, project_date DESC
+    ")->fetchAll();
+}
+
+// fix (Andrea): fondo del Hero configurable — mosaico (de siempre), una foto
+// destacada al azar, o sin fondo (color liso, con el texto adaptado a
+// claro/oscuro). $themeIsDark se reutiliza más abajo en el módulo de
+// mosaico de proyectos, para que la lógica de claro/oscuro sea una sola.
+$heroBackgroundMode = $themeSettings['hero_background_mode'] ?? 'mosaic';
+$themeIsDark = isSurfaceDark($themeSettings);
+$heroPhoto = null;
+
+if ($showHero && $heroBackgroundMode === 'mosaic') {
     // El mosaico se nutre de las fuentes activas: proyectos destacados y/o
     // miniaturas de vídeo, según qué módulos estén encendidos.
     if ($showCategories) {
@@ -91,6 +115,15 @@ if ($showHero) {
     // fix (seo-agent [audit] 🟠): variante 'mobile' (768w), no 'desktop' — cada
     // pieza del mosaico se muestra muy pequeña, 1600w era peso desperdiciado
     $mosaicImages = array_map(fn($img) => '/uploads/' . variantFromThumbFilename($img, 'mobile'), array_slice($mosaicImages, 0, 30));
+} elseif ($showHero && $heroBackgroundMode === 'random_photo') {
+    // fix (Andrea): una foto destacada al azar como fondo del Hero, distinta
+    // en cada visita — igual criterio que el Módulo Simple (home_simple_image_mode).
+    $randomHeroImage = $pdo->query("
+        SELECT main_image FROM projects WHERE featured = 1 AND status = 'published' ORDER BY RAND() LIMIT 1
+    ")->fetchColumn();
+    if ($randomHeroImage) {
+        $heroPhoto = '/uploads/' . variantFromThumbFilename($randomHeroImage, 'desktop');
+    }
 }
 
 $siteNameForTitle = $themeSettings['site_name'] ?? 'Mi Sitio';
@@ -113,11 +146,12 @@ if (!$homeMetaDescription) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="<?= $locale ?>">
+<html lang="<?= $locale ?>" data-theme-tone="<?= $themeIsDark ? 'dark' : 'light' ?>">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?= htmlspecialchars($pageTitle) ?></title>
+  <?= robotsMetaTag($themeSettings) ?>
   <meta name="description" content="<?= htmlspecialchars($homeMetaDescription) ?>">
   <link rel="canonical" href="<?= getSiteDomain($themeSettings) ?><?= localeHomeUrl($locale) ?>">
   <link rel="alternate" hreflang="es" href="<?= getSiteDomain($themeSettings) ?>/">
@@ -134,6 +168,7 @@ if (!$homeMetaDescription) {
   <?php if ($showCategories): ?><link rel="stylesheet" href="/assets/css/components/category-row.css"><?php endif; ?>
   <?php if ($showVideos): ?><link rel="stylesheet" href="/assets/css/components/video-lightbox.css"><?php endif; ?>
   <?php if ($showSimple): ?><link rel="stylesheet" href="/assets/css/components/home-simple.css"><?php endif; ?>
+  <?php if ($showProjectsMosaic): ?><link rel="stylesheet" href="/assets/css/components/projects-mosaic.css"><?php endif; ?>
   <link rel="stylesheet" href="/assets/css/components/footer.css">
   <link rel="stylesheet" href="/assets/css/components/contact-drawer.css">
   <link rel="stylesheet" href="/assets/css/components/cookie-banner.css">
@@ -247,7 +282,15 @@ if (!$homeMetaDescription) {
       </section>
     <?php endif; endif; ?>
 
-    <?php if (!$showCategories && !$showVideos && !$showSimple): ?>
+    <?php if ($showProjectsMosaic): ?>
+      <?php if (empty($projectsMosaicItems)): ?>
+        <p class="empty-state"><?= $locale === 'en' ? 'New projects coming soon.' : 'Nuevos proyectos muy pronto.' ?></p>
+      <?php else: ?>
+        <?php include __DIR__ . '/../src/templates/projects-mosaic.php'; ?>
+      <?php endif; ?>
+    <?php endif; ?>
+
+    <?php if (!$showCategories && !$showVideos && !$showSimple && !$showProjectsMosaic): ?>
       <p class="empty-state" style="padding-top:var(--spacing-24);"><?= $locale === 'en' ? 'Content coming soon.' : 'Contenido muy pronto.' ?></p>
     <?php endif; ?>
   </main>

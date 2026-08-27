@@ -247,9 +247,20 @@ async function loadSettings() {
     document.getElementById('contact-email').value = settings.contact_email || '';
     document.getElementById('contact-phone').value = settings.contact_phone || '';
     document.getElementById('home-show-hero').checked = (settings.home_show_hero ?? '1') === '1';
+    document.getElementById('hero-background-mode').value = settings.hero_background_mode || 'mosaic';
+    updateHeroBackgroundModeUI();
+    linkToggleVisibility('#home-show-hero', ['#hero-background-fields']); // fix (Andrea): solo tiene sentido si el Hero está activo
     document.getElementById('home-show-categories').checked = (settings.home_show_categories ?? '1') === '1';
     document.getElementById('home-show-videos').checked = (settings.home_show_videos ?? '0') === '1';
     document.getElementById('home-show-simple').checked = (settings.home_show_simple ?? '0') === '1';
+    document.getElementById('home-show-projects-mosaic').checked = (settings.home_show_projects_mosaic ?? '0') === '1';
+    document.getElementById('projects-mosaic-columns').value = settings.projects_mosaic_columns || '3';
+    linkToggleVisibility('#home-show-projects-mosaic', ['#projects-mosaic-fields']);
+    document.getElementById('site-noindex').checked = (settings.site_noindex ?? '0') === '1';
+    document.getElementById('site-coming-soon').checked = (settings.site_coming_soon ?? '0') === '1';
+    document.getElementById('coming-soon-message-es').value = settings.coming_soon_message_es || '';
+    document.getElementById('coming-soon-message-en').value = settings.coming_soon_message_en || '';
+    linkToggleVisibility('#site-coming-soon', ['#coming-soon-fields']);
     document.getElementById('home-simple-title-es').value = settings.home_simple_title_es || '';
     document.getElementById('home-simple-title-en').value = settings.home_simple_title_en || '';
     document.getElementById('home-simple-desc-es').value = settings.home_simple_description_es || '';
@@ -315,8 +326,15 @@ document.getElementById('save-settings-btn').addEventListener('click', async () 
         contact_email: document.getElementById('contact-email').value.trim(),
         contact_phone: document.getElementById('contact-phone').value.trim(),
         home_show_hero: document.getElementById('home-show-hero').checked ? '1' : '0',
+        hero_background_mode: document.getElementById('hero-background-mode').value,
         home_show_categories: document.getElementById('home-show-categories').checked ? '1' : '0',
         home_show_videos: document.getElementById('home-show-videos').checked ? '1' : '0',
+        home_show_projects_mosaic: document.getElementById('home-show-projects-mosaic').checked ? '1' : '0',
+        projects_mosaic_columns: document.getElementById('projects-mosaic-columns').value,
+        site_noindex: document.getElementById('site-noindex').checked ? '1' : '0',
+        site_coming_soon: document.getElementById('site-coming-soon').checked ? '1' : '0',
+        coming_soon_message_es: document.getElementById('coming-soon-message-es').value,
+        coming_soon_message_en: document.getElementById('coming-soon-message-en').value,
         home_meta_description_es: document.getElementById('home-meta-es').value,
         home_meta_description_en: document.getElementById('home-meta-en').value,
         module_projects_enabled: document.getElementById('module-projects-enabled').checked ? '1' : '0',
@@ -390,6 +408,12 @@ function updateSimpleImageModeUI() {
   document.getElementById('simple-image-random-hint').hidden = !isRandom;
 }
 document.getElementById('simple-image-mode-random').addEventListener('change', updateSimpleImageModeUI);
+
+// fix (Andrea): fondo del Hero — el aviso de contraste automático solo aplica al modo "sin fondo"
+function updateHeroBackgroundModeUI() {
+  document.getElementById('hero-background-none-hint').hidden = document.getElementById('hero-background-mode').value !== 'none';
+}
+document.getElementById('hero-background-mode').addEventListener('change', updateHeroBackgroundModeUI);
 
 // --- Pestañas ---
 document.querySelectorAll('.admin-tab-btn').forEach((btn) => {

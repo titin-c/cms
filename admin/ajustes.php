@@ -138,6 +138,41 @@ foreach ($curatedFonts as $f) { $groups[$f['category']][] = $f['name']; }
         </label>
       </section>
 
+      <!-- fix (Andrea): web en construcción — dos interruptores independientes,
+           se pueden activar por separado o los dos a la vez. /admin siempre
+           sigue funcionando aunque "Próximamente" esté activado. -->
+      <section class="admin-form__block">
+        <h2>Web en construcción</h2>
+        <label class="admin-toggle">
+          <input type="checkbox" id="site-noindex">
+          <span class="admin-toggle__track"><span class="admin-toggle__thumb"></span></span>
+          No indexar en buscadores (noindex, nofollow)
+        </label>
+        <p class="admin-toggle__desc">La web se ve normal, pero pide a Google y compañía que no la indexen todavía.</p>
+
+        <label class="admin-toggle" style="margin-top:12px;">
+          <input type="checkbox" id="site-coming-soon">
+          <span class="admin-toggle__track"><span class="admin-toggle__thumb"></span></span>
+          Página "Próximamente"
+        </label>
+        <p class="admin-toggle__desc">Sustituye toda la web pública por un aviso de "en construcción". El panel de administración sigue funcionando con normalidad.</p>
+
+        <div id="coming-soon-fields" hidden>
+          <div class="admin-form__bilingual" style="margin-top:12px;">
+            <div class="admin-form__lang-col">
+              <span class="admin-form__lang-badge">Español</span>
+              <label for="coming-soon-message-es">Mensaje — opcional</label>
+              <textarea id="coming-soon-message-es" rows="3" placeholder="Estamos preparando algo nuevo. Vuelve pronto."></textarea>
+            </div>
+            <div class="admin-form__lang-col">
+              <span class="admin-form__lang-badge">English</span>
+              <label for="coming-soon-message-en">Message — optional</label>
+              <textarea id="coming-soon-message-en" rows="3" placeholder="We're working on something new. Check back soon."></textarea>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </div>
 
     <!-- ============ PESTAÑA: ESTILOS ============ -->
@@ -284,7 +319,19 @@ foreach ($curatedFonts as $f) { $groups[$f['category']][] = $f['name']; }
           <span class="admin-toggle__track"><span class="admin-toggle__thumb"></span></span>
           Hero
         </label>
-        <p class="admin-toggle__desc">Mosaico grande con el nombre del sitio.</p>
+        <p class="admin-toggle__desc">Sección grande a pantalla completa con el nombre del sitio.</p>
+
+        <!-- fix (Andrea): fondo del Hero configurable — mosaico (de siempre),
+             foto destacada al azar, o sin fondo (color liso). -->
+        <div id="hero-background-fields" style="margin:8px 0 16px 0;">
+          <label for="hero-background-mode">Fondo del Hero</label>
+          <select id="hero-background-mode">
+            <option value="mosaic">Mosaico de fotos (como siempre)</option>
+            <option value="random_photo">Foto destacada al azar</option>
+            <option value="none">Sin fondo (color liso)</option>
+          </select>
+          <p class="admin-form__hint" id="hero-background-none-hint" hidden>El texto se adapta automáticamente para verse bien tanto si el color de fondo es claro como oscuro.</p>
+        </div>
 
         <label class="admin-toggle">
           <input type="checkbox" id="home-show-categories">
@@ -306,6 +353,22 @@ foreach ($curatedFonts as $f) { $groups[$f['category']][] = $f['name']; }
           Simple
         </label>
         <p class="admin-toggle__desc">Imagen destacada + título + texto.</p>
+
+        <label class="admin-toggle">
+          <input type="checkbox" id="home-show-projects-mosaic">
+          <span class="admin-toggle__track"><span class="admin-toggle__thumb"></span></span>
+          Mosaico de proyectos
+        </label>
+        <p class="admin-toggle__desc">Todos los proyectos publicados a pantalla completa, con efecto parallax al hacer scroll.</p>
+
+        <div id="projects-mosaic-fields" style="margin:8px 0 0 0;" hidden>
+          <label for="projects-mosaic-columns">Miniaturas por fila</label>
+          <select id="projects-mosaic-columns">
+            <option value="1">1 por fila</option>
+            <option value="2">2 por fila</option>
+            <option value="3">3 por fila</option>
+          </select>
+        </div>
 
         <p class="admin-form__hint">Si desactivas el Hero, la home usa la misma cabecera sólida que el resto de páginas.</p>
       </section>

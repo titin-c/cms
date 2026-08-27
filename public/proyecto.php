@@ -9,6 +9,7 @@ $GLOBALS['__locale'] = resolveLocale();
 $locale = $GLOBALS['__locale'];
 $pdo = getDb();
 $themeSettings = getSiteSettings($pdo);
+maybeRenderComingSoon($themeSettings, $locale); // fix (Andrea, web en construcción)
 
 // fix (Andrea, SEO): la ruta en inglés (/project/slug-en) llega con slug_en;
 // la ruta en español (/proyecto/slug) llega con slug — ver public/.htaccess
@@ -79,6 +80,7 @@ $enUrl = $hasTranslatedUrl ? '/project/' . rawurlencode($project['slug_en']) : n
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?= htmlspecialchars($title) ?> — <?= htmlspecialchars($themeSettings['site_name'] ?? 'Mi Sitio') ?></title>
+  <?= robotsMetaTag($themeSettings) ?>
   <meta name="description" content="<?= htmlspecialchars($seoDesc ?: '') ?>">
   <meta name="keywords" content="<?= htmlspecialchars($seoKeywords ?: '') ?>">
   <link rel="canonical" href="<?= getSiteDomain($themeSettings) ?><?= $locale === 'en' && $enUrl ? $enUrl : $esUrl ?>">

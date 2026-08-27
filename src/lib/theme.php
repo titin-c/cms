@@ -63,6 +63,27 @@ function getSiteSettings(PDO $pdo): array {
         'module_projects_enabled' => '1',
         'module_videos_enabled' => '1',
         'module_pages_enabled' => '1',
+
+        // fix (Andrea, web en construcción): dos interruptores independientes —
+        // noindex (la web se ve, pero no se indexa) y "Próximamente" (sustituye
+        // toda la web pública por una página de aviso; /admin sigue funcionando
+        // siempre). Se pueden activar por separado o los dos a la vez.
+        'site_noindex' => '0',
+        'site_coming_soon' => '0',
+        'coming_soon_message_es' => '',
+        'coming_soon_message_en' => '',
+
+        // fix (Andrea): fondo del Hero configurable — 'mosaic' (el de siempre),
+        // 'random_photo' (una foto destacada al azar en cada visita, con el
+        // mismo overlay oscuro que el mosaico) o 'none' (color de fondo liso,
+        // el texto se adapta automáticamente a claro/oscuro).
+        'hero_background_mode' => 'mosaic',
+
+        // fix (Andrea): nuevo módulo de home — mosaico de todos los proyectos
+        // publicados con efecto parallax al hacer scroll.
+        'home_show_projects_mosaic' => '0',
+        'projects_mosaic_columns' => '3', // '1' | '2' | '3'
+
         'videos_show_in_header' => '0',
         'videos_show_in_footer' => '0',
         'videos_slug_es' => 'videos',
@@ -101,6 +122,72 @@ function getSiteDomain(array $settings): string {
 
 function getSocialLinks(PDO $pdo): array {
     return $pdo->query("SELECT * FROM social_links ORDER BY sort_order ASC, id ASC")->fetchAll();
+}
+
+/**
+ * fix (Andrea): ¿el fondo general del sitio (color_surface) es oscuro?
+ * Se reutiliza tanto para el Hero en modo "sin fondo" (color del texto) como
+ * para el hover del mosaico de proyectos con parallax (dirección del overlay)
+ * — un único criterio de claro/oscuro para todo el sitio, coherente con el
+ * resto del sistema de color en colors.php.
+ */
+function isSurfaceDark(array $settings): bool {
+    require_once __DIR__ . '/colors.php';
+    return relativeLuminance($settings['color_surface'] ?? '#FFFFFF') < 0.5;
+}
+
+/**
+ * Etiqueta <meta name="robots"> cuando la web está marcada como noindex o en
+ * modo "Próximamente" (este último también lleva su propio noindex, ver
+ * maybeRenderComingSoon()). Se incrusta en el <head> de cada página pública.
+ */
+function robotsMetaTag(array $settings): string {
+    if (($settings['site_noindex'] ?? '0') === '1' || ($settings['site_coming_soon'] ?? '0') === '1') {
+        return '<meta name="robots" content="noindex, nofollow">' . "\n";
+    }
+    return '';
+}
+
+/**
+ * fix (Andrea, web en construcción): si el modo "Próximamente" está activo,
+ * sustituye toda la página pública por un aviso simple y termina la
+ * ejecución — /admin y /api nunca pasan por aquí (no llaman a esta función),
+ * así que el panel sigue funcionando con normalidad mientras la web está
+ * "a puerta cerrada" de cara al público.
+ */
+function maybeRenderComingSoon(array $settings, string $locale): void {
+    if (($settings['site_coming_soon'] ?? '0') !== '1') return;
+
+    require_once __DIR__ . '/i18n.php';
+    $siteName = $settings['site_name'] ?? 'Mi Sitio';
+    $message = $locale === 'en'
+        ? ($settings['coming_soon_message_en'] ?: $settings['coming_soon_message_es'])
+        : $settings['coming_soon_message_es'];
+    if (!$message) { $message = t('coming_soon.default_message'); }
+    ?>
+<!DOCTYPE html>
+<html lang="<?= htmlspecialchars($locale) ?>">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title><?= htmlspecialchars($siteName) ?></title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="<?= htmlspecialchars(buildThemeFontsUrl($settings)) ?>" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/tokens.css">
+  <?= renderThemeOverridesStyleTag($settings) ?>
+  <link rel="stylesheet" href="/assets/css/components/coming-soon.css">
+</head>
+<body>
+  <main class="coming-soon">
+    <h1 class="coming-soon__title"><?= htmlspecialchars($siteName) ?></h1>
+    <p class="coming-soon__message"><?= nl2br(htmlspecialchars($message)) ?></p>
+  </main>
+</body>
+</html>
+    <?php
+    exit;
 }
 
 /**

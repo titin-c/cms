@@ -1,0 +1,27 @@
+/* fix (Andrea, web en construcción): página de aviso mínima, usa los mismos
+   tokens de color/tipografía ya configurados en Ajustes — se ve "de la casa"
+   incluso siendo un placeholder. */
+.coming-soon {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--spacing-6);
+  background: var(--color-surface);
+  color: var(--color-ink-900);
+}
+
+.coming-soon__title {
+  font-size: 28px;
+  margin: 0 0 var(--spacing-4);
+}
+
+.coming-soon__message {
+  font-family: var(--font-ui);
+  color: var(--color-ink-500);
+  max-width: 480px;
+  line-height: var(--line-height-relaxed);
+  margin: 0;
+}

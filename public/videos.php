@@ -10,6 +10,7 @@ $GLOBALS['__locale'] = resolveLocale();
 $locale = $GLOBALS['__locale'];
 $pdo = getDb();
 $themeSettings = getSiteSettings($pdo);
+maybeRenderComingSoon($themeSettings, $locale); // fix (Andrea, web en construcción)
 
 // fix (seo-agent [audit] 🔴): si el cliente desactivó Vídeos desde Ajustes,
 // esta página tampoco debe seguir accesible/indexable
@@ -39,6 +40,7 @@ $pageTitle = $pageMetaTitle ?: ($pageH1 ?: ($locale === 'en' ? 'Videos' : 'Víde
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?= htmlspecialchars($pageTitle) ?> — <?= htmlspecialchars($themeSettings['site_name'] ?? 'Mi Sitio') ?></title>
+  <?= robotsMetaTag($themeSettings) ?>
   <?php if ($pageMetaDescription): ?>
     <meta name="description" content="<?= htmlspecialchars($pageMetaDescription) ?>">
   <?php endif; ?>

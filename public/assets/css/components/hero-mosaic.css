@@ -22,6 +22,30 @@
   background-position: center;
 }
 
+/* fix (Andrea): modo "foto destacada al azar" — una única imagen a pantalla completa */
+.hero-mosaic__photo {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+}
+
+/* fix (Andrea): modo "sin fondo" — color liso (el mismo de Ajustes → Color de
+   fondo) y el texto se adapta a claro/oscuro vía [data-theme-tone] en <html>. */
+.hero-mosaic--none {
+  background: var(--color-surface);
+}
+[data-theme-tone="light"] .hero-mosaic--none .hero-mosaic__content,
+[data-theme-tone="light"] .hero-mosaic--none .hero-mosaic__scroll {
+  color: var(--color-ink-900);
+  text-shadow: none;
+}
+[data-theme-tone="dark"] .hero-mosaic--none .hero-mosaic__content,
+[data-theme-tone="dark"] .hero-mosaic--none .hero-mosaic__scroll {
+  color: #FFFFFF;
+  text-shadow: none;
+}
+
 /* fix (Andrea): patrón de tamaños variados — cuadradas grandes, verticales, horizontales,
    intercaladas con las piezas pequeñas por defecto, para un aire más "mosaico moderno" */
 .hero-mosaic__tile:nth-child(9n+1) { grid-column: span 2; grid-row: span 2; }  /* cuadrada grande */

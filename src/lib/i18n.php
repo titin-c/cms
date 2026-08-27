@@ -37,6 +37,7 @@ $GLOBALS['__strings'] = [
         'contact.sending' => 'Enviando...',
         'contact.sent' => 'Mensaje enviado. ¡Gracias!',
         'contact.error' => 'No se pudo enviar. Inténtalo de nuevo.',
+        'coming_soon.default_message' => 'Estamos preparando algo nuevo. Vuelve pronto.',
     ],
     'en' => [
         'nav.contact' => 'Contact',
@@ -66,6 +67,7 @@ $GLOBALS['__strings'] = [
         'contact.sending' => 'Sending...',
         'contact.sent' => 'Message sent. Thank you!',
         'contact.error' => 'Could not send. Please try again.',
+        'coming_soon.default_message' => 'We\'re working on something new. Check back soon.',
     ],
 ];
 

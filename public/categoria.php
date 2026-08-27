@@ -9,6 +9,7 @@ $GLOBALS['__locale'] = resolveLocale();
 $locale = $GLOBALS['__locale'];
 $pdo = getDb();
 $themeSettings = getSiteSettings($pdo);
+maybeRenderComingSoon($themeSettings, $locale); // fix (Andrea, web en construcción)
 
 if (!empty($_GET['slug_en'])) {
     $stmt = $pdo->prepare("
@@ -71,6 +72,7 @@ $enUrl = !empty($category['slug_en']) ? '/category/' . rawurlencode($category['s
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?= $pageTitle ?></title>
+  <?= robotsMetaTag($themeSettings) ?>
   <meta name="description" content="<?= htmlspecialchars($category['meta_description'] ?: strip_tags($category['description'] ?? '') ?: $category['title']) ?>">
   <link rel="canonical" href="<?= getSiteDomain($themeSettings) ?><?= $locale === 'en' && $enUrl ? $enUrl : $esUrl ?>">
   <link rel="alternate" hreflang="es" href="<?= getSiteDomain($themeSettings) ?><?= $esUrl ?>">
