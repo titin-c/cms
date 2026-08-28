@@ -34,8 +34,11 @@ switch ($method) {
             'title_en', 'description_es', 'description_en',
             'home_title_es', 'home_title_en', 'home_description_es', 'home_description_en',
             'meta_description_es', 'meta_description_en',
+            // fix (Andrea, SEO): sustituye a seo_keywords_es/en (en desuso desde
+            // la 1.10.9 — Google ignora las meta keywords desde hace años, y
+            // aquí ni siquiera llegaban a mostrarse en la web).
+            'meta_title_es', 'meta_title_en',
             'button_label_es', 'button_label_en',
-            'seo_keywords_es', 'seo_keywords_en',
         ];
         $values = ['title_es' => $input['title_es'] ?? '']; // obligatorio, nunca NULL
         foreach ($fieldNames as $f) {
@@ -51,15 +54,15 @@ switch ($method) {
             'title_es' => 160, 'title_en' => 160,
             'home_title_es' => 120, 'home_title_en' => 120,
             'meta_description_es' => 300, 'meta_description_en' => 300,
+            'meta_title_es' => 200, 'meta_title_en' => 200,
             'button_label_es' => 60, 'button_label_en' => 60,
-            'seo_keywords_es' => 300, 'seo_keywords_en' => 300,
         ], [
             'slug' => 'URL slug (ES)', 'slug_en' => 'URL slug (EN)',
             'title_es' => 'Título (ES)', 'title_en' => 'Título (EN)',
             'home_title_es' => 'Título en la home (ES)', 'home_title_en' => 'Título en la home (EN)',
             'meta_description_es' => 'Meta descripción (ES)', 'meta_description_en' => 'Meta descripción (EN)',
+            'meta_title_es' => 'Meta título (ES)', 'meta_title_en' => 'Meta título (EN)',
             'button_label_es' => 'Texto del botón (ES)', 'button_label_en' => 'Texto del botón (EN)',
-            'seo_keywords_es' => 'Palabras clave (ES)', 'seo_keywords_en' => 'Palabras clave (EN)',
         ]);
         $slug = $values['slug'];
         $slugEn = $values['slug_en'];

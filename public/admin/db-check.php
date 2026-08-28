@@ -41,6 +41,8 @@ $expectedColumns = [
         'button_label_en' => "VARCHAR(60) NULL",
         'seo_keywords_es' => "VARCHAR(300) NULL",
         'seo_keywords_en' => "VARCHAR(300) NULL",
+        'meta_title_es' => "VARCHAR(200) NULL",
+        'meta_title_en' => "VARCHAR(200) NULL",
         'show_in_header' => "BOOLEAN NOT NULL DEFAULT 0",
         'header_placement' => "ENUM('none','direct','submenu') NOT NULL DEFAULT 'submenu'",
         'show_in_footer' => "BOOLEAN NOT NULL DEFAULT 0",
@@ -57,6 +59,8 @@ $expectedColumns = [
         'seo_keywords_en' => "VARCHAR(255) NULL",
         'seo_description_es' => "VARCHAR(300) NULL",
         'seo_description_en' => "VARCHAR(300) NULL",
+        'meta_title_es' => "VARCHAR(200) NULL",
+        'meta_title_en' => "VARCHAR(200) NULL",
     ],
     'content_pages' => [
         'slug_en' => "VARCHAR(160) NULL UNIQUE",
@@ -64,6 +68,8 @@ $expectedColumns = [
         'show_in_footer' => "BOOLEAN NOT NULL DEFAULT 1",
         'noindex' => "BOOLEAN NOT NULL DEFAULT 0",
         'sort_order' => "INT NOT NULL DEFAULT 0",
+        'meta_title_es' => "VARCHAR(200) NULL",
+        'meta_title_en' => "VARCHAR(200) NULL",
     ],
 ];
 

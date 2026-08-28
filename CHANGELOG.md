@@ -3,7 +3,29 @@
 Este archivo deja constancia de qué incluye cada entrega, para poder comprobar
 de un vistazo si lo que hay subido en el repositorio remoto está actualizado.
 
-## 1.10.8 — actual
+## 1.10.9 — actual
+
+- ✨ Nuevo campo **"Meta título"** (ES/EN) en Categorías, Proyectos y Páginas:
+  el texto que aparece en la pestaña del navegador y como título en el
+  resultado de Google, que puede ser distinto del título visible (H1) de la
+  página — si se deja vacío, se usa el título visible de siempre, así que no
+  hay que rellenarlo en todo lo que ya tienes publicado.
+- 🧹 Sustituye a las "palabras clave" (meta keywords): Google las ignora para
+  posicionar desde hace más de 15 años, y en categorías ni siquiera llegaban
+  a mostrarse en el código de la web (era un campo solo de referencia interna
+  del panel). El campo de proyectos sí se mostraba en el código (`<meta
+  name="keywords">`) — se ha quitado también, ya no aporta nada.
+  Las columnas de la base de datos con las palabras clave antiguas se dejan
+  tal cual, sin borrar nada — el panel simplemente ha dejado de mostrarlas y
+  de guardarlas.
+- Migración manual `database/migration_15_meta_title.sql` (o, más cómodo,
+  visita `/admin/db-check.php` tras subir esta versión — ya la detecta y la
+  aplica sola, como con el fallo de `noindex` de la 1.10.5).
+- Como efecto colateral, la sugerencia de "palabras clave de referencia de la
+  categoría" al redactar el alt de la imagen principal de un proyecto
+  desaparece — dependía del campo de palabras clave que se acaba de retirar.
+
+## 1.10.8
 
 - ✨ Nuevo campo en **Ajustes → Sitio → "Código externo (Tag Manager, píxeles...)"**:
   dos casillas para pegar tal cual el código que pida Google Tag Manager, Meta

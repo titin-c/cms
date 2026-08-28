@@ -87,8 +87,11 @@ switch ($method) {
             'title_en' => $input['title_en'] ?? null,
             'content_en' => $input['content_en'] ?? null,
             'excerpt_en' => $input['excerpt_en'] ?? null,
-            'seo_keywords' => $input['seo_keywords'] ?? null,
-            'seo_keywords_en' => $input['seo_keywords_en'] ?? null,
+            // fix (Andrea, SEO): sustituye a seo_keywords/seo_keywords_en (en
+            // desuso desde la 1.10.9 — Google ignora las meta keywords desde
+            // hace años).
+            'meta_title_es' => $input['meta_title_es'] ?? null,
+            'meta_title_en' => $input['meta_title_en'] ?? null,
             'seo_description_es' => $input['seo_description_es'] ?? null,
             'seo_description_en' => $input['seo_description_en'] ?? null,
         ];
@@ -99,13 +102,13 @@ switch ($method) {
             'slug' => 160, 'slug_en' => 160,
             'main_image' => 255, 'main_image_alt' => 255,
             'title_es' => 200, 'title_en' => 200,
-            'seo_keywords' => 255, 'seo_keywords_en' => 255,
+            'meta_title_es' => 200, 'meta_title_en' => 200,
             'seo_description_es' => 300, 'seo_description_en' => 300,
         ], [
             'slug' => 'URL slug (ES)', 'slug_en' => 'URL slug (EN)',
             'main_image' => 'Imagen principal', 'main_image_alt' => 'Alt de la imagen principal',
             'title_es' => 'Título (ES)', 'title_en' => 'Título (EN)',
-            'seo_keywords' => 'Palabras clave (ES)', 'seo_keywords_en' => 'Palabras clave (EN)',
+            'meta_title_es' => 'Meta título (ES)', 'meta_title_en' => 'Meta título (EN)',
             'seo_description_es' => 'Meta descripción (ES)', 'seo_description_en' => 'Meta descripción (EN)',
         ]);
         $warning = truncationWarningMessage($truncatedFields);

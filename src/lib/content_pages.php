@@ -37,6 +37,9 @@ function localizeContentPage(array $page, string $locale): array {
         'title' => ($locale === 'en' && $page['title_en']) ? $page['title_en'] : $page['title_es'],
         'content' => ($locale === 'en' && $page['content_en']) ? $page['content_en'] : $page['content_es'],
         'meta_description' => ($locale === 'en' && $page['meta_description_en']) ? $page['meta_description_en'] : $page['meta_description_es'],
+        // fix (Andrea, SEO): meta título propio para <title>, si se rellena —
+        // cae al título visible (H1) si se deja vacío (ver pagina.php).
+        'meta_title' => ($locale === 'en' && !empty($page['meta_title_en'])) ? $page['meta_title_en'] : ($page['meta_title_es'] ?? ''),
         'noindex' => !empty($page['noindex']),
     ];
 }

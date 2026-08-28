@@ -95,21 +95,3 @@ form.addEventListener('submit', (e) => {
   e.preventDefault();
   saveProject(draftToggle.checked ? 'draft' : 'published');
 });
-
-// fix (Andrea, SEO): muestra las palabras clave de referencia de la
-// categoría seleccionada, junto al campo de alt de la imagen principal —
-// ayuda a redactar el alt de forma consistente sin tener que recordarlas.
-const categorySelect = document.getElementById('category_id');
-const keywordsHint = document.getElementById('alt-keywords-hint');
-
-function updateKeywordsHint() {
-  const keywords = categorySelect?.selectedOptions?.[0]?.dataset.keywords || '';
-  if (keywordsHint) {
-    keywordsHint.textContent = keywords
-      ? `Palabras clave de referencia de esta categoría: ${keywords}`
-      : '';
-  }
-}
-
-categorySelect?.addEventListener('change', updateKeywordsHint);
-updateKeywordsHint(); // estado inicial al cargar (modo edición o categoría preseleccionada)

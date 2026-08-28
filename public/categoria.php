@@ -16,7 +16,8 @@ if (!empty($_GET['slug_en'])) {
         SELECT id, slug, slug_en, is_default_uncategorized, show_title, status,
                COALESCE(title_en, title_es) AS title,
                COALESCE(description_en, description_es) AS description,
-               COALESCE(meta_description_en, meta_description_es) AS meta_description
+               COALESCE(meta_description_en, meta_description_es) AS meta_description,
+               COALESCE(meta_title_en, meta_title_es) AS meta_title
         FROM categories WHERE slug_en = ? LIMIT 1
     ");
     $stmt->execute([$_GET['slug_en']]);
@@ -24,8 +25,9 @@ if (!empty($_GET['slug_en'])) {
     $localeCol = $locale === 'en' ? "COALESCE(title_en, title_es)" : "title_es";
     $descCol = $locale === 'en' ? "COALESCE(description_en, description_es)" : "description_es";
     $metaCol = $locale === 'en' ? "COALESCE(meta_description_en, meta_description_es)" : "meta_description_es";
+    $metaTitleCol = $locale === 'en' ? "COALESCE(meta_title_en, meta_title_es)" : "meta_title_es";
     $stmt = $pdo->prepare("
-        SELECT id, slug, slug_en, is_default_uncategorized, show_title, status, {$localeCol} AS title, {$descCol} AS description, {$metaCol} AS meta_description
+        SELECT id, slug, slug_en, is_default_uncategorized, show_title, status, {$localeCol} AS title, {$descCol} AS description, {$metaCol} AS meta_description, {$metaTitleCol} AS meta_title
         FROM categories WHERE slug = ? LIMIT 1
     ");
     $stmt->execute([$_GET['slug'] ?? '']);
@@ -62,7 +64,10 @@ if (empty($projects)) {
     exit;
 }
 
-$pageTitle = htmlspecialchars($category['title']) . ' — ' . htmlspecialchars($themeSettings['site_name'] ?? 'Mi Sitio');
+// fix (Andrea, SEO): meta título propio para <title>, si se rellena — cae al
+// título visible (H1) si se deja vacío. Sustituye a las meta keywords, que
+// nunca llegaron a mostrarse en la web y que Google ignora desde hace años.
+$pageTitle = htmlspecialchars($category['meta_title'] ?: $category['title']) . ' — ' . htmlspecialchars($themeSettings['site_name'] ?? 'Mi Sitio');
 $esUrl = '/categoria/' . rawurlencode($category['slug']);
 $enUrl = !empty($category['slug_en']) ? '/category/' . rawurlencode($category['slug_en']) : null;
 ?>

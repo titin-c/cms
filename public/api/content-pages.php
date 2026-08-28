@@ -42,6 +42,8 @@ switch ($method) {
             'title_en' => $input['title_en'] ?? null,
             'meta_description_es' => $input['meta_description_es'] ?? null,
             'meta_description_en' => $input['meta_description_en'] ?? null,
+            'meta_title_es' => $input['meta_title_es'] ?? null,
+            'meta_title_en' => $input['meta_title_en'] ?? null,
         ];
         // fix (Andrea): acorta lo que sobre en vez de dejar que MySQL rechace
         // el guardado entero — ver comentario en src/lib/validation.php.
@@ -49,10 +51,12 @@ switch ($method) {
             'slug' => 160, 'slug_en' => 160,
             'title_es' => 200, 'title_en' => 200,
             'meta_description_es' => 300, 'meta_description_en' => 300,
+            'meta_title_es' => 200, 'meta_title_en' => 200,
         ], [
             'slug' => 'URL slug (ES)', 'slug_en' => 'URL slug (EN)',
             'title_es' => 'Título (ES)', 'title_en' => 'Título (EN)',
             'meta_description_es' => 'Meta descripción (ES)', 'meta_description_en' => 'Meta descripción (EN)',
+            'meta_title_es' => 'Meta título (ES)', 'meta_title_en' => 'Meta título (EN)',
         ]);
 
         $fields = $raw + [

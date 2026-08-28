@@ -11,7 +11,7 @@ if ($id) {
     $stmt->execute([$id]);
     $project = $stmt->fetch();
 }
-$categories = $pdo->query("SELECT id, title_es, seo_keywords_es FROM categories ORDER BY sort_order ASC")->fetchAll();
+$categories = $pdo->query("SELECT id, title_es FROM categories ORDER BY sort_order ASC")->fetchAll();
 
 // fix (Andrea): categorías adicionales ya asignadas, para marcar los checkboxes en modo edición
 $extraCategoryIds = [];
@@ -59,7 +59,6 @@ if ($project) {
         <input type="hidden" name="main_image" id="main_image" value="<?= htmlspecialchars($project['main_image'] ?? '') ?>">
         <label for="main_image_alt">Alt de la imagen principal</label>
         <input type="text" id="main_image_alt" name="main_image_alt" value="<?= htmlspecialchars($project['main_image_alt'] ?? '') ?>">
-        <p class="admin-form__hint" id="alt-keywords-hint" data-keywords-hint></p>
       </section>
 
       <!-- BLOQUE: contenido ES/EN en dos columnas -->
@@ -108,7 +107,7 @@ if ($project) {
         <label for="category_id">Categoría</label>
         <select id="category_id" name="category_id" required>
           <?php foreach ($categories as $cat): ?>
-            <option value="<?= $cat['id'] ?>" data-keywords="<?= htmlspecialchars($cat['seo_keywords_es'] ?? '') ?>" <?= ($project['category_id'] ?? null) == $cat['id'] ? 'selected' : '' ?>>
+            <option value="<?= $cat['id'] ?>" <?= ($project['category_id'] ?? null) == $cat['id'] ? 'selected' : '' ?>>
               <?= htmlspecialchars($cat['title_es']) ?>
             </option>
           <?php endforeach; ?>
@@ -156,8 +155,8 @@ if ($project) {
           <div class="admin-form__lang-col">
             <span class="admin-form__lang-badge">Español</span>
 
-            <label for="seo_keywords">Palabras clave</label>
-            <input type="text" id="seo_keywords" name="seo_keywords" value="<?= htmlspecialchars($project['seo_keywords'] ?? '') ?>">
+            <label for="meta_title_es">Meta título — opcional, si lo dejas vacío se usa el título de arriba</label>
+            <input type="text" id="meta_title_es" name="meta_title_es" maxlength="200" value="<?= htmlspecialchars($project['meta_title_es'] ?? '') ?>">
 
             <label for="seo_description_es">Meta descripción</label>
             <textarea id="seo_description_es" name="seo_description_es" maxlength="300" rows="2"><?= htmlspecialchars($project['seo_description_es'] ?? '') ?></textarea>
@@ -166,14 +165,13 @@ if ($project) {
           <div class="admin-form__lang-col">
             <span class="admin-form__lang-badge">English</span>
 
-            <label for="seo_keywords_en">Keywords — opcional</label>
-            <input type="text" id="seo_keywords_en" name="seo_keywords_en" value="<?= htmlspecialchars($project['seo_keywords_en'] ?? '') ?>">
+            <label for="meta_title_en">Meta title — optional, falls back to the title above</label>
+            <input type="text" id="meta_title_en" name="meta_title_en" maxlength="200" value="<?= htmlspecialchars($project['meta_title_en'] ?? '') ?>">
 
             <label for="seo_description_en">Meta description — opcional</label>
             <textarea id="seo_description_en" name="seo_description_en" maxlength="300" rows="2"><?= htmlspecialchars($project['seo_description_en'] ?? '') ?></textarea>
           </div>
         </div>
-        <p class="admin-form__hint">Nota: Google ya no usa el campo de palabras clave para posicionar desde hace años — lo mantenemos por compatibilidad con otros motores, pero no le dediques mucho tiempo.</p>
       </section>
 
       <div class="admin-form__actions">

@@ -43,7 +43,7 @@ $enUrl = $page['slug_en'] ? '/en/' . rawurlencode($page['slug_en']) : null;
   <?= $themeSettings['tracking_head_code'] ?? '' ?>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title><?= htmlspecialchars($page['title']) ?> — <?= htmlspecialchars($themeSettings['site_name'] ?? 'Mi Sitio') ?></title>
+  <title><?= htmlspecialchars($page['meta_title'] ?: $page['title']) ?> — <?= htmlspecialchars($themeSettings['site_name'] ?? 'Mi Sitio') ?></title>
   <?= robotsMetaTag($themeSettings) ?>
   <?php if ($page['noindex']): ?><meta name="robots" content="noindex, follow"><?php endif; ?>
   <meta name="description" content="<?= htmlspecialchars($page['meta_description'] ?: strip_tags($page['content'])) ?>">

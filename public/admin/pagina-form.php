@@ -54,6 +54,9 @@ if ($id) {
             <div id="page-content-es-editor" class="admin-richtext" data-richtext><?= $page['content_es'] ?? '' ?></div>
             <input type="hidden" name="content_es" id="page-content-es">
 
+            <label for="page-meta-title-es">Meta título — opcional, si lo dejas vacío se usa el título de arriba</label>
+            <input type="text" id="page-meta-title-es" name="meta_title_es" maxlength="200" value="<?= htmlspecialchars($page['meta_title_es'] ?? '') ?>">
+
             <label for="page-meta-es">Meta descripción — opcional, texto plano</label>
             <textarea id="page-meta-es" name="meta_description_es" rows="2" maxlength="300"><?= htmlspecialchars($page['meta_description_es'] ?? '') ?></textarea>
           </div>
@@ -71,6 +74,9 @@ if ($id) {
             <label>Content</label>
             <div id="page-content-en-editor" class="admin-richtext" data-richtext><?= $page['content_en'] ?? '' ?></div>
             <input type="hidden" name="content_en" id="page-content-en">
+
+            <label for="page-meta-title-en">Meta title — optional, falls back to the title above</label>
+            <input type="text" id="page-meta-title-en" name="meta_title_en" maxlength="200" value="<?= htmlspecialchars($page['meta_title_en'] ?? '') ?>">
 
             <label for="page-meta-en">Meta description — opcional, plain text</label>
             <textarea id="page-meta-en" name="meta_description_en" rows="2" maxlength="300"><?= htmlspecialchars($page['meta_description_en'] ?? '') ?></textarea>

@@ -37,7 +37,10 @@ $title   = ($locale === 'en' && $hasTranslation) ? $project['title_en']   : $pro
 $content = ($locale === 'en' && $hasTranslation) ? $project['content_en'] : $project['content_es'];
 $excerpt = ($locale === 'en' && $hasTranslation) ? $project['excerpt_en'] : $project['excerpt_es'];
 $seoDesc = ($locale === 'en' && $hasTranslation) ? $project['seo_description_en'] : $project['seo_description_es'];
-$seoKeywords = ($locale === 'en' && !empty($project['seo_keywords_en'])) ? $project['seo_keywords_en'] : $project['seo_keywords'];
+// fix (Andrea, SEO): meta título propio para <title>, si se rellena — cae al
+// título visible (H1) si se deja vacío. Sustituye a las meta keywords, que
+// Google ignora desde hace años.
+$metaTitle = ($locale === 'en' && !empty($project['meta_title_en'])) ? $project['meta_title_en'] : ($project['meta_title_es'] ?? '');
 
 $imagesStmt = $pdo->prepare("SELECT * FROM project_images WHERE project_id = ? ORDER BY sort_order ASC");
 $imagesStmt->execute([$project['id']]);
@@ -80,10 +83,9 @@ $enUrl = $hasTranslatedUrl ? '/project/' . rawurlencode($project['slug_en']) : n
   <?= $themeSettings['tracking_head_code'] ?? '' ?>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title><?= htmlspecialchars($title) ?> — <?= htmlspecialchars($themeSettings['site_name'] ?? 'Mi Sitio') ?></title>
+  <title><?= htmlspecialchars($metaTitle ?: $title) ?> — <?= htmlspecialchars($themeSettings['site_name'] ?? 'Mi Sitio') ?></title>
   <?= robotsMetaTag($themeSettings) ?>
   <meta name="description" content="<?= htmlspecialchars($seoDesc ?: '') ?>">
-  <meta name="keywords" content="<?= htmlspecialchars($seoKeywords ?: '') ?>">
   <link rel="canonical" href="<?= getSiteDomain($themeSettings) ?><?= $locale === 'en' && $enUrl ? $enUrl : $esUrl ?>">
   <link rel="alternate" hreflang="es" href="<?= getSiteDomain($themeSettings) ?><?= $esUrl ?>">
   <?php if ($enUrl): ?>

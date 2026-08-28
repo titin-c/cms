@@ -148,21 +148,21 @@ if ($id) {
           <div class="admin-form__lang-col">
             <span class="admin-form__lang-badge">Español</span>
 
+            <label for="cat-meta-title-es">Meta título — opcional, si lo dejas vacío se usa el título de arriba</label>
+            <input type="text" id="cat-meta-title-es" name="meta_title_es" maxlength="200" value="<?= htmlspecialchars($category['meta_title_es'] ?? '') ?>">
+
             <label for="cat-meta-es">Meta descripción — ~155 caracteres</label>
             <textarea id="cat-meta-es" name="meta_description_es" rows="2" maxlength="300"><?= htmlspecialchars($category['meta_description_es'] ?? '') ?></textarea>
-
-            <label for="cat-kw-es">Palabras clave de referencia — separadas por comas</label>
-            <input type="text" id="cat-kw-es" name="seo_keywords_es" placeholder="fotografía moda, editorial, Valencia" value="<?= htmlspecialchars($category['seo_keywords_es'] ?? '') ?>">
           </div>
 
           <div class="admin-form__lang-col">
             <span class="admin-form__lang-badge">English</span>
 
+            <label for="cat-meta-title-en">Meta title — optional, falls back to the title above</label>
+            <input type="text" id="cat-meta-title-en" name="meta_title_en" maxlength="200" value="<?= htmlspecialchars($category['meta_title_en'] ?? '') ?>">
+
             <label for="cat-meta-en">Meta description</label>
             <textarea id="cat-meta-en" name="meta_description_en" rows="2" maxlength="300"><?= htmlspecialchars($category['meta_description_en'] ?? '') ?></textarea>
-
-            <label for="cat-kw-en">Reference keywords</label>
-            <input type="text" id="cat-kw-en" name="seo_keywords_en" placeholder="fashion photography, editorial, Valencia" value="<?= htmlspecialchars($category['seo_keywords_en'] ?? '') ?>">
           </div>
         </div>
       </section>

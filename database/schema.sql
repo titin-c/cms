@@ -34,12 +34,21 @@ CREATE TABLE categories (
   meta_description_es VARCHAR(300) NULL,
   meta_description_en VARCHAR(300) NULL,
 
+  -- fix (Andrea, SEO): título propio para <title> y el resultado de Google,
+  -- que puede ser distinto del H1 (title_es/en) — si está vacío, cae al H1.
+  -- Sustituye a las "palabras clave" de más abajo, que Google ignora desde
+  -- hace años y aquí ni siquiera llegaban a mostrarse en la web.
+  meta_title_es VARCHAR(200) NULL,
+  meta_title_en VARCHAR(200) NULL,
+
   -- 6: texto del botón "Ver todo" de la home hacia esta categoría
   button_label_es VARCHAR(60) NULL,     -- si está vacío, cae a "Ver todo"
   button_label_en VARCHAR(60) NULL,     -- si está vacío, cae a "View all"
 
-  -- 7: palabras clave de referencia para nombrar archivos y redactar alt text
-  -- de las fotos de esta categoría (uso interno del panel, no se muestra en la web)
+  -- 7: palabras clave de referencia — en desuso desde la 1.10.9 (sustituidas
+  -- por meta_title_es/en de arriba). Se dejan las columnas sin tocar por si
+  -- alguna vez hay datos de interés, pero el panel ya no las muestra ni las
+  -- guarda.
   seo_keywords_es VARCHAR(300) NULL,
   seo_keywords_en VARCHAR(300) NULL,
 
@@ -87,10 +96,14 @@ CREATE TABLE projects (
   content_en LONGTEXT NULL,
   excerpt_en TEXT NULL,
 
+  -- en desuso desde la 1.10.9 (sustituidas por meta_title_es/en de abajo) —
+  -- columnas conservadas sin tocar, el panel ya no las muestra ni las guarda
   seo_keywords VARCHAR(255) NULL,
   seo_keywords_en VARCHAR(255) NULL,
   seo_description_es VARCHAR(300) NULL,
   seo_description_en VARCHAR(300) NULL,
+  meta_title_es VARCHAR(200) NULL,
+  meta_title_en VARCHAR(200) NULL,
 
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -148,6 +161,8 @@ CREATE TABLE content_pages (
   content_en LONGTEXT NULL,
   meta_description_es VARCHAR(300) NULL,
   meta_description_en VARCHAR(300) NULL,
+  meta_title_es VARCHAR(200) NULL,
+  meta_title_en VARCHAR(200) NULL,
   show_in_header BOOLEAN NOT NULL DEFAULT 0,
   show_in_footer BOOLEAN NOT NULL DEFAULT 1,
   -- fix (seo-agent [audit]): páginas legales (Privacidad/Cookies/Aviso legal)
