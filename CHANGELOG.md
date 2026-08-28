@@ -3,7 +3,26 @@
 Este archivo deja constancia de qué incluye cada entrega, para poder comprobar
 de un vistazo si lo que hay subido en el repositorio remoto está actualizado.
 
-## 1.10.9 — actual
+## 1.10.10 — actual
+
+- 🔴 Arregla que los ajustes de **Cabecera, Footer y "Fila en la home" de
+  categorías nunca se guardaban** al editar (el toggle "Mostrar título"
+  tampoco). El formulario los enviaba bien, pero al servidor le faltaban esas
+  cuatro columnas en la lista de campos a guardar — llevaban así desde que se
+  añadieron esos ajustes, así que cambiar cualquiera de ellos no tenía efecto
+  por mucho que se guardara.
+- 🔴 Arregla que **la URL (slug) de un proyecto o un vídeo cambiaba sola cada
+  vez que se editaba el título**, aunque ya estuviera publicado — el
+  formulario nunca tuvo un campo para fijar la URL en español a mano (a
+  diferencia de categorías y páginas, que sí lo tienen), así que se
+  recalculaba desde el título en cada guardado. Corregir una simple errata
+  en el título rompía en silencio cualquier enlace ya compartido a ese
+  proyecto o vídeo. Ahora, al editar, se mantiene la URL ya publicada; solo
+  se genera desde el título la primera vez que se crea.
+- Ambos son bugs reales de comportamiento (no de base de datos), así que no
+  requieren ninguna migración — basta con subir los archivos.
+
+## 1.10.9
 
 - ✨ Nuevo campo **"Meta título"** (ES/EN) en Categorías, Proyectos y Páginas:
   el texto que aparece en la pestaña del navegador y como título en el

@@ -61,8 +61,22 @@ switch ($method) {
             }
         }
 
-        $slug = $input['slug'] ?? slugify($input['title_es'] ?? 'proyecto-' . time());
         $id = $input['id'] ?? null;
+
+        // fix (Andrea, SEO): al editar, se mantiene el slug (URL) ya
+        // publicado en vez de regenerarlo del título — el formulario nunca
+        // ha tenido un campo para editarlo a mano, así que antes CADA
+        // guardado lo recalculaba desde el título, y arreglar una errata
+        // cambiaba la URL pública del proyecto sin avisar, rompiendo
+        // cualquier enlace ya compartido. Solo se genera desde el título la
+        // primera vez que se crea.
+        if ($id) {
+            $existingSlugStmt = $pdo->prepare("SELECT slug FROM projects WHERE id = ?");
+            $existingSlugStmt->execute([$id]);
+            $slug = $existingSlugStmt->fetchColumn() ?: slugify($input['title_es'] ?? 'proyecto-' . time());
+        } else {
+            $slug = slugify($input['title_es'] ?? 'proyecto-' . time());
+        }
 
         // fix (Andrea, SEO): slug en inglés — si Andrea no lo rellena a mano,
         // se genera automáticamente a partir del título en inglés (si existe).

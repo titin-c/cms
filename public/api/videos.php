@@ -37,8 +37,20 @@ switch ($method) {
             }
         }
 
-        $slug = trim((string) ($input['slug'] ?? ''));
-        if ($slug === '') { $slug = slugifyVideo($input['title_es'] ?? 'video-' . time()); }
+        // fix (Andrea, SEO): al editar, se mantiene el slug (URL) ya
+        // publicado en vez de regenerarlo del título — el formulario nunca
+        // ha tenido un campo para editarlo a mano, así que antes CADA
+        // guardado lo recalculaba desde el título, y arreglar una errata
+        // cambiaba la URL pública del vídeo sin avisar, rompiendo cualquier
+        // enlace ya compartido. Solo se genera desde el título la primera
+        // vez que se crea.
+        if (!empty($input['id'])) {
+            $existingSlugStmt = $pdo->prepare("SELECT slug FROM videos WHERE id = ?");
+            $existingSlugStmt->execute([$input['id']]);
+            $slug = $existingSlugStmt->fetchColumn() ?: slugifyVideo($input['title_es'] ?? 'video-' . time());
+        } else {
+            $slug = slugifyVideo($input['title_es'] ?? 'video-' . time());
+        }
         $slugEn = trim((string) ($input['slug_en'] ?? ''));
         if ($slugEn === '' && !empty($input['title_en'])) { $slugEn = slugifyVideo($input['title_en']); }
 

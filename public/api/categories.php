@@ -47,6 +47,21 @@ switch ($method) {
         $values['slug'] = $slug;
         $values['slug_en'] = $slugEn;
 
+        // fix (Andrea): estos cuatro ajustes (Cabecera, Footer, Fila en la
+        // home, Mostrar título) los enviaba el formulario desde hace tiempo,
+        // pero nunca llegaban a guardarse — faltaban en esta lista, así que
+        // por mucho que se cambiara el interruptor, la base de datos se
+        // quedaba siempre con el valor por defecto de cuando se creó la
+        // categoría. Bug real, no solo de "mostrar en la home"/"mostrar
+        // título" — el desplegable de Cabecera y el toggle de Footer tenían
+        // exactamente el mismo problema.
+        $values['show_title'] = !empty($input['show_title']) ? 1 : 0;
+        $values['show_in_footer'] = !empty($input['show_in_footer']) ? 1 : 0;
+        $values['show_in_home'] = !empty($input['show_in_home']) ? 1 : 0;
+        $values['header_placement'] = in_array($input['header_placement'] ?? '', ['none', 'direct', 'submenu'], true)
+            ? $input['header_placement']
+            : 'submenu';
+
         // fix (Andrea): acorta lo que sobre en vez de dejar que MySQL rechace
         // el guardado entero — ver comentario en src/lib/validation.php.
         [$values, $truncatedFields] = truncateFieldsToLimits($values, [
