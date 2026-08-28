@@ -3,8 +3,24 @@ RewriteEngine On
 RewriteCond %{HTTPS} off
 RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-# Si tu hosting no te permite configurar /public como raíz del dominio,
-# descomenta estas líneas para redirigir la raíz del dominio a /public:
+# fix (Andrea): en el hosting de IONOS de este proyecto, CUALQUIER archivo
+# .htaccess en esta carpeta (la raíz del proyecto, un nivel por encima de
+# /public) tumba toda la web — no importa lo que contenga, incluso una sola
+# línea de comentario provoca "Internal Server Error" en todo el sitio. No es
+# un problema de las reglas de reescritura: es una restricción del hosting
+# para esa carpeta en concreto. Por eso este archivo NO debe subirse nunca a
+# la raíz del proyecto en el servidor de Andrea.
+#
+# La solución definitiva para este hosting fue otra: admin/ y api/ ahora
+# viven dentro de public/ (public/admin, public/api) y el dominio apunta
+# directamente a esa carpeta público (public/) en el panel de IONOS. Así ni
+# siquiera hace falta ningún .htaccess en la raíz del proyecto.
+#
+# Este archivo se conserva en el repositorio solo como referencia por si en
+# el futuro se usa OTRO hosting que sí permita /public como raíz del dominio
+# de otra forma, o que no tenga esta restricción. Si tu hosting no te deja
+# configurar /public como raíz del dominio y sí permite .htaccess en la
+# raíz del proyecto, descomenta estas líneas para redirigir ahí:
 # RewriteCond %{REQUEST_URI} !^/public/
 # RewriteCond %{REQUEST_URI} !^/(admin|api)/
 # RewriteRule ^(.*)$ /public/$1 [L]

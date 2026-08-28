@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: application/json');
-require_once __DIR__ . '/../src/lib/auth.php';
-require_once __DIR__ . '/../src/lib/image.php';
+require_once __DIR__ . '/../../src/lib/auth.php';
+require_once __DIR__ . '/../../src/lib/image.php';
 
 requireAuth();
 
@@ -33,7 +33,7 @@ if (!in_array($mime, ALLOWED_TYPES, true)) {
     exit;
 }
 
-$uploadDir = __DIR__ . '/../public/uploads';
+$uploadDir = __DIR__ . '/../uploads';
 
 // fix (Andrea, SEO Google Images): antes el nombre de archivo era un hash
 // aleatorio sin ningún valor semántico (ej. "a1b2c3d4-thumb.webp"). Ahora se

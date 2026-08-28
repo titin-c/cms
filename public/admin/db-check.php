@@ -17,8 +17,8 @@
  * ejecutar SQL a mano. Es segura de visitar y de repetir tantas veces como
  * haga falta: si no falta nada, no toca nada.
  */
-require_once __DIR__ . '/../src/lib/auth.php';
-require_once __DIR__ . '/../src/lib/db.php';
+require_once __DIR__ . '/../../src/lib/auth.php';
+require_once __DIR__ . '/../../src/lib/db.php';
 
 requireAuth();
 $pdo = getDb();

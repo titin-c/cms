@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../src/lib/auth.php';
+require_once __DIR__ . '/../../src/lib/auth.php';
 startSecureSession();
 if (!empty($_SESSION['admin_id'])) {
     header('Location: /admin/dashboard.php');

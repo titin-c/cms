@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__ . '/../src/lib/auth.php';
+require_once __DIR__ . '/../../src/lib/auth.php';
 requireAuth();
-require_once __DIR__ . '/../src/lib/db.php';
+require_once __DIR__ . '/../../src/lib/db.php';
 
 $pdo = getDb();
 $id = $_GET['id'] ?? null;

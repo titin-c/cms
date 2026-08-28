@@ -1,8 +1,8 @@
 <?php
-require_once __DIR__ . '/../src/lib/auth.php';
-require_once __DIR__ . '/../src/lib/social_icons.php';
-require_once __DIR__ . '/../src/lib/db.php';
-require_once __DIR__ . '/../src/lib/theme.php';
+require_once __DIR__ . '/../../src/lib/auth.php';
+require_once __DIR__ . '/../../src/lib/social_icons.php';
+require_once __DIR__ . '/../../src/lib/db.php';
+require_once __DIR__ . '/../../src/lib/theme.php';
 requireAuth();
 
 $pdo = getDb();

@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-require_once __DIR__ . '/../src/lib/auth.php';
+require_once __DIR__ . '/../../src/lib/auth.php';
 
 $input = json_decode(file_get_contents('php://input'), true) ?? [];
 $email = trim($input['email'] ?? '');

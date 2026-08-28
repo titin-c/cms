@@ -1,8 +1,8 @@
 <?php
 header('Content-Type: application/json');
-require_once __DIR__ . '/../src/lib/auth.php';
-require_once __DIR__ . '/../src/lib/db.php';
-require_once __DIR__ . '/../src/lib/validation.php';
+require_once __DIR__ . '/../../src/lib/auth.php';
+require_once __DIR__ . '/../../src/lib/db.php';
+require_once __DIR__ . '/../../src/lib/validation.php';
 
 requireAuth();
 $pdo = getDb();

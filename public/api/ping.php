@@ -7,6 +7,6 @@
  * así retrasa su borrado automático mientras el panel sigue abierto.
  */
 header('Content-Type: application/json');
-require_once __DIR__ . '/../src/lib/auth.php';
+require_once __DIR__ . '/../../src/lib/auth.php';
 requireAuth();
 echo json_encode(['ok' => true]);

@@ -3,7 +3,47 @@
 Este archivo deja constancia de qué incluye cada entrega, para poder comprobar
 de un vistazo si lo que hay subido en el repositorio remoto está actualizado.
 
-## 1.10.5 — actual
+## 1.10.6 — actual
+
+- 🔴 **Cambio de estructura del proyecto para el hosting de IONOS**, tras
+  la caída completa de la web tras subir todos los archivos a producción.
+  Resumen de lo que pasó y por qué:
+  - El dominio en IONOS apunta a la carpeta raíz del proyecto (no
+    directamente a `public/`), así que la home daba "Forbidden" (no había
+    ningún `index.php` justo ahí).
+  - Al intentar arreglarlo con una regla de redirección en el `.htaccess`
+    de la raíz, esa regla concreta entró en un bucle de redirecciones
+    internas en este hosting y tumbó **toda** la web (cualquier PHP daba
+    "Internal Server Error", incluso un archivo sin ninguna dependencia).
+  - Investigando más a fondo, se confirmó que en esta cuenta de IONOS **no
+    se permite tener ningún `.htaccess` en esa carpeta raíz concreta**, ni
+    siquiera vacío o con solo un comentario — es una restricción de ese
+    directorio específico en este hosting, no algo que dependiera del
+    contenido del archivo. `public/.htaccess` y `admin/.htaccess` no tienen
+    ese problema y seguían funcionando bien todo este tiempo.
+  - Solución definitiva: **`admin/` y `api/` pasan a vivir dentro de
+    `public/`** (`public/admin/`, `public/api/`), en vez de al lado de
+    `public/` como antes. Así el dominio puede apuntar directamente a
+    `public/` (la forma normal y recomendada, sin trucos de `.htaccess` en
+    la raíz), y `admin`/`api` se siguen sirviendo con las mismas
+    direcciones de siempre (`/admin/...`, `/api/...`) porque ahora quedan
+    dentro de esa misma carpeta. `src/` y `database/` NO se mueven, siguen
+    fuera de `public/` como hasta ahora (por seguridad, no son accesibles
+    desde el navegador). Esta opción (admin/api dentro de public si el
+    hosting no permite tenerlos fuera) ya estaba prevista en `INSTALL.md`.
+  - Se ha actualizado `src/lib/config.local.php`-style rutas relativas en
+    todos los archivos de `admin/` y `api/` (ahora un nivel más adentro,
+    `../../src/...` en vez de `../src/...`) y la ruta de subida de imágenes
+    en `api/upload.php`. Probado de extremo a extremo en local con la
+    estructura nueva (login, panel, todas las APIs) antes de entregarlo.
+  - **Importante para el despliegue**: en el panel de IONOS hay que cambiar
+    el directorio de destino del dominio a `andreasavall/public` (antes
+    `andreasavall`), y el `.htaccess` de la raíz del proyecto no debe
+    subirse a esta cuenta de IONOS en absoluto (se deja en el repositorio
+    documentado, por si en el futuro se usa otro hosting que sí lo permita).
+    Instrucciones exactas de subida en el mensaje de entrega de este parche.
+
+## 1.10.5
 
 - 🔴 Encontrada la causa real (y definitiva) del error al guardar páginas:
   no era la longitud de ningún campo (eso era un problema real pero distinto,
