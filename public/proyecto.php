@@ -77,6 +77,7 @@ $enUrl = $hasTranslatedUrl ? '/project/' . rawurlencode($project['slug_en']) : n
 <!DOCTYPE html>
 <html lang="<?= $locale ?>">
 <head>
+  <?= $themeSettings['tracking_head_code'] ?? '' ?>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?= htmlspecialchars($title) ?> — <?= htmlspecialchars($themeSettings['site_name'] ?? 'Mi Sitio') ?></title>
@@ -127,6 +128,7 @@ $enUrl = $hasTranslatedUrl ? '/project/' . rawurlencode($project['slug_en']) : n
   <?php endif; ?>
 </head>
 <body class="project-detail-page">
+  <?= $themeSettings['tracking_body_code'] ?? '' ?>
 
   <header class="project-hero" style="background-image:url('/uploads/<?= htmlspecialchars(variantFromThumbFilename($project['main_image'], 'desktop')) ?>')">
     <div class="project-hero__overlay" aria-hidden="true"></div>

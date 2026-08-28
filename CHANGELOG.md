@@ -3,7 +3,25 @@
 Este archivo deja constancia de qué incluye cada entrega, para poder comprobar
 de un vistazo si lo que hay subido en el repositorio remoto está actualizado.
 
-## 1.10.7 — actual
+## 1.10.8 — actual
+
+- ✨ Nuevo campo en **Ajustes → Sitio → "Código externo (Tag Manager, píxeles...)"**:
+  dos casillas para pegar tal cual el código que pida Google Tag Manager, Meta
+  (Facebook) Pixel u otra plataforma similar, sin tocar ningún archivo. Se
+  aplica automáticamente en todas las páginas públicas (home, categorías,
+  proyectos, páginas, vídeos):
+  - **Código para el `<head>`**: se inserta justo después de `<head>` — donde
+    estas plataformas piden su script principal.
+  - **Código para justo después de `<body>`**: se inserta ahí mismo — es
+    donde Tag Manager pide su segunda parte obligatoria (el `<noscript>` para
+    navegadores sin JavaScript), y donde suelen pedir píxeles adicionales.
+  - La página de error 404 se ha dejado fuera a propósito: al no depender de
+    la base de datos, sigue funcionando aunque la BD tenga problemas — no
+    merece la pena arriesgar esa robustez por un campo de seguimiento.
+- Aprovechando el cambio, `/api/settings.php` recibe la misma protección
+  añadida en la 1.10.7 (errores inesperados ya no dan pantalla en blanco).
+
+## 1.10.7
 
 - 🔴 Arregla "No se pudo cargar el listado" en Proyectos/Categorías/Páginas/Vídeos
   del panel: antes solo el guardado (POST) atrapaba errores inesperados de base

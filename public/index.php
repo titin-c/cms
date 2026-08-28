@@ -196,6 +196,7 @@ if (!$homeMetaDescription) {
 <!DOCTYPE html>
 <html lang="<?= $locale ?>" data-theme-tone="<?= $themeIsDark ? 'dark' : 'light' ?>">
 <head>
+  <?= $themeSettings['tracking_head_code'] ?? '' ?>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?= htmlspecialchars($pageTitle) ?></title>
@@ -234,6 +235,7 @@ if (!$homeMetaDescription) {
   </script>
 </head>
 <body>
+  <?= $themeSettings['tracking_body_code'] ?? '' ?>
   <?php
     // fix (Andrea, orden de módulos): el módulo que quede primero (Hero o
     // Mosaico de proyectos) se pinta AQUÍ, fuera de <main>, con la cabecera

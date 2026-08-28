@@ -205,6 +205,24 @@ foreach ($curatedFonts as $f) { $groups[$f['category']][] = $f['name']; }
         </div>
       </section>
 
+      <section class="admin-form__block">
+        <h2>Código externo (Tag Manager, píxeles...)</h2>
+        <p class="admin-form__hint">
+          Pega aquí tal cual el código que te dé Google Tag Manager, Meta (Facebook) Pixel u
+          otra plataforma similar. Se aplica automáticamente en todas las páginas del sitio —
+          no hace falta tocar ningún archivo. El primer campo va justo después de
+          <code>&lt;head&gt;</code> (donde piden estos servicios su script principal); el
+          segundo va justo después de <code>&lt;body&gt;</code> (donde suelen pedir la parte
+          para navegadores sin JavaScript, o algún píxel adicional). Dejar en blanco si no usas
+          ninguno.
+        </p>
+        <label for="tracking-head-code">Código para el &lt;head&gt;</label>
+        <textarea id="tracking-head-code" rows="5" placeholder="<!-- Google Tag Manager -->&#10;<script>...</script>"></textarea>
+
+        <label for="tracking-body-code" style="margin-top:12px;">Código para justo después de &lt;body&gt;</label>
+        <textarea id="tracking-body-code" rows="5" placeholder="<!-- Google Tag Manager (noscript) -->&#10;<noscript>...</noscript>"></textarea>
+      </section>
+
     </div>
 
     <!-- ============ PESTAÑA: ESTILOS ============ -->

@@ -397,6 +397,8 @@ async function loadSettings() {
     linkToggleVisibility('#site-coming-soon', ['#coming-soon-fields']);
     document.getElementById('header-show-social').checked = (settings.header_show_social ?? '1') === '1';
     document.getElementById('footer-show-social').checked = (settings.footer_show_social ?? '1') === '1';
+    document.getElementById('tracking-head-code').value = settings.tracking_head_code || '';
+    document.getElementById('tracking-body-code').value = settings.tracking_body_code || '';
     applyHomeModulesOrder(settings.home_modules_order);
     loadTypeSettings(settings);
     document.getElementById('home-simple-title-es').value = settings.home_simple_title_es || '';
@@ -475,6 +477,8 @@ document.getElementById('save-settings-btn').addEventListener('click', async () 
         coming_soon_message_en: document.getElementById('coming-soon-message-en').value,
         header_show_social: document.getElementById('header-show-social').checked ? '1' : '0',
         footer_show_social: document.getElementById('footer-show-social').checked ? '1' : '0',
+        tracking_head_code: document.getElementById('tracking-head-code').value,
+        tracking_body_code: document.getElementById('tracking-body-code').value,
         home_modules_order: collectHomeModulesOrder(),
         home_meta_description_es: document.getElementById('home-meta-es').value,
         home_meta_description_en: document.getElementById('home-meta-en').value,

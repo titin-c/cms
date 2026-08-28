@@ -40,6 +40,7 @@ $enUrl = $page['slug_en'] ? '/en/' . rawurlencode($page['slug_en']) : null;
 <!DOCTYPE html>
 <html lang="<?= $locale ?>">
 <head>
+  <?= $themeSettings['tracking_head_code'] ?? '' ?>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?= htmlspecialchars($page['title']) ?> — <?= htmlspecialchars($themeSettings['site_name'] ?? 'Mi Sitio') ?></title>
@@ -75,6 +76,7 @@ $enUrl = $page['slug_en'] ? '/en/' . rawurlencode($page['slug_en']) : null;
   <link rel="stylesheet" href="/assets/css/components/cookie-banner.css">
 </head>
 <body>
+  <?= $themeSettings['tracking_body_code'] ?? '' ?>
 
   <?php
     $navOnHero = false;

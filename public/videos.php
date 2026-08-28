@@ -37,6 +37,7 @@ $pageTitle = $pageMetaTitle ?: ($pageH1 ?: ($locale === 'en' ? 'Videos' : 'Víde
 <!DOCTYPE html>
 <html lang="<?= $locale ?>">
 <head>
+  <?= $themeSettings['tracking_head_code'] ?? '' ?>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?= htmlspecialchars($pageTitle) ?> — <?= htmlspecialchars($themeSettings['site_name'] ?? 'Mi Sitio') ?></title>
@@ -72,6 +73,7 @@ $pageTitle = $pageMetaTitle ?: ($pageH1 ?: ($locale === 'en' ? 'Videos' : 'Víde
   <link rel="stylesheet" href="/assets/css/components/cookie-banner.css">
 </head>
 <body>
+  <?= $themeSettings['tracking_body_code'] ?? '' ?>
 
   <?php
     $navOnHero = false;

@@ -69,6 +69,7 @@ $enUrl = !empty($category['slug_en']) ? '/category/' . rawurlencode($category['s
 <!DOCTYPE html>
 <html lang="<?= $locale ?>">
 <head>
+  <?= $themeSettings['tracking_head_code'] ?? '' ?>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?= $pageTitle ?></title>
@@ -103,6 +104,7 @@ $enUrl = !empty($category['slug_en']) ? '/category/' . rawurlencode($category['s
   </script>
 </head>
 <body>
+  <?= $themeSettings['tracking_body_code'] ?? '' ?>
 
   <?php
     $navOnHero = false;

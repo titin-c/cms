@@ -123,6 +123,17 @@ function getSiteSettings(PDO $pdo): array {
         'type_breadcrumb_size' => '12', 'type_breadcrumb_weight' => '400',
         'type_grid_title_size' => '14', 'type_grid_title_weight' => '600',
         'type_grid_summary_size' => '14', 'type_grid_summary_weight' => '400',
+
+        // fix (Andrea): código externo (Google Tag Manager, píxeles de
+        // publicidad...) para pegar tal cual, sin tener que tocar el código
+        // del CMS cada vez que una plataforma pide un script nuevo.
+        // tracking_head_code: se inserta justo después de <head> en todas
+        // las páginas públicas (así lo pide Google Tag Manager).
+        // tracking_body_code: se inserta justo después de <body>, también en
+        // todas las páginas públicas (segunda parte obligatoria del propio
+        // Tag Manager — su <noscript>—, y donde suelen pedir otros píxeles).
+        'tracking_head_code' => '',
+        'tracking_body_code' => '',
     ];
 
     $rows = $pdo->query("SELECT setting_key, setting_value FROM site_settings")->fetchAll();

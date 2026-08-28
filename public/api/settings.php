@@ -2,11 +2,13 @@
 header('Content-Type: application/json');
 require_once __DIR__ . '/../../src/lib/auth.php';
 require_once __DIR__ . '/../../src/lib/db.php';
+require_once __DIR__ . '/../../src/lib/validation.php';
 
 requireAuth();
 $pdo = getDb();
 $method = $_SERVER['REQUEST_METHOD'];
 
+try {
 switch ($method) {
     case 'GET':
         $rows = $pdo->query("SELECT setting_key, setting_value FROM site_settings")->fetchAll();
@@ -64,6 +66,8 @@ switch ($method) {
             'type_breadcrumb_size', 'type_breadcrumb_weight',
             'type_grid_title_size', 'type_grid_title_weight',
             'type_grid_summary_size', 'type_grid_summary_weight',
+            // fix (Andrea): código externo (Tag Manager, píxeles...)
+            'tracking_head_code', 'tracking_body_code',
         ];
         $input = json_decode(file_get_contents('php://input'), true) ?? [];
 
@@ -82,4 +86,7 @@ switch ($method) {
     default:
         http_response_code(405);
         echo json_encode(['error' => 'method_not_allowed']);
+}
+} catch (\Throwable $e) {
+    respondUnexpectedError($e, 'settings.php');
 }
