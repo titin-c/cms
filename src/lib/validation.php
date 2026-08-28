@@ -57,3 +57,24 @@ function respondUnexpectedDbError(PDOException $e, string $context): void {
     echo json_encode(['error' => 'save_failed', 'message' => 'No se pudo guardar por un error del servidor. Si se repite, avisa — ya ha quedado registrado.']);
     exit;
 }
+
+/**
+ * fix (Andrea): red de seguridad general para TODO el archivo (antes solo el
+ * guardado —POST— atrapaba errores; un listado —GET— roto daba una pantalla
+ * en blanco sin ninguna pista, como pasó con el fallo de "No se pudo cargar
+ * el listado" en producción). Se registra el detalle completo en el log del
+ * servidor, y como este endpoint solo es accesible con sesión de admin ya
+ * iniciada, se incluye también un resumen técnico en la respuesta — así se
+ * puede ver la causa real desde el propio navegador (pestaña Red) sin
+ * necesitar acceso al log del servidor.
+ */
+function respondUnexpectedError(\Throwable $e, string $context): void {
+    error_log("$context: " . get_class($e) . ': ' . $e->getMessage() . ' en ' . $e->getFile() . ':' . $e->getLine());
+    http_response_code(500);
+    echo json_encode([
+        'error' => 'unexpected_error',
+        'message' => 'Ha ocurrido un error inesperado. Si se repite, avisa — ya ha quedado registrado.',
+        'debug' => get_class($e) . ': ' . $e->getMessage() . ' (' . basename($e->getFile()) . ':' . $e->getLine() . ')',
+    ]);
+    exit;
+}

@@ -18,6 +18,7 @@ function slugify(string $text): string {
     return trim($text, '-');
 }
 
+try {
 switch ($method) {
     case 'GET':
         // Listado con búsqueda/filtro (dashboard) — relevante desde el lanzamiento por el volumen esperado (research-agent)
@@ -169,4 +170,7 @@ switch ($method) {
     default:
         http_response_code(405);
         echo json_encode(['error' => 'method_not_allowed']);
+}
+} catch (\Throwable $e) {
+    respondUnexpectedError($e, 'projects.php');
 }

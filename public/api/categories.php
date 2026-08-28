@@ -13,6 +13,7 @@ requireAuth();
 $pdo = getDb();
 $method = $_SERVER['REQUEST_METHOD'];
 
+try {
 switch ($method) {
     case 'GET':
         echo json_encode($pdo->query("SELECT * FROM categories ORDER BY sort_order ASC")->fetchAll());
@@ -122,4 +123,7 @@ switch ($method) {
     default:
         http_response_code(405);
         echo json_encode(['error' => 'method_not_allowed']);
+}
+} catch (\Throwable $e) {
+    respondUnexpectedError($e, 'categories.php');
 }

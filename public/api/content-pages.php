@@ -14,6 +14,7 @@ function slugifyPhp(string $text): string {
     return trim($text, '-');
 }
 
+try {
 switch ($method) {
     case 'GET':
         echo json_encode($pdo->query("SELECT * FROM content_pages ORDER BY sort_order ASC, id ASC")->fetchAll());
@@ -102,4 +103,7 @@ switch ($method) {
     default:
         http_response_code(405);
         echo json_encode(['error' => 'method_not_allowed']);
+}
+} catch (\Throwable $e) {
+    respondUnexpectedError($e, 'content-pages.php');
 }

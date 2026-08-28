@@ -14,6 +14,7 @@ function slugifyVideo(string $text): string {
     return trim($text, '-');
 }
 
+try {
 switch ($method) {
     case 'GET':
         $search = $_GET['q'] ?? '';
@@ -111,4 +112,7 @@ switch ($method) {
     default:
         http_response_code(405);
         echo json_encode(['error' => 'method_not_allowed']);
+}
+} catch (\Throwable $e) {
+    respondUnexpectedError($e, 'videos.php');
 }

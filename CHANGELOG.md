@@ -3,7 +3,24 @@
 Este archivo deja constancia de qué incluye cada entrega, para poder comprobar
 de un vistazo si lo que hay subido en el repositorio remoto está actualizado.
 
-## 1.10.6 — actual
+## 1.10.7 — actual
+
+- 🔴 Arregla "No se pudo cargar el listado" en Proyectos/Categorías/Páginas/Vídeos
+  del panel: antes solo el guardado (POST) atrapaba errores inesperados de base
+  de datos — el listado (GET) no tenía ninguna red de seguridad, así que
+  cualquier fallo ahí daba una pantalla en blanco en el navegador sin ninguna
+  pista de la causa (ni siquiera en la respuesta, porque la producción tiene
+  `display_errors` apagado, como debe ser). Ahora todo el archivo (no solo el
+  guardado) está protegido: cualquier error inesperado se registra en el log
+  del servidor Y se devuelve un resumen técnico en la respuesta (`debug`), para
+  poder ver la causa real desde la pestaña Red del navegador sin necesitar
+  acceso al log del servidor. Probado en local forzando un fallo real (tabla
+  ausente) para confirmar que ahora se ve el motivo exacto en vez de una
+  respuesta vacía.
+- Nuevo helper `respondUnexpectedError()` en `src/lib/validation.php`
+  (complementa a `respondUnexpectedDbError()`, que solo cubría el guardado).
+
+## 1.10.6
 
 - 🔴 **Cambio de estructura del proyecto para el hosting de IONOS**, tras
   la caída completa de la web tras subir todos los archivos a producción.
